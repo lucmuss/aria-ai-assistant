@@ -1,0 +1,48 @@
+{
+  "extensionName": { "message": "مساعد البريد الإلكتروني بالذكاء الاصطناعي" },
+  "extensionDescription": { "message": "ينشئ ردود ذكية ونسخ باستخدام الذكاء الاصطناعي" },
+  "browserActionTitle": { "message": "مساعد البريد الإلكتروني بالذكاء الاصطناعي" },
+  "settingsTitle": { "message": "الإعدادات – مساعد البريد الإلكتروني بالذكاء الاصطناعي" },
+  "saveBtn": { "message": "💾 حفظ الإعدادات" },
+  "savedMsg": { "message": "تم حفظ الإعدادات بنجاح!" },
+  "languageLabel": { "message": "لغة الواجهة:" },
+  "languageDesc": { "message": "اختر لغة واجهة الامتداد" },
+  
+  "chatSettings": { "message": "إعدادات واجهة برمجة التطبيقات للدردشة" },
+  "apiUrlLabel": { "message": "رابط واجهة برمجة التطبيقات:" },
+  "apiUrlPlaceholder": { "message": "https://api.openai.com/v1/chat/completions" },
+  "apiUrlDesc": { "message": "نقطة النهاية للنموذج الخاص بك (مثل OpenAI أو خادم ULAMA المحلي)" },
+  "apiKeyLabel": { "message": "مفتاح واجهة برمجة التطبيقات:" },
+  "apiKeyPlaceholder": { "message": "sk-xxxxxxxxxxxx" },
+  "apiKeyDesc": { "message": "مفتاح واجهة برمجة التطبيقات الخاص بك من المزود (مثل OpenAI، Ollama إلخ)" },
+  "modelLabel": { "message": "النموذج:" },
+  "modelDesc": { "message": "اسم النموذج (مثل gpt-4o, llama3, mistral)" },
+  "temperatureLabel": { "message": "درجة الحرارة:" },
+  "temperatureDesc": { "message": "يتحكم في الإبداع (0 = واقعي، 1 = مبدع)" },
+  "maxTokensLabel": { "message": "الرموز القصوى:" },
+  "maxTokensDesc": { "message": "الطول الأقصى للرد" },
+  "systemPromptLabel": { "message": "موجه النظام:" },
+  "systemPromptPlaceholder": { "message": "أنت مساعد بريد إلكتروني مهذب." },
+  "systemPromptDesc": { "message": "النص الافتراضي للمساعد (مثل النبرة أو الأسلوب)" },
+  "contextSizeLabel": { "message": "حجم السياق:" },
+  "contextSizeDesc": { "message": "عدد الرسائل السابقة المضمنة كسياق" },
+  "includeSenderLabel": { "message": "تضمين المرسل:" },
+  "includeSenderDesc": { "message": "يتضمن عنوان المرسل في سياق الموجه" },
+  
+  "sttSettings": { "message": "إعدادات تحويل الكلام إلى نص" },
+  "sttApiUrlLabel": { "message": "رابط واجهة برمجة التطبيقات STT:" },
+  "sttApiUrlPlaceholder": { "message": "https://api.openai.com/v1/audio/transcriptions" },
+  "sttApiUrlDesc": { "message": "رابط نسخ الكلام (مثل Whisper)" },
+  "sttApiKeyLabel": { "message": "مفتاح واجهة برمجة التطبيقات STT:" },
+  "sttApiKeyPlaceholder": { "message": "sk-xxxxxxxxxxxx" },
+  "sttApiKeyDesc": { "message": "مفتاح واجهة برمجة التطبيقات لمزود STT" },
+  "sttModelLabel": { "message": "النموذج:" },
+  "sttModelDesc": { "message": "نموذج الكلام (مثل whisper-1 أو tiny محلي)" },
+  "sttLanguageLabel": { "message": "اللغة:" },
+  "sttLanguageDesc": { "message": "لغة التعرف (فارغ = تلقائي)" },
+  
+  "popupTitle": { "message": "مساعد البريد الإلكتروني بالذكاء الاصطناعي" },
+  "generateReplyBtn": { "message": "✉️ إنشاء رد" },
+  "voiceInputBtn": { "message": "🎤 إدخال صوتي" },
+  "settingsBtn": { "message": "⚙️ الإعدادات" }
+}
