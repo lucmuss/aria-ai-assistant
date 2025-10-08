@@ -9,6 +9,12 @@
       "strict_min_version": "115.0"
     }
   },
+  "icons": {
+    "16": "icons/ai-icon.png",
+    "32": "icons/ai-icon.png",
+    "48": "icons/ai-icon.png",
+    "128": "icons/ai-icon.png"
+  },
   "permissions": [
     "storage",
     "messagesRead",
@@ -17,10 +23,18 @@
     "tabs"
   ],
   "browser_action": {
+    "default_icon": {
+      "16": "icons/ai-icon.png",
+      "32": "icons/ai-icon.png"
+    },
     "default_popup": "popup.html",
     "default_title": "AI Assistant"
   },
   "compose_action": {
+    "default_icon": {
+      "16": "icons/ai-icon.png",
+      "32": "icons/ai-icon.png"
+    },
     "default_popup": "popup.html",
     "default_title": "AI Assistant"
   },
