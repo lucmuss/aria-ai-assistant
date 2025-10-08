@@ -55,5 +55,10 @@
     "sttError": { "message": "STT Fehler: " },
     "apiError": { "message": "API-Fehler: " },
     "generalError": { "message": "Fehler: " }
-  }
+  },
+    "exportBtn": { "message": "📤 Einstellungen exportieren" },
+  "importBtn": { "message": "📥 Einstellungen importieren" },
+  "exportSuccessMsg": { "message": "Einstellungen wurden exportiert!" },
+  "importSuccessMsg": { "message": "Einstellungen wurden erfolgreich importiert!" },
+  "importErrorMsg": { "message": "Fehler beim Import: " }
 }

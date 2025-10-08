@@ -79,7 +79,12 @@ async function loadI18n() {
         "sttModelLabel": "Model:",
         "sttModelDesc": "Speech model (e.g. whisper-1 or local tiny)",
         "sttLanguageLabel": "Language:",
-        "sttLanguageDesc": "Recognition language (empty = automatic)"
+        "sttLanguageDesc": "Recognition language (empty = automatic)",
+        "exportBtn": "Export Settings",
+        "importBtn": "Import Settings",
+        "exportSuccessMsg": "Settings exported successfully!",
+        "importSuccessMsg": "Settings imported successfully!",
+        "importErrorMsg": "Import error: "
       };
       return fallbackMessages[key] || key;
     };
@@ -167,9 +172,122 @@ function setupLanguageChangeListener() {
   });
 }
 
+// Export-Funktion - API Keys werden jetzt komplett exportiert
+async function exportSettings(t) {
+  const settings = await browser.storage.local.get();
+  
+  // Exportiere alle Daten OHNE Maskierung der API-Keys
+  const exportData = {
+    ...settings,
+    exportInfo: {
+      version: "1.0",
+      exportDate: new Date().toISOString(),
+      extension: "AI Mail Assistant",
+      note: "Diese Datei enthält sensible API-Keys. Bitte sicher aufbewahren!"
+    }
+  };
+  
+  const dataStr = JSON.stringify(exportData, null, 2);
+  const dataBlob = new Blob([dataStr], { type: "application/json" });
+  
+  const url = URL.createObjectURL(dataBlob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `ai-mail-assistant-settings-${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  document.getElementById("status").innerText = t("exportSuccessMsg");
+}
+
+// Import-Funktion
+async function importSettings(file, t) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    
+    reader.onload = async (e) => {
+      try {
+        const importedData = JSON.parse(e.target.result);
+        
+        // Validiere die importierten Daten
+        if (!importedData.chat || !importedData.stt) {
+          throw new Error("Ungültiges Dateiformat");
+        }
+        
+        // Übernehme die Einstellungen - API-Keys werden komplett übernommen
+        const settingsToImport = {
+          uiLanguage: importedData.uiLanguage || "de",
+          chat: {
+            apiUrl: importedData.chat.apiUrl || "",
+            apiKey: importedData.chat.apiKey || "", // Vollständiger API-Key wird übernommen
+            model: importedData.chat.model || "gpt-4o-mini",
+            temperature: importedData.chat.temperature || 1.0,
+            maxTokens: importedData.chat.maxTokens || 2000,
+            systemPrompt: importedData.chat.systemPrompt || "",
+            contextSize: importedData.chat.contextSize || 5,
+            includeSender: importedData.chat.includeSender || false
+          },
+          stt: {
+            apiUrl: importedData.stt.apiUrl || "",
+            apiKey: importedData.stt.apiKey || "", // Vollständiger API-Key wird übernommen
+            model: importedData.stt.model || "whisper-1",
+            language: importedData.stt.language || ""
+          }
+        };
+        
+        // Speichere die importierten Einstellungen
+        await browser.storage.local.set(settingsToImport);
+        
+        // Lade die neuen Einstellungen in die UI
+        await loadSettings();
+        
+        // Aktualisiere die Übersetzungen
+        await updateTranslations();
+        
+        document.getElementById("status").innerText = t("importSuccessMsg");
+        resolve();
+      } catch (error) {
+        console.error("Import error:", error);
+        document.getElementById("status").innerText = t("importErrorMsg") + error.message;
+        reject(error);
+      }
+    };
+    
+    reader.onerror = () => {
+      reject(new Error("Fehler beim Lesen der Datei"));
+    };
+    
+    reader.readAsText(file);
+  });
+}
+
+// Event Listener für Import/Export
+function setupImportExportListeners(t) {
+  // Export Button
+  document.getElementById("exportBtn").addEventListener("click", () => exportSettings(t));
+  
+  // Import Button
+  document.getElementById("importBtn").addEventListener("click", () => {
+    document.getElementById("importFile").click();
+  });
+  
+  // File Input
+  document.getElementById("importFile").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      await importSettings(file, t);
+      // Reset file input
+      e.target.value = "";
+    }
+  });
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   const t = await loadI18n();
   await loadSettings();
   setupLanguageChangeListener();
+  setupImportExportListeners(t);
   document.getElementById("saveBtn").addEventListener("click", () => saveSettings(t));
 });
