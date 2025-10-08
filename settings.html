@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h2>AI Mail Assistant - Einstellungen</h2>
+
+  <h3>Text-API (Chat)</h3>
+  <label>API URL: <input id="apiUrl" type="text" /></label><br>
+  <label>API Key: <input id="apiKey" type="password" /></label><br>
+  <label>Modell: <input id="model" type="text" value="gpt-4o-mini"/></label><br>
+  <label>System Prompt: <textarea id="systemPrompt"></textarea></label><br>
+  <label>Temperatur: <input id="temperature" type="number" min="0" max="2" step="0.1" value="0.7"/></label><br>
+  <label>Kontextgröße: <input id="contextSize" type="number" min="1" max="20" value="5"/></label><br>
+
+  <h3>Speech-to-Text (Whisper)</h3>
+  <label>API URL: <input id="sttApiUrl" type="text" /></label><br>
+  <label>API Key: <input id="sttApiKey" type="password" /></label><br>
+  <label>Modell: <input id="sttModel" type="text" value="whisper-1"/></label><br>
+  <label>Sprache (optional): <input id="sttLanguage" type="text" /></label><br>
+  <label>Modus (transcribe/translate): <input id="sttMode" type="text" /></label><br>
+
+  <button id="saveBtn">Speichern</button>
+
+  <script src="settings.js"></script>
+</body>
+</html>
