@@ -1,28 +1,100 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8">
+  <title>Einstellungen – AI Mail Assistant</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h2>AI Mail Assistant - Einstellungen</h2>
+  <h1>⚙️ AI Mail Assistant Einstellungen</h1>
 
-  <h3>Text-API (Chat)</h3>
-  <label>API URL: <input id="apiUrl" type="text" /></label><br>
-  <label>API Key: <input id="apiKey" type="password" /></label><br>
-  <label>Modell: <input id="model" type="text" value="gpt-4o-mini"/></label><br>
-  <label>System Prompt: <textarea id="systemPrompt"></textarea></label><br>
-  <label>Temperatur: <input id="temperature" type="number" min="0" max="2" step="0.1" value="0.7"/></label><br>
-  <label>Kontextgröße: <input id="contextSize" type="number" min="1" max="20" value="5"/></label><br>
+  <button id="saveBtn">💾 Einstellungen speichern</button>
+  <p id="status"></p>
 
-  <h3>Speech-to-Text (Whisper)</h3>
-  <label>API URL: <input id="sttApiUrl" type="text" /></label><br>
-  <label>API Key: <input id="sttApiKey" type="password" /></label><br>
-  <label>Modell: <input id="sttModel" type="text" value="whisper-1"/></label><br>
-  <label>Sprache (optional): <input id="sttLanguage" type="text" /></label><br>
-  <label>Modus (transcribe/translate): <input id="sttMode" type="text" /></label><br>
+  <form id="settingsForm">
+    <table>
+      <tr><th colspan="3">Chat API Einstellungen</th></tr>
+      <tr>
+        <td><b>API URL:</b></td>
+        <td><input type="text" id="chatApiUrl" placeholder="https://api.openai.com/v1/chat/completions"></td>
+        <td>Endpoint für dein Modell (z. B. OpenAI oder lokaler ULAMA-Server)</td>
+      </tr>
+      <tr>
+        <td><b>API Key:</b></td>
+        <td><input type="password" id="chatApiKey" placeholder="sk-xxxxxxxxxxxx"></td>
+        <td>Dein API-Schlüssel vom Anbieter (z. B. OpenAI, Ollama etc.)</td>
+      </tr>
+      <tr>
+        <td><b>Modell:</b></td>
+        <td><input type="text" id="chatModel" value="gpt-4o-mini"></td>
+        <td>Modellname (z. B. <code>gpt-4o</code>, <code>llama3</code>, <code>mistral</code>)</td>
+      </tr>
+      <tr>
+        <td><b>Temperatur:</b></td>
+        <td><input type="number" step="0.1" min="0" max="2" id="chatTemperature" value="1.0"></td>
+        <td>Steuert Kreativität (0 = sachlich, 1 = kreativ)</td>
+      </tr>
+      <tr>
+        <td><b>Max Tokens:</b></td>
+        <td><input type="number" id="chatMaxTokens" value="2000"></td>
+        <td>Maximale Textlänge der Antwort</td>
+      </tr>
+      <tr>
+        <td><b>System Prompt:</b></td>
+        <td><textarea id="chatSystemPrompt" rows="3" placeholder="Du bist ein höflicher E-Mail-Assistent."></textarea></td>
+        <td>Vorgabetext für den Assistenten (z. B. Tonfall oder Stil)</td>
+      </tr>
+      <tr>
+        <td><b>Kontextgröße:</b></td>
+        <td><input type="number" id="chatContextSize" value="5"></td>
+        <td>Anzahl der vorherigen Nachrichten, die als Kontext gesendet werden</td>
+      </tr>
+      <tr>
+        <td><b>Absender einbeziehen:</b></td>
+        <td><input type="checkbox" id="chatIncludeSender"></td>
+        <td>Fügt die Absenderadresse in den Prompt-Kontext ein</td>
+      </tr>
 
-  <button id="saveBtn">Speichern</button>
+      <tr><th colspan="3">Speech-to-Text Einstellungen</th></tr>
+      <tr>
+        <td><b>STT API URL:</b></td>
+        <td><input type="text" id="sttApiUrl" placeholder="https://api.openai.com/v1/audio/transcriptions"></td>
+        <td>URL für Sprachtranskription (z. B. Whisper)</td>
+      </tr>
+      <tr>
+        <td><b>STT API Key:</b></td>
+        <td><input type="password" id="sttApiKey" placeholder="sk-xxxxxxxxxxxx"></td>
+        <td>API-Key für den STT-Anbieter</td>
+      </tr>
+      <tr>
+        <td><b>Modell:</b></td>
+        <td><input type="text" id="sttModel" value="whisper-1"></td>
+        <td>Sprachmodell (z. B. <code>whisper-1</code> oder lokal <code>tiny</code>)</td>
+      </tr>
+      <tr>
+        <td><b>Sprache:</b></td>
+        <td>
+          <select id="sttLanguage">
+            <option value="">Auto</option>
+            <option value="de">Deutsch (de)</option>
+            <option value="en">Englisch (en)</option>
+            <option value="fr">Französisch (fr)</option>
+            <option value="es">Spanisch (es)</option>
+            <option value="it">Italienisch (it)</option>
+            <option value="nl">Niederländisch (nl)</option>
+            <option value="pl">Polnisch (pl)</option>
+            <option value="pt">Portugiesisch (pt)</option>
+            <option value="ru">Russisch (ru)</option>
+            <option value="sv">Schwedisch (sv)</option>
+            <option value="tr">Türkisch (tr)</option>
+            <option value="zh">Chinesisch (zh)</option>
+            <option value="ja">Japanisch (ja)</option>
+          </select>
+        </td>
+        <td>Sprache der Erkennung (leer = automatisch)</td>
+      </tr>
+    </table>
+  </form>
 
   <script src="settings.js"></script>
 </body>

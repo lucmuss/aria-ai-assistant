@@ -1,28 +1,34 @@
 {
   "manifest_version": 2,
   "name": "AI Mail Assistant",
-  "version": "1.0",
-  "description": "Antworten auf E-Mails mit AI und Spracheingabe generieren.",
+  "version": "1.1",
+  "description": "Antwortet auf E-Mails mit OpenAI oder eigenem ULAMA-Server",
   "applications": {
     "gecko": {
-      "id": "ai-mail-assistant@example.com"
+      "id": "ai-mail-assistant@example.com",
+      "strict_min_version": "115.0"
     }
   },
   "permissions": [
     "storage",
-    "tabs",
     "messagesRead",
-    "compose"
+    "compose",
+    "mailTabs",
+    "tabs"
   ],
-  "background": {
-    "scripts": ["background.js"]
-  },
   "browser_action": {
     "default_popup": "popup.html",
-    "default_title": "AI Mail Assistant"
+    "default_title": "AI Assistant"
+  },
+  "compose_action": {
+    "default_popup": "popup.html",
+    "default_title": "AI Assistant"
   },
   "options_ui": {
     "page": "settings.html",
     "open_in_tab": true
+  },
+  "background": {
+    "scripts": ["background.js"]
   }
 }
