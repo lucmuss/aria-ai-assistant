@@ -59,5 +59,11 @@
   "promptInputPlaceholder": { "message": "Enter your instructions for the AI here..." },
   "textInputBtn": { "message": "📝 Text Input" },
   "submitBtn": { "message": "📤 Submit" },
-  "cancelBtn": { "message": "❌ Cancel" }
+  "cancelBtn": { "message": "❌ Cancel" },
+  "testApiBtn": { "message": "🧪 Test API" },
+  "testApiSuccess": { "message": "✅ API connection tested successfully!" },
+  "testApiError": { "message": "❌ API Error: " },
+  "testApiMissingSettings": { "message": "❌ Please fill out all API settings first" },
+  "noInstructionsProvided": { "message": "Please enter instructions for the AI." },
+  "speechRecognitionError": { "message": "Speech recognition error: " }
 }

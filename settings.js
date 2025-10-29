@@ -84,7 +84,11 @@ async function loadI18n() {
         "importBtn": "Import Settings",
         "exportSuccessMsg": "Settings exported successfully!",
         "importSuccessMsg": "Settings imported successfully!",
-        "importErrorMsg": "Import error: "
+        "importErrorMsg": "Import error: ",
+        "testApiBtn": "🧪 Test API",
+        "testApiSuccess": "✅ API connection tested successfully!",
+        "testApiError": "❌ API Error: ",
+        "testApiMissingSettings": "❌ Please fill out all API settings first"
       };
       return fallbackMessages[key] || key;
     };
@@ -170,6 +174,65 @@ function setupLanguageChangeListener() {
     const t = await updateTranslations();
     await saveSettings(t);
   });
+}
+
+// API-Test-Funktion
+async function testApi(t) {
+  const statusElement = document.getElementById("status");
+  
+  // API-Einstellungen aus dem Formular lesen
+  const apiUrl = document.getElementById("chatApiUrl").value.trim();
+  const apiKey = document.getElementById("chatApiKey").value.trim();
+  const model = document.getElementById("chatModel").value.trim();
+  
+  // Prüfen ob alle Felder ausgefüllt sind
+  if (!apiUrl || !apiKey || !model) {
+    statusElement.textContent = t("testApiMissingSettings");
+    statusElement.style.color = "red";
+    return;
+  }
+  
+  try {
+    statusElement.textContent = "🧪 Teste API-Verbindung...";
+    statusElement.style.color = "blue";
+    
+    // Test-Request an die API senden
+    const testBody = {
+      model: model,
+      messages: [
+        { role: "system", content: "Du bist ein Test-Assistent." },
+        { role: "user", content: "Hallo, dies ist ein Test. Bitte antworte einfach mit 'Test erfolgreich'." }
+      ],
+      max_tokens: 50,
+      temperature: 0.1
+    };
+    
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(testBody)
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP ${response.status}: ${errorText}`);
+    }
+    
+    const data = await response.json();
+    
+    // Erfolgreiche Antwort
+    statusElement.textContent = t("testApiSuccess");
+    statusElement.style.color = "green";
+    console.log("API-Test erfolgreich:", data);
+    
+  } catch (error) {
+    console.error("API-Test fehlgeschlagen:", error);
+    statusElement.textContent = t("testApiError") + error.message;
+    statusElement.style.color = "red";
+  }
 }
 
 // Export-Funktion - API Keys werden jetzt komplett exportiert
@@ -263,8 +326,11 @@ async function importSettings(file, t) {
   });
 }
 
-// Event Listener für Import/Export
+// Event Listener für Import/Export und API-Test
 function setupImportExportListeners(t) {
+  // API-Test Button
+  document.getElementById("testApiBtn").addEventListener("click", () => testApi(t));
+  
   // Export Button
   document.getElementById("exportBtn").addEventListener("click", () => exportSettings(t));
   

@@ -1,9 +1,32 @@
 async function getActiveMailTab() {
+  try {
+    // Zuerst versuchen, den aktuellen MailTab zu erhalten
+    const mailTab = await browser.mailTabs.getCurrent();
+    if (mailTab) {
+      console.log("MailTab gefunden:", mailTab);
+      return mailTab;
+    }
+  } catch (error) {
+    console.log("Kein MailTab verfügbar:", error.message);
+  }
+
+  // Fallback: Aktive Tabs abfragen
   const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-  if (!tabs || tabs.length === 0) return null;
+  if (!tabs || tabs.length === 0) {
+    console.log("Keine aktiven Tabs gefunden");
+    return null;
+  }
+  
   const tab = tabs[0];
-  if (tab.mailTab) return tab;
-  return await browser.mailTabs.getCurrent().catch(() => null);
+  console.log("Aktiver Tab:", tab);
+  
+  // Prüfen ob es sich um einen MailTab handelt
+  if (tab.mailTab) {
+    console.log("Tab ist ein MailTab");
+    return tab;
+  }
+  
+  return null;
 }
 
 async function getSettings() {
@@ -20,7 +43,7 @@ async function callOpenAI(prompt) {
   const settings = await getSettings();
 
   if (!settings.apiUrl || !settings.apiKey || !settings.model) {
-    throw new Error("Bitte zuerst API-URL, API-Key und Modell in den Einstellungen speichern.");
+    throw new Error(browser.i18n.getMessage("apiSettingsMissing"));
   }
 
   const body = {
@@ -181,15 +204,19 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   // Hauptfunktion: Antwort generieren
   generateReplyBtn.addEventListener('click', async () => {
+    console.log('Generate Reply Button geklickt');
     try {
       // Prüfen ob eine E-Mail geöffnet ist
+      console.log('Prüfe E-Mail-Kontext...');
       await getEmailContext();
       
       // UI umschalten
+      console.log('Schalte UI um');
       mainSection.style.display = 'none';
       inputSection.style.display = 'block';
       promptInput.focus();
     } catch (err) {
+      console.error('Fehler beim Generieren der Antwort:', err);
       alert(err.message);
     }
   });
@@ -208,10 +235,11 @@ document.addEventListener('DOMContentLoaded', async function() {
       submitBtn.style.display = 'block';
       
     } catch (err) {
-      alert("Spracherkennungsfehler: " + err.message);
+      alert(browser.i18n.getMessage("speechRecognitionError") + err.message);
     } finally {
       voiceInputBtn.disabled = false;
-      voiceInputBtn.textContent = "🎤 Spracheingabe";
+      voiceInputBtn.textContent = voiceInputBtn.getAttribute("data-i18n") === "voiceInputBtn" ? 
+        browser.i18n.getMessage("voiceInputBtn") : "🎤 Spracheingabe";
     }
   });
 
@@ -226,7 +254,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     try {
       const userPrompt = promptInput.value.trim();
       if (!userPrompt) {
-        alert("Bitte geben Sie Anweisungen für die KI ein.");
+        alert(browser.i18n.getMessage("noInstructionsProvided"));
         return;
       }
 

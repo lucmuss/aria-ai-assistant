@@ -44,5 +44,14 @@
   "popupTitle": { "message": "AI邮件助手" },
   "generateReplyBtn": { "message": "✉️ 生成回复" },
   "voiceInputBtn": { "message": "🎤 语音输入" },
-  "settingsBtn": { "message": "⚙️ 设置" }
+  "settingsBtn": { "message": "⚙️ 设置" },
+  "exportBtn": { "message": "📤 导出设置" },
+  "importBtn": { "message": "📥 导入设置" },
+  "exportSuccessMsg": { "message": "设置已导出！" },
+  "importSuccessMsg": { "message": "设置导入成功！" },
+  "importErrorMsg": { "message": "导入错误：" },
+  "promptInputPlaceholder": { "message": "在此输入AI的指令..." },
+  "textInputBtn": { "message": "📝 文本输入" },
+  "submitBtn": { "message": "📤 提交" },
+  "cancelBtn": { "message": "❌ 取消" }
 }

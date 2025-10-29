@@ -59,5 +59,11 @@
   "promptInputPlaceholder": { "message": "Wprowadź tutaj swoje instrukcje dla AI..." },
   "textInputBtn": { "message": "📝 Wprowadź tekst" },
   "submitBtn": { "message": "📤 Wyślij" },
-  "cancelBtn": { "message": "❌ Anuluj" }
+  "cancelBtn": { "message": "❌ Anuluj" },
+  "testApiBtn": { "message": "🧪 Testuj API" },
+  "testApiSuccess": { "message": "✅ Połączenie z API przetestowane pomyślnie!" },
+  "testApiError": { "message": "❌ Błąd API: " },
+  "testApiMissingSettings": { "message": "❌ Proszę najpierw wypełnić wszystkie ustawienia API" },
+  "noInstructionsProvided": { "message": "Proszę wprowadzić instrukcje dla AI." },
+  "speechRecognitionError": { "message": "Błąd rozpoznawania mowy: " }
 }

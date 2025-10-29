@@ -64,5 +64,11 @@
   "promptInputPlaceholder": { "message": "Geben Sie hier Ihre Anweisungen für die KI ein..." },
   "textInputBtn": { "message": "📝 Texteingabe" },
   "submitBtn": { "message": "📤 Abschicken" },
-  "cancelBtn": { "message": "❌ Abbrechen" }
+  "cancelBtn": { "message": "❌ Abbrechen" },
+  "testApiBtn": { "message": "🧪 API testen" },
+  "testApiSuccess": { "message": "✅ API-Verbindung erfolgreich getestet!" },
+  "testApiError": { "message": "❌ API-Fehler: " },
+  "testApiMissingSettings": { "message": "❌ Bitte füllen Sie zuerst alle API-Einstellungen aus" },
+  "noInstructionsProvided": { "message": "Bitte geben Sie Anweisungen für die KI ein." },
+  "speechRecognitionError": { "message": "Spracherkennungsfehler: " }
 }
