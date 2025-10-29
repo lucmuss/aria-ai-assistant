@@ -60,5 +60,9 @@
   "importBtn": { "message": "📥 Einstellungen importieren" },
   "exportSuccessMsg": { "message": "Einstellungen wurden exportiert!" },
   "importSuccessMsg": { "message": "Einstellungen wurden erfolgreich importiert!" },
-  "importErrorMsg": { "message": "Fehler beim Import: " }
+  "importErrorMsg": { "message": "Fehler beim Import: " },
+  "promptInputPlaceholder": { "message": "Geben Sie hier Ihre Anweisungen für die KI ein..." },
+  "textInputBtn": { "message": "📝 Texteingabe" },
+  "submitBtn": { "message": "📤 Abschicken" },
+  "cancelBtn": { "message": "❌ Abbrechen" }
 }

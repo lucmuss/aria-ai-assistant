@@ -5,11 +5,23 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h3>AI Mail Assistant</h3>
-  <button id="replyBtn">✉️ Antwort generieren</button>
-  <button id="sttBtn">🎤 Spracheingabe</button>
-  <button id="settingsBtn">⚙️ Einstellungen</button>
-  <script src="stt.js"></script>
+  <h3 data-i18n="popupTitle">AI Mail Assistant</h3>
+  
+  <div id="inputSection" style="display: none;">
+    <textarea id="promptInput" data-i18n-placeholder="promptInputPlaceholder" placeholder="Enter your instructions for the AI here..."></textarea>
+    <div class="button-group">
+      <button id="voiceInputBtn" data-i18n="voiceInputBtn">🎤 Voice Input</button>
+      <button id="textInputBtn" data-i18n="textInputBtn">📝 Text Input</button>
+    </div>
+    <button id="submitBtn" style="display: none;" data-i18n="submitBtn">📤 Submit</button>
+    <button id="cancelBtn" data-i18n="cancelBtn">❌ Cancel</button>
+  </div>
+
+  <div id="mainSection">
+    <button id="generateReplyBtn" data-i18n="generateReplyBtn">✉️ Generate Reply</button>
+    <button id="settingsBtn" data-i18n="settingsBtn">⚙️ Settings</button>
+  </div>
+
   <script src="popup.js"></script>
 </body>
 </html>

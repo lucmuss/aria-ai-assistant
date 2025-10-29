@@ -55,5 +55,9 @@
     "sttError": { "message": "STT Error: " },
     "apiError": { "message": "API Error: " },
     "generalError": { "message": "Error: " }
-  }
+  },
+  "promptInputPlaceholder": { "message": "Enter your instructions for the AI here..." },
+  "textInputBtn": { "message": "📝 Text Input" },
+  "submitBtn": { "message": "📤 Submit" },
+  "cancelBtn": { "message": "❌ Cancel" }
 }

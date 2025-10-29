@@ -1,16 +1,54 @@
 body {
   font-family: Arial, sans-serif;
   margin: 16px;
+  width: 300px;
 }
 
-h1 {
+h3 {
   margin-bottom: 12px;
+  text-align: center;
 }
 
 button {
   padding: 8px 12px;
   margin-bottom: 12px;
   cursor: pointer;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #f9f9f9;
+}
+
+button:hover {
+  background: #e9e9e9;
+}
+
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+  min-height: 60px;
+  font-family: Arial, sans-serif;
+}
+
+.button-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.button-group button {
+  margin-bottom: 0;
+  flex: 1;
 }
 
 table {
@@ -31,7 +69,7 @@ td {
   vertical-align: top;
 }
 
-input, textarea, select {
+input, select {
   width: 100%;
   box-sizing: border-box;
   padding: 4px;
