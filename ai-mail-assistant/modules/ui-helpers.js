@@ -17,7 +17,7 @@ export async function displayStats() {
       document.getElementById('outputTokens').textContent = stats.outputTokens;
       document.getElementById('model').textContent = stats.model;
       document.getElementById('time').textContent = stats.time;
-      document.getElementById('cost').textContent = `$${Math.max(0.01, stats.cost).toFixed(2)}`;
+      document.getElementById('cost').textContent = stats.cost;
       document.getElementById('temperature').textContent = stats.temperature ? stats.temperature.toFixed(2) : '1.00';
       statsDiv.style.display = 'block';
     } else {

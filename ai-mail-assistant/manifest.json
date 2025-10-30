@@ -1,12 +1,14 @@
 {
   "manifest_version": 2,
   "name": "ARIA - AI Assistant",
-  "version": "1.0",
-  "donation_url": "https://www.paypal.com/donate?hosted_button_id=YOUR_BUTTON_ID",
-  "description": "Antwortet auf E-Mails mit OpenAI oder eigenem ULAMA-Server",
+  "version": "1.0.0",
+  "author": "ARIA Contributors",
+  "homepage_url": "https://github.com/yourusername/aria-thunderbird",
+  "donation_url": "https://www.paypal.com/pool/9jCVLXPPmR?sr=wccr",
+  "description": "AI-powered email assistant: Generate intelligent responses, use voice input, support for OpenAI & local AI models. Multi-language support in 14 languages.",
   "applications": {
     "gecko": {
-      "id": "ai-mail-assistant@example.com",
+      "id": "aria-ai-assistant@thunderbird.extension",
       "strict_min_version": "115.0"
     }
   },
