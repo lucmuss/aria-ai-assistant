@@ -275,31 +275,34 @@ async function getEmailContext() {
   };
 }
 
-async function insertTextAtCursor(text, context = 'viewer', windowId = null) {
-  console.log('insertTextAtCursor: Context:', context, 'WindowId:', windowId);
+async function insertTextAtCursor(text, context = 'viewer', tabId = null) {
+  console.log('insertTextAtCursor: Context:', context, 'TabId:', tabId);
   
   if (context === 'composer') {
     // Im Composer-Kontext: Text in das aktuelle Composer-Fenster einfügen
     try {
-      let winId = windowId;
-      if (!winId) {
+      let composeTabId = tabId;
+      if (!composeTabId) {
         const windowInfo = await browser.windows.getCurrent();
         if (windowInfo.type === 'messageCompose') {
-          winId = windowInfo.id;
+          const tabs = await browser.tabs.query({windowId: windowInfo.id, active: true});
+          if (tabs.length > 0) {
+            composeTabId = tabs[0].id;
+          }
         }
       }
-      if (winId) {
-        const details = await browser.compose.getComposeDetails(winId);
+      if (composeTabId) {
+        const details = await browser.compose.getComposeDetails(composeTabId);
         let currentBody = details.body || '';
         const separator = currentBody.trim() ? '\n\n' : '';
         const newBody = currentBody + separator + text;
-        await browser.compose.setComposeDetails(winId, {
+        await browser.compose.setComposeDetails(composeTabId, {
           body: newBody
         });
         console.log('Text appended to Composer');
         return;
       } else {
-        throw new Error('No compose window found');
+        throw new Error('No compose tab found');
       }
     } catch (error) {
       console.error('Fehler beim Einfügen in Composer:', error);
@@ -459,7 +462,7 @@ Bitte schreibe eine passende Antwort basierend auf dem E-Mail-Kontext und den Be
       const aiResponse = await callOpenAI(fullPrompt);
       
       // Antwort in die E-Mail einfügen
-      await insertTextAtCursor(aiResponse, emailContext.context, emailContext.windowId);
+      await insertTextAtCursor(aiResponse, emailContext.context, emailContext.tabId);
       
       // Popup schließen
       window.close();
