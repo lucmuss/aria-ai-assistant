@@ -39,11 +39,59 @@ async function getSTTSettings() {
   return settings.stt || {};
 }
 
+async function loadI18n() {
+  let langSetting = await browser.storage.local.get("uiLanguage");
+  const lang = langSetting.uiLanguage || "en";
+  
+  const messagesUrl = browser.runtime.getURL(`locales/${lang}/messages.json`);
+  
+  try {
+    const response = await fetch(messagesUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to load messages: ${response.status}`);
+    }
+    const messages = await response.json();
+
+    const t = (key) => {
+      if (key.startsWith("alerts.")) {
+        const nestedKey = key.split(".")[1];
+        return messages.alerts?.[nestedKey]?.message || key;
+      }
+      return messages[key]?.message || key;
+    };
+
+    console.log('Custom i18n loaded for language:', lang);
+    return t;
+  } catch (error) {
+    console.error("Failed to load custom i18n:", error);
+    const fallbackMessages = {
+      "alerts.noEmailOpen": "Please open or display an email first.",
+      "alerts.noMessageSelected": "No message selected.",
+      "alerts.apiSettingsMissing": "Please save API URL, API Key, and Model in settings first.",
+      "alerts.sttSettingsMissing": "Please enter STT API in settings first!",
+      "generalError": "Error: ",
+      "speechRecognitionError": "Speech recognition error: ",
+      "noInstructionsProvided": "Please provide instructions for the AI.",
+      "popupTitle": "AI Mail Assistant",
+      "generateReplyBtn": "✉️ Generate Reply",
+      "settingsBtn": "⚙️ Settings",
+      "voiceInputBtn": "🎤 Voice Input",
+      "textInputBtn": "📝 Text Input",
+      "submitBtn": "📤 Submit",
+      "cancelBtn": "❌ Cancel",
+      "promptInputPlaceholder": "Enter your instructions for the AI here..."
+    };
+    const fallbackT = (key) => fallbackMessages[key] || key;
+    console.log('Using fallback i18n (English)');
+    return fallbackT;
+  }
+}
+
 async function callOpenAI(prompt) {
   const settings = await getSettings();
 
   if (!settings.apiUrl || !settings.apiKey || !settings.model) {
-    throw new Error(browser.i18n.getMessage("apiSettingsMissing"));
+    throw new Error(window.t("alerts.apiSettingsMissing"));
   }
 
   const body = {
@@ -77,7 +125,7 @@ async function transcribeAudio() {
   let sttSettings = await getSTTSettings();
 
   if (!sttSettings.apiUrl || !sttSettings.apiKey || !sttSettings.model) {
-    throw new Error(browser.i18n.getMessage("sttSettingsMissing"));
+    throw new Error(window.t("alerts.sttSettingsMissing"));
   }
 
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -161,14 +209,14 @@ async function getEmailContext() {
       console.error('getEmailContext: Fehler beim Composer-Check:', error);
     }
     
-    throw new Error(browser.i18n.getMessage("noEmailOpen"));
+    throw new Error(window.t("alerts.noEmailOpen"));
   }
 
   const message = await browser.messageDisplay.getDisplayedMessage(mailTab.id);
   console.log('getEmailContext: Angezeigte Nachricht:', message);
   
   if (!message) {
-    throw new Error(browser.i18n.getMessage("noMessageSelected"));
+    throw new Error(window.t("alerts.noMessageSelected"));
   }
 
   const full = await browser.messages.getFull(message.id);
@@ -206,18 +254,18 @@ async function insertTextAtCursor(text, context = 'viewer') {
       }
     } catch (error) {
       console.error('Fehler beim Einfügen in Composer:', error);
-      throw new Error(browser.i18n.getMessage("generalError") + error.message);
+      throw new Error(window.t("generalError") + error.message);
     }
   } else {
     // Im Viewer-Kontext: Neue Antwort mit Text erstellen
     const mailTab = await getActiveMailTab();
     if (!mailTab) {
-      throw new Error(browser.i18n.getMessage("noEmailOpen"));
+      throw new Error(window.t("alerts.noEmailOpen"));
     }
 
     const message = await browser.messageDisplay.getDisplayedMessage(mailTab.id);
     if (!message) {
-      throw new Error(browser.i18n.getMessage("noMessageSelected"));
+      throw new Error(window.t("alerts.noMessageSelected"));
     }
 
     await browser.compose.beginReply(message.id, { body: text });
@@ -225,51 +273,37 @@ async function insertTextAtCursor(text, context = 'viewer') {
 }
 
 // Vollständige Lokalisierungs-Funktion
-async function localizePage() {
+async function localizePage(t) {
   // Alle Elemente mit data-i18n-Attribut übersetzen
   const elements = document.querySelectorAll('[data-i18n]');
-  for (const element of elements) {
+  elements.forEach(element => {
     const key = element.getAttribute('data-i18n');
-    const message = browser.i18n.getMessage(key);
-    if (message) {
-      element.textContent = message;
-    }
-  }
+    element.textContent = t(key);
+  });
 
   // Placeholder übersetzen
   const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
-  for (const element of placeholderElements) {
+  placeholderElements.forEach(element => {
     const key = element.getAttribute('data-i18n-placeholder');
-    const message = browser.i18n.getMessage(key);
-    if (message) {
-      element.setAttribute('placeholder', message);
-    }
-  }
-
-  // Buttons mit spezifischen IDs übersetzen (falls nicht durch data-i18n abgedeckt)
-  const buttonIds = ['generateReplyBtn', 'settingsBtn', 'voiceInputBtn', 'textInputBtn', 'submitBtn', 'cancelBtn'];
-  buttonIds.forEach(id => {
-    const element = document.getElementById(id);
-    if (element && !element.hasAttribute('data-i18n')) {
-      const message = browser.i18n.getMessage(id);
-      if (message) {
-        element.textContent = message;
-      }
-    }
+    element.setAttribute('placeholder', t(key));
   });
 
   console.log('Lokalisierung abgeschlossen');
 }
 
 // Lokalisierung nach Sprachwechsel anwenden
-async function refreshTranslations() {
-  await localizePage();
+async function refreshTranslations(t) {
+  await localizePage(t);
 }
 
 // UI Event Handler
 document.addEventListener('DOMContentLoaded', async function() {
+  // Load custom i18n
+  const t = await loadI18n();
+  window.t = t;
+  
   // Lokalisierung anwenden
-  await localizePage();
+  await localizePage(t);
   
   const mainSection = document.getElementById('mainSection');
   const inputSection = document.getElementById('inputSection');
@@ -296,7 +330,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       promptInput.focus();
     } catch (err) {
       console.error('Fehler beim Generieren der Antwort:', err);
-      alert(err.message);
+      alert(window.t("alerts.noEmailOpen") || err.message);
     }
   });
 
@@ -314,11 +348,10 @@ document.addEventListener('DOMContentLoaded', async function() {
       submitBtn.style.display = 'block';
       
     } catch (err) {
-      alert(browser.i18n.getMessage("speechRecognitionError") + err.message);
+      alert(window.t("speechRecognitionError") + err.message);
     } finally {
       voiceInputBtn.disabled = false;
-      voiceInputBtn.textContent = voiceInputBtn.getAttribute("data-i18n") === "voiceInputBtn" ? 
-        browser.i18n.getMessage("voiceInputBtn") : "🎤 Spracheingabe";
+      voiceInputBtn.textContent = window.t("voiceInputBtn");
     }
   });
 
@@ -333,7 +366,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     try {
       const userPrompt = promptInput.value.trim();
       if (!userPrompt) {
-        alert(browser.i18n.getMessage("noInstructionsProvided"));
+        alert(window.t("noInstructionsProvided"));
         return;
       }
 
@@ -362,10 +395,10 @@ Bitte schreibe eine passende Antwort basierend auf dem E-Mail-Kontext und den Be
       
     } catch (err) {
       console.error(err);
-      alert("Fehler: " + err.message);
+      alert(window.t("generalError") + err.message);
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = "📤 Abschicken";
+      submitBtn.textContent = window.t("submitBtn") || "📤 Submit";
     }
   });
 

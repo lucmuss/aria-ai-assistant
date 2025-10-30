@@ -1,3 +1,38 @@
+async function applyTranslations(t) {
+  // Apply translations to all elements
+  document.title = `⚙️ ${t("extensionName")} - ${t("settingsTitle")}`;
+  document.querySelector("[data-i18n='settingsTitle']").innerText = t("settingsTitle");
+  document.querySelector("[data-i18n='saveBtn']").innerText = t("saveBtn");
+  document.querySelector("[data-i18n='languageLabel']").innerText = t("languageLabel");
+  document.querySelector("[data-i18n='languageDesc']").innerText = t("languageDesc");
+
+  // Translate all data-i18n elements
+  document.querySelectorAll("[data-i18n]").forEach(element => {
+    const key = element.getAttribute("data-i18n");
+    if (key) {
+      element.innerText = t(key);
+    }
+  });
+
+  // Translate buttons with specific IDs
+  const buttonIds = ["testApiBtn", "exportBtn", "importBtn"];
+  buttonIds.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.innerText = t(id);
+    }
+  });
+
+  // Translate placeholders
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
+    const key = element.getAttribute("data-i18n-placeholder");
+    element.placeholder = t(key);
+  });
+
+  // Reset status
+  document.getElementById("status").innerText = "";
+}
+
 async function loadI18n() {
   let langSetting = await browser.storage.local.get("uiLanguage");
   const lang = langSetting.uiLanguage || browser.i18n.getUILanguage().split("-")[0] || "en";
@@ -14,38 +49,7 @@ async function loadI18n() {
 
     const t = key => messages[key]?.message || key;
 
-    // Alle Texte übersetzen
-    document.title = `⚙️ ${t("extensionName")} - ${t("settingsTitle")}`;
-    document.querySelector("[data-i18n='settingsTitle']").innerText = t("settingsTitle");
-    document.querySelector("[data-i18n='saveBtn']").innerText = t("saveBtn");
-    document.querySelector("[data-i18n='languageLabel']").innerText = t("languageLabel");
-    document.querySelector("[data-i18n='languageDesc']").innerText = t("languageDesc");
-
-    // Übersetze alle Tabellen-Überschriften und Beschreibungen
-    document.querySelectorAll("[data-i18n]").forEach(element => {
-      const key = element.getAttribute("data-i18n");
-      if (key && key !== "settingsTitle" && key !== "saveBtn" && key !== "languageLabel" && key !== "languageDesc") {
-        element.innerText = t(key);
-      }
-    });
-
-    // Übersetze Buttons und andere Elemente mit spezifischen IDs
-    const buttonIds = ["testApiBtn", "exportBtn", "importBtn"];
-    buttonIds.forEach(id => {
-      const element = document.getElementById(id);
-      if (element) {
-        element.innerText = t(id);
-      }
-    });
-
-    // Übersetze Placeholder
-    document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
-      const key = element.getAttribute("data-i18n-placeholder");
-      element.placeholder = t(key);
-    });
-
-    // Status zurücksetzen
-    document.getElementById("status").innerText = "";
+    applyTranslations(t);
 
     return t;
   } catch (error) {
@@ -119,6 +123,8 @@ async function loadI18n() {
     document.querySelector("[data-i18n='languageLabel']").innerText = fallbackT("languageLabel");
     document.querySelector("[data-i18n='languageDesc']").innerText = fallbackT("languageDesc");
 
+    applyTranslations(fallbackT);
+
     return fallbackT;
   }
 }
@@ -176,25 +182,22 @@ async function saveSettings(t) {
   const statusElement = document.getElementById("status");
   statusElement.innerText = t("savedMsg");
   statusElement.style.color = "green";
-  
-  // Nach dem Speichern die Übersetzungen sofort aktualisieren
-  await updateTranslations();
 }
 
 async function updateTranslations() {
-  const t = await loadI18n();
+  const t = await loadI18n(); // This now calls applyTranslations internally
+  window.currentT = t; // Store globally for listeners
   return t;
 }
 
 // Event Listener für Sprachänderung
-function setupLanguageChangeListener() {
+function setupLanguageChangeListener(t) {
   document.getElementById("uiLanguage").addEventListener("change", async () => {
-    // Sofortige Aktualisierung der Übersetzungen bei Sprachwechsel
-    const t = await updateTranslations();
-    document.title = `⚙️ ${t("extensionName")} - ${t("settingsTitle")}`;
-    
     // Automatisch speichern bei Sprachwechsel
     await saveSettings(t);
+    
+    // Reload the settings tab to apply the new language
+    location.reload();
   });
 }
 
@@ -222,8 +225,8 @@ async function testApi(t) {
     const testBody = {
       model: model,
       messages: [
-        { role: "system", content: "Du bist ein Test-Assistent." },
-        { role: "user", content: "Hallo, dies ist ein Test. Bitte antworte einfach mit 'Test erfolgreich'." }
+        { role: "system", content: "You are a test assistant." },
+        { role: "user", content: "Hello, this is a test. Please respond with 'Test successful'." }
       ],
       max_tokens: 50,
       temperature: 0.1
@@ -268,7 +271,7 @@ async function exportSettings(t) {
       version: "1.0",
       exportDate: new Date().toISOString(),
       extension: "AI Mail Assistant",
-      note: "Diese Datei enthält sensible API-Keys. Bitte sicher aufbewahren!"
+      note: t("exportNote") || "This file contains sensitive API keys. Please keep it safe!"
     }
   };
   
@@ -298,12 +301,12 @@ async function importSettings(file, t) {
         
         // Validiere die importierten Daten
         if (!importedData.chat || !importedData.stt) {
-          throw new Error("Ungültiges Dateiformat");
+          throw new Error(t("importErrorMsg") || "Invalid file format");
         }
         
         // Übernehme die Einstellungen - API-Keys werden komplett übernommen
         const settingsToImport = {
-          uiLanguage: importedData.uiLanguage || "de",
+          uiLanguage: importedData.uiLanguage || "en",
           chat: {
             apiUrl: importedData.chat.apiUrl || "",
             apiKey: importedData.chat.apiKey || "", // Vollständiger API-Key wird übernommen
@@ -329,9 +332,9 @@ async function importSettings(file, t) {
         await loadSettings();
         
         // Aktualisiere die Übersetzungen
-        await updateTranslations();
+        const newT = await updateTranslations();
         
-        document.getElementById("status").innerText = t("importSuccessMsg");
+        document.getElementById("status").innerText = newT("importSuccessMsg");
         resolve();
       } catch (error) {
         console.error("Import error:", error);
@@ -341,7 +344,7 @@ async function importSettings(file, t) {
     };
     
     reader.onerror = () => {
-      reject(new Error("Fehler beim Lesen der Datei"));
+      reject(new Error(t("importErrorMsg") || "Error reading file"));
     };
     
     reader.readAsText(file);
@@ -350,32 +353,55 @@ async function importSettings(file, t) {
 
 // Event Listener für Import/Export und API-Test
 function setupImportExportListeners(t) {
+  // Remove existing listeners to avoid duplicates
+  const testBtn = document.getElementById("testApiBtn");
+  const exportBtn = document.getElementById("exportBtn");
+  const importBtn = document.getElementById("importBtn");
+  const importFile = document.getElementById("importFile");
+
+  testBtn.removeEventListener("click", testBtn._listener);
+  exportBtn.removeEventListener("click", exportBtn._listener);
+  importBtn.removeEventListener("click", importBtn._listener);
+  importFile.removeEventListener("change", importFile._listener);
+
   // API-Test Button
-  document.getElementById("testApiBtn").addEventListener("click", () => testApi(t));
+  testBtn._listener = () => testApi(t);
+  testBtn.addEventListener("click", testBtn._listener);
   
   // Export Button
-  document.getElementById("exportBtn").addEventListener("click", () => exportSettings(t));
+  exportBtn._listener = () => exportSettings(t);
+  exportBtn.addEventListener("click", exportBtn._listener);
   
   // Import Button
-  document.getElementById("importBtn").addEventListener("click", () => {
+  importBtn._listener = () => {
     document.getElementById("importFile").click();
-  });
+  };
+  importBtn.addEventListener("click", importBtn._listener);
   
   // File Input
-  document.getElementById("importFile").addEventListener("change", async (e) => {
+  importFile._listener = async (e) => {
     const file = e.target.files[0];
     if (file) {
       await importSettings(file, t);
       // Reset file input
       e.target.value = "";
     }
-  });
+  };
+  importFile.addEventListener("change", importFile._listener);
+}
+
+function setupSaveBtnListener(t) {
+  const saveBtn = document.getElementById("saveBtn");
+  saveBtn.removeEventListener("click", saveBtn._listener);
+  saveBtn._listener = () => saveSettings(t);
+  saveBtn.addEventListener("click", saveBtn._listener);
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
   const t = await loadI18n();
+  window.currentT = t;
   await loadSettings();
-  setupLanguageChangeListener();
+  setupLanguageChangeListener(t);
   setupImportExportListeners(t);
-  document.getElementById("saveBtn").addEventListener("click", () => saveSettings(t));
+  setupSaveBtnListener(t);
 });
