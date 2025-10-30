@@ -39,6 +39,19 @@ async function getSTTSettings() {
   return settings.stt || {};
 }
 
+function calculateCost(model, inputTokens, outputTokens) {
+  const prices = {
+    'gpt-4o-mini': { input: 0.00000015, output: 0.00000060 }, // per token
+    // Add more models as needed
+  };
+  const price = prices[model] || { input: 0, output: 0 };
+  const inputCost = inputTokens * price.input;
+  const outputCost = outputTokens * price.output;
+  const totalCost = inputCost + outputCost;
+  if (totalCost === 0) return '< $0.01';
+  return `$${totalCost.toFixed(6)}`;
+}
+
 async function loadI18n() {
   let langSetting = await browser.storage.local.get("uiLanguage");
   const lang = langSetting.uiLanguage || "en";
@@ -95,6 +108,8 @@ async function callOpenAI(prompt) {
     throw new Error(window.t("alerts.apiSettingsMissing"));
   }
 
+  const startTime = performance.now();
+
   const body = {
     model: settings.model,
     messages: [
@@ -119,7 +134,16 @@ async function callOpenAI(prompt) {
   }
 
   const data = await response.json();
-  return data.choices[0].message.content.trim();
+  const endTime = performance.now();
+  const time = ((endTime - startTime) / 1000).toFixed(2);
+
+  const content = data.choices[0].message.content.trim();
+  const usage = data.usage || { prompt_tokens: 0, completion_tokens: 0 };
+  const inputTokens = usage.prompt_tokens || 0;
+  const outputTokens = usage.completion_tokens || 0;
+  const cost = calculateCost(settings.model, inputTokens, outputTokens);
+
+  return { content, usage: { input: inputTokens, output: outputTokens }, model: settings.model, time, cost };
 }
 
 async function transcribeAudio() {
@@ -444,6 +468,12 @@ document.addEventListener('DOMContentLoaded', async function() {
   // Speichere Eingabe bei Änderung
   promptInput.addEventListener('input', () => {
     browser.storage.local.set({ lastPrompt: promptInput.value });
+    const group = document.getElementById('submitCancelGroup');
+    if (promptInput.value.trim()) {
+      group.style.display = 'flex';
+    } else {
+      group.style.display = 'none';
+    }
   });
 
   // Lade gespeicherte Eingabe beim Öffnen des Input-Bereichs
@@ -458,7 +488,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   async function initializeInput() {
     await loadLastPrompt();
     if (promptInput.value.trim()) {
-      submitBtn.style.display = 'block';
+      document.getElementById('submitCancelGroup').style.display = 'flex';
     }
     promptInput.focus();
   }
@@ -471,7 +501,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       
       const transcript = await transcribeAudio();
       promptInput.value = transcript;
-      submitBtn.style.display = 'block';
+      document.getElementById('submitCancelGroup').style.display = 'flex';
       
     } catch (err) {
       alert(window.t("speechRecognitionError") + err.message);
@@ -484,7 +514,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   // Texteingabe - Textfeld fokussieren
   textInputBtn.addEventListener('click', () => {
     promptInput.focus();
-    submitBtn.style.display = 'block';
+    document.getElementById('submitCancelGroup').style.display = 'flex';
   });
 
   // Abschicken
@@ -517,11 +547,25 @@ Bitte schreibe eine passende Antwort basierend auf dem E-Mail-Kontext und den Be
 
       console.log('Full prompt sent to API:', fullPrompt);
 
-      const aiResponse = await callOpenAI(fullPrompt);
+      const apiResult = await callOpenAI(fullPrompt);
+      const { content, usage, model, time, cost } = apiResult;
       
-      const formattedResponse = aiResponse.replace(/\n/g, '<br>');
+      const formattedResponse = content.replace(/\n/g, '<br>');
       
-      console.log('AI response received:', aiResponse);
+      console.log('AI response received:', content);
+      
+      // Save stats
+      const lastStats = {
+        inputTokens: usage.input,
+        outputTokens: usage.output,
+        model,
+        time,
+        cost
+      };
+      await browser.storage.local.set({ lastStats });
+      
+      // Display stats
+      displayStats();
       
       // Antwort in die E-Mail einfügen
       await insertTextAtCursor(formattedResponse, emailContext.context, emailContext.tabId);
@@ -542,11 +586,34 @@ Bitte schreibe eine passende Antwort basierend auf dem E-Mail-Kontext und den Be
   cancelBtn.addEventListener('click', () => {
     promptInput.value = '';
     browser.storage.local.set({ lastPrompt: '' });
-    submitBtn.style.display = 'none';
+    document.getElementById('submitCancelGroup').style.display = 'none';
   });
 
-  // Initialisiere beim Laden
+async function displayStats() {
+  try {
+    const result = await browser.storage.local.get('lastStats');
+    const stats = result.lastStats;
+    if (stats) {
+      document.getElementById('inputTokens').textContent = stats.inputTokens;
+      document.getElementById('outputTokens').textContent = stats.outputTokens;
+      document.getElementById('model').textContent = stats.model;
+      document.getElementById('time').textContent = stats.time;
+      document.getElementById('cost').textContent = stats.cost;
+      document.getElementById('stats').style.display = 'block';
+    } else {
+      document.getElementById('stats').style.display = 'none';
+    }
+  } catch (err) {
+    console.error('Error displaying stats:', err);
+    document.getElementById('stats').style.display = 'none';
+  }
+}
+
+// Initialisiere beim Laden
   initializeInput();
+
+  // Display stats
+  displayStats();
 
   // Settings im Input-Bereich
   const inputSettingsBtn = document.getElementById('inputSettingsBtn');
@@ -558,7 +625,7 @@ Bitte schreibe eine passende Antwort basierend auf dem E-Mail-Kontext und den Be
     const fixedPrompt = 'Schreibe eine kurze Bestätigung, dass die E-Mail erhalten wurde und wünsche beste Grüße.';
     promptInput.value = fixedPrompt;
     browser.storage.local.set({ lastPrompt: fixedPrompt });
-    submitBtn.style.display = 'block';
+    document.getElementById('submitCancelGroup').style.display = 'flex';
 
     // Automatisch absenden
     submitBtn.click();

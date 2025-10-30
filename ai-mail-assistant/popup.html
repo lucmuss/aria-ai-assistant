@@ -13,10 +13,19 @@
       <button id="voiceInputBtn" data-i18n="voiceInputBtn">🎤 Voice Input</button>
       <button id="textInputBtn" data-i18n="textInputBtn">📝 Text Input</button>
     </div>
-    <button id="submitBtn" style="display: none;" data-i18n="submitBtn">📤 Submit</button>
-    <button id="cancelBtn" data-i18n="cancelBtn">❌ Cancel</button>
-    <button id="inputSettingsBtn" data-i18n="settingsBtn">⚙️ Settings</button>
-    <button id="autoresponseBtn">🪄 Autoresponse</button>
+    <div class="button-group" id="submitCancelGroup" style="display: none;">
+      <button id="submitBtn" data-i18n="submitBtn">📤 Submit</button>
+      <button id="cancelBtn" data-i18n="cancelBtn">❌ Cancel</button>
+    </div>
+    <div class="button-group">
+      <button id="inputSettingsBtn" data-i18n="settingsBtn">⚙️ Settings</button>
+      <button id="autoresponseBtn">🪄 Autoresponse</button>
+    </div>
+    <div id="stats" style="display: none; margin-top: 10px; font-size: 12px; color: #333; padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
+      <div style="margin-bottom: 2px;"><strong>Input Tokens:</strong> <span id="inputTokens">-</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Output Tokens:</strong> <span id="outputTokens">-</span></div>
+      <div style="margin-bottom: 2px;"><strong>Model:</strong> <span id="model">-</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Time:</strong> <span id="time">-</span>s</div>
+      <div><strong>Cost:</strong> <span id="cost">-</span></div>
+    </div>
   </div>
 
   <script src="popup.js"></script>
