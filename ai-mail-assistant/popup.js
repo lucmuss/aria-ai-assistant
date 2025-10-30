@@ -389,6 +389,19 @@ document.addEventListener('DOMContentLoaded', async function() {
   const cancelBtn = document.getElementById('cancelBtn');
   const promptInput = document.getElementById('promptInput');
 
+  // Speichere Eingabe bei Änderung
+  promptInput.addEventListener('input', () => {
+    browser.storage.local.set({ lastPrompt: promptInput.value });
+  });
+
+  // Lade gespeicherte Eingabe beim Öffnen des Input-Bereichs
+  async function loadLastPrompt() {
+    const result = await browser.storage.local.get('lastPrompt');
+    if (result.lastPrompt) {
+      promptInput.value = result.lastPrompt;
+    }
+  }
+
   // Hauptfunktion: Antwort generieren
   generateReplyBtn.addEventListener('click', async () => {
     console.log('Generate Reply Button geklickt');
@@ -401,6 +414,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       console.log('Schalte UI um');
       mainSection.style.display = 'none';
       inputSection.style.display = 'block';
+      await loadLastPrompt();
       promptInput.focus();
     } catch (err) {
       console.error('Fehler beim Generieren der Antwort:', err);
@@ -448,6 +462,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       submitBtn.textContent = "📤 Wird generiert...";
 
       const emailContext = await getEmailContext();
+      console.log('Email context:', emailContext);
       
       // Vollständiger Prompt mit E-Mail-Kontext und Benutzeranweisungen
       const fullPrompt = `E-Mail-Kontext:
@@ -457,12 +472,18 @@ Nachricht: ${emailContext.emailBody}
 
 Benutzeranweisungen: ${userPrompt}
 
-Bitte schreibe eine passende Antwort basierend auf dem E-Mail-Kontext und den Benutzeranweisungen.`;
+Bitte schreibe eine passende Antwort basierend auf dem E-Mail-Kontext und den Benutzeranweisungen. Formatiere die Antwort mit Zeilenumbrüchen und mehreren Absätzen, damit sie gut in Thunderbird als E-Mail-Körper eingefügt werden kann. Schreibe nur den Inhalt der E-Mail-Antwort, ohne den Betreff einzuschließen. Beginne die Antwort nicht mit 'AI response received:' oder ähnlichen Phrasen.`;
+
+      console.log('Full prompt sent to API:', fullPrompt);
 
       const aiResponse = await callOpenAI(fullPrompt);
       
+      const formattedResponse = aiResponse.replace(/\n/g, '<br>');
+      
+      console.log('AI response received:', aiResponse);
+      
       // Antwort in die E-Mail einfügen
-      await insertTextAtCursor(aiResponse, emailContext.context, emailContext.tabId);
+      await insertTextAtCursor(formattedResponse, emailContext.context, emailContext.tabId);
       
       // Popup schließen
       window.close();
