@@ -272,6 +272,28 @@ async function insertTextAtCursor(text, context = 'viewer') {
   }
 }
 
+async function openSettingsTab() {
+  const settingsURL = browser.runtime.getURL('settings.html');
+
+  // 1) Find existing settings tab
+  let tabs = await browser.tabs.query({ url: settingsURL });
+  let settingsTab;
+  if (tabs.length) {
+    settingsTab = tabs[0];
+    // Activate existing tab
+    await browser.tabs.update(settingsTab.id, { active: true });
+  } else {
+    // Create a new settings tab
+    settingsTab = await browser.tabs.create({ url: settingsURL, active: true });
+  }
+
+  // 2) Focus the window containing that tab
+  await browser.windows.update(settingsTab.windowId, { focused: true });
+
+  // 3) Close the popup
+  window.close();
+}
+
 // Vollständige Lokalisierungs-Funktion
 async function localizePage(t) {
   // Alle Elemente mit data-i18n-Attribut übersetzen
@@ -335,7 +357,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   });
 
   // Einstellungen öffnen
-  settingsBtn.addEventListener('click', () => browser.runtime.openOptionsPage());
+  settingsBtn.addEventListener('click', openSettingsTab);
 
   // Spracheingabe
   voiceInputBtn.addEventListener('click', async () => {
