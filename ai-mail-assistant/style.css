@@ -36,7 +36,7 @@ textarea {
   border: 1px solid #ddd;
   border-radius: 4px;
   resize: vertical;
-  min-height: 60px;
+  min-height: 240px;
   font-family: Arial, sans-serif;
 }
 

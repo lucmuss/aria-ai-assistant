@@ -171,6 +171,10 @@ async function transcribeAudio() {
   });
 }
 
+function stripHtml(text) {
+  return text.replace(/<[^>]*>/g, '');
+}
+
 async function getEmailContext() {
   console.log('getEmailContext: Starte Kontext-Erkennung...');
   
@@ -468,7 +472,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       const fullPrompt = `E-Mail-Kontext:
 Betreff: ${emailContext.subject}
 Absender: ${emailContext.sender}
-Nachricht: ${emailContext.emailBody}
+Nachricht: ${stripHtml(emailContext.emailBody)}
+Erkenne die Sprache der Nachricht und antworte in derselben Sprache.
 
 Benutzeranweisungen: ${userPrompt}
 
@@ -497,11 +502,26 @@ Bitte schreibe eine passende Antwort basierend auf dem E-Mail-Kontext und den Be
     }
   });
 
-  // Abbrechen
+  // Abbrechen - nur Textfeld leeren
   cancelBtn.addEventListener('click', () => {
-    mainSection.style.display = 'block';
-    inputSection.style.display = 'none';
     promptInput.value = '';
+    browser.storage.local.set({ lastPrompt: '' });
     submitBtn.style.display = 'none';
+  });
+
+  // Settings im Input-Bereich
+  const inputSettingsBtn = document.getElementById('inputSettingsBtn');
+  inputSettingsBtn.addEventListener('click', openSettingsTab);
+
+  // Autoresponse
+  const autoresponseBtn = document.getElementById('autoresponseBtn');
+  autoresponseBtn.addEventListener('click', async () => {
+    const fixedPrompt = 'Schreibe eine kurze Bestätigung, dass die E-Mail erhalten wurde und wünsche beste Grüße.';
+    promptInput.value = fixedPrompt;
+    browser.storage.local.set({ lastPrompt: fixedPrompt });
+    submitBtn.style.display = 'block';
+
+    // Automatisch absenden
+    submitBtn.click();
   });
 });
