@@ -29,7 +29,8 @@ export class STTRecorder {
       console.log('STT: Recording started');
     } catch (error) {
       console.error('STT: Failed to start recording:', error);
-      throw new Error('Mikrofonzugriff verweigert. Bitte Berechtigungen überprüfen.');
+      const t = window.t || ((key) => key);
+      throw new Error(t('errorMicrophoneAccess'));
     }
   }
 
@@ -84,7 +85,8 @@ export class STTRecorder {
  */
 export async function transcribeAudio(audioBlob, sttSettings) {
   if (!sttSettings.apiUrl || !sttSettings.apiKey || !sttSettings.model) {
-    throw new Error('STT-API-Einstellungen fehlen. Bitte in den Einstellungen konfigurieren.');
+    const t = window.t || ((key) => key);
+    throw new Error(t('errorSttSettingsMissing'));
   }
 
   const formData = new FormData();
@@ -106,7 +108,8 @@ export async function transcribeAudio(audioBlob, sttSettings) {
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`STT API Fehler (${response.status}): ${errorText}`);
+      const t = window.t || ((key) => key);
+      throw new Error(`${t('errorSttApi')} (${response.status}): ${errorText}`);
     }
 
     const data = await response.json();

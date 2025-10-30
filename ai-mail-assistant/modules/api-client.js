@@ -46,7 +46,8 @@ export async function callOpenAI(prompt) {
   const settings = await getChatSettings();
 
   if (!settings.apiUrl || !settings.apiKey || !settings.model) {
-    throw new Error('API-Einstellungen fehlen. Bitte URL, API-Key und Modell in den Einstellungen konfigurieren.');
+    const t = window.t || ((key) => key);
+    throw new Error(t('errorApiSettingsMissing'));
   }
 
   const startTime = performance.now();
@@ -56,7 +57,7 @@ export async function callOpenAI(prompt) {
     messages: [
       { 
         role: 'system', 
-        content: settings.systemPrompt || 'Du bist ein hilfreicher E-Mail-Assistent.' 
+        content: settings.systemPrompt || (window.t ? window.t('systemPromptDefault') : 'You are a helpful email assistant.')
       },
       { 
         role: 'user', 
@@ -79,7 +80,8 @@ export async function callOpenAI(prompt) {
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`API-Fehler (${response.status}): ${errorText}`);
+      const t = window.t || ((key) => key);
+      throw new Error(`${t('errorApiGeneral')} (${response.status}): ${errorText}`);
     }
 
     const data = await response.json();
@@ -110,24 +112,25 @@ export async function callOpenAI(prompt) {
  */
 export function buildPrompt(emailContext, userInstructions, stripHtmlFn) {
   const extensionSettings = emailContext.extensionSettings || {};
+  const t = window.t || ((key) => key);
   
   let senderInfo = '';
   if (extensionSettings.includeSender && emailContext.sender) {
-    senderInfo = `Absender: ${emailContext.sender}\n`;
+    senderInfo = `${t('promptContextSender')} ${emailContext.sender}\n`;
   }
 
   const emailBody = stripHtmlFn(emailContext.emailBody);
 
-  return `E-Mail-Kontext:
-Betreff: ${emailContext.subject}
-${senderInfo}Name: ${emailContext.userName}
-Organisation: ${emailContext.userOrganization}
-Nachricht: ${emailBody}
-Erkenne die Sprache der Nachricht und antworte in derselben Sprache.
+  return `${t('promptContextEmail')}
+${t('promptContextSubject')} ${emailContext.subject}
+${senderInfo}${t('promptContextName')} ${emailContext.userName}
+${t('promptContextOrganization')} ${emailContext.userOrganization}
+${t('promptContextMessage')} ${emailBody}
+${t('promptContextLanguageDetect')}
 
-Benutzeranweisungen: ${userInstructions}
+${t('promptContextInstructions')} ${userInstructions}
 
-Bitte schreibe eine passende Antwort basierend auf dem E-Mail-Kontext und den Benutzeranweisungen. Formatiere die Antwort mit Zeilenumbrüchen und mehreren Absätzen, damit sie gut in Thunderbird als E-Mail-Körper eingefügt werden kann. Schreibe nur den Inhalt der E-Mail-Antwort, ohne den Betreff einzuschließen. Beginne die Antwort nicht mit 'AI response received:' oder ähnlichen Phrasen.`;
+${t('promptContextFormat')}`;
 }
 
 /**

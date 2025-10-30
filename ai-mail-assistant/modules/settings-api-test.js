@@ -25,8 +25,8 @@ export async function testChatApi(t) {
     const testBody = {
       model: model,
       messages: [
-        { role: 'system', content: 'You are a test assistant.' },
-        { role: 'user', content: 'Hello, this is a test. Please respond with "Test successful".' }
+        { role: 'system', content: t('testApiSystemPrompt') },
+        { role: 'user', content: t('testApiUserPrompt') }
       ],
       max_tokens: 50,
       temperature: 0.1
@@ -81,7 +81,7 @@ export async function testSttApi(t) {
     const testAudioUrl = browser.runtime.getURL('test.wav');
     const audioResponse = await fetch(testAudioUrl);
     if (!audioResponse.ok) {
-      throw new Error('test.wav not found. Please add a test.wav file to the extension directory.');
+      throw new Error(t('testSttFileNotFound'));
     }
     const audioBlob = await audioResponse.blob();
     
@@ -105,7 +105,7 @@ export async function testSttApi(t) {
     }
     
     const data = await response.json();
-    const transcript = data.text || 'No transcription returned';
+    const transcript = data.text || t('testSttNoTranscription');
     
     statusElement.textContent = t('testSttSuccess') + transcript;
     statusElement.style.color = 'green';

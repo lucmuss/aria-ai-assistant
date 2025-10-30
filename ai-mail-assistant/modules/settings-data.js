@@ -38,7 +38,8 @@ export async function loadSettings() {
 
   // Load generation counter
   const generatedEmails = settings.generatedEmails || 0;
-  document.getElementById('generationCounter').innerText = `Generated E-Mails: ${generatedEmails}`;
+  const t = window.currentT || ((key) => key);
+  document.getElementById('generationCounter').innerText = `${t('generatedEmailsLabel')} ${generatedEmails}`;
 }
 
 /**
