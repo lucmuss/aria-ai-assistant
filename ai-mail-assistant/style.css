@@ -129,7 +129,7 @@ h1 {
 
 .stats-row {
   display: grid;
-  grid-template-columns: 100px 50px 10px 50px;
+  grid-template-columns: 100px 50px 100px 50px;
   width: 100%;
   margin-bottom: 2px;
 }
