@@ -56,6 +56,10 @@
     "apiError": { "message": "API-Fehler: " },
     "generalError": { "message": "Fehler: " }
   },
+  "noMessageContextMsg": {
+    "message": "Keine E-Mail oder Antwort-Entwurf geöffnet. Bitte zuerst eine Nachricht öffnen oder beantworten.",
+    "description": "Fehlermeldung, wenn kein Viewer- und Composer-Kontext existiert"
+  },
   "promptInputPlaceholder": { "message": "Geben Sie hier Ihre Anweisungen für die KI ein..." },
   "textInputBtn": { "message": "📝 Texteingabe" },
   "submitBtn": { "message": "📤 Abschicken" },

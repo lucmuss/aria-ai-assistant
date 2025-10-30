@@ -69,6 +69,7 @@ async function loadI18n() {
       "alerts.noMessageSelected": "No message selected.",
       "alerts.apiSettingsMissing": "Please save API URL, API Key, and Model in settings first.",
       "alerts.sttSettingsMissing": "Please enter STT API in settings first!",
+      "noMessageContextMsg": "No message or reply draft open. Please open an email or reply first.",
       "generalError": "Error: ",
       "speechRecognitionError": "Speech recognition error: ",
       "noInstructionsProvided": "Please provide instructions for the AI.",
@@ -173,50 +174,87 @@ async function transcribeAudio() {
 async function getEmailContext() {
   console.log('getEmailContext: Starte Kontext-Erkennung...');
   
-  const mailTab = await getActiveMailTab();
-  if (!mailTab) {
-    console.log('getEmailContext: Kein MailTab gefunden, prüfe Composer...');
-    // Prüfe Composer-Kontext
-    try {
-      const composeSessions = await browser.compose.listComposeSessions();
-      console.log('getEmailContext: Composer-Sessions:', composeSessions);
-      
-      if (composeSessions && composeSessions.length > 0) {
-        const composeDetails = await browser.compose.getComposeDetails(composeSessions[0].id);
-        console.log('getEmailContext: Composer-Details:', composeDetails);
+  let message = null;
+  let ctx = null;
+  let windowInfo = null;
+  
+  try {
+    windowInfo = await browser.windows.getCurrent();
+    console.log('getEmailContext: Current window:', windowInfo);
+    
+    if (windowInfo.type === 'messageCompose') {
+      console.log('getEmailContext: Composer context detected');
+      const tabs = await browser.tabs.query({windowId: windowInfo.id, active: true});
+      if (tabs.length > 0) {
+        const composeTabId = tabs[0].id;
+        const composeDetails = await browser.compose.getComposeDetails(composeTabId);
+        console.log('getEmailContext: Compose details:', composeDetails);
         
-        if (composeDetails && composeDetails.inReplyTo) {
-          const message = await browser.messages.get(composeDetails.inReplyTo);
-          const full = await browser.messages.getFull(message.id);
-          let body = "";
-          for (let part of Object.values(full.parts)) {
-            if (part.contentType === "text/plain" && part.body) {
-              body = part.body;
-              break;
+        // Wenn wir Compose Details haben, behandle diesen Kontext
+        if (composeDetails) {
+          // Fall 1: Antwort auf eine existierende E-Mail (inReplyTo vorhanden)
+          if (composeDetails.inReplyTo) {
+            try {
+              const compMsg = await browser.messages.get(composeDetails.inReplyTo);
+              const full = await browser.messages.getFull(compMsg.id);
+              let body = "";
+              for (let part of Object.values(full.parts)) {
+                if (part.contentType === "text/plain" && part.body) {
+                  body = part.body;
+                  break;
+                }
+              }
+              
+              return {
+                messageId: compMsg.id,
+                emailBody: body,
+                subject: compMsg.subject,
+                sender: compMsg.author,
+                context: 'composer',
+                tabId: composeTabId,
+                windowId: windowInfo.id
+              };
+            } catch (error) {
+              console.error('getEmailContext: Fehler beim Laden der Reply-Message:', error);
             }
           }
           
+          // Fall 2: Neue E-Mail oder Draft ohne inReplyTo
+          // Verwende die vorhandenen Compose-Details
+          console.log('getEmailContext: Compose window ohne inReplyTo - verwende aktuelle Compose Details');
           return {
-            messageId: message.id,
-            emailBody: body,
-            subject: message.subject,
-            sender: message.author,
-            context: 'composer'
+            messageId: null,
+            emailBody: composeDetails.body || "",
+            subject: composeDetails.subject || "",
+            sender: composeDetails.to && composeDetails.to.length > 0 ? composeDetails.to[0] : "",
+            context: 'composer',
+            tabId: composeTabId,
+            windowId: windowInfo.id
           };
         }
       }
-    } catch (error) {
-      console.error('getEmailContext: Fehler beim Composer-Check:', error);
     }
-    
-    throw new Error(window.t("alerts.noEmailOpen"));
+  } catch (error) {
+    console.error('getEmailContext: Fehler beim Window/Compose-Check:', error);
   }
 
-  const message = await browser.messageDisplay.getDisplayedMessage(mailTab.id);
-  console.log('getEmailContext: Angezeigte Nachricht:', message);
-  
+  // Fallback to viewer context
+  console.log('getEmailContext: Checking viewer context...');
+  const mailTab = await getActiveMailTab();
+  if (mailTab) {
+    try {
+      message = await browser.messageDisplay.getDisplayedMessage(mailTab.id);
+      console.log('getEmailContext: Angezeigte Nachricht:', message);
+      if (message) {
+        ctx = 'viewer';
+      }
+    } catch (error) {
+      console.log('getEmailContext: Fehler beim Viewer-Check:', error);
+    }
+  }
+
   if (!message) {
-    throw new Error(window.t("alerts.noMessageSelected"));
+    throw new Error(window.t("noMessageContextMsg") || "No message or reply draft open. Please open an email or reply first.");
   }
 
   const full = await browser.messages.getFull(message.id);
@@ -233,24 +271,35 @@ async function getEmailContext() {
     emailBody: body,
     subject: message.subject,
     sender: message.author,
-    context: 'viewer'
+    context: ctx
   };
 }
 
-async function insertTextAtCursor(text, context = 'viewer') {
-  console.log('insertTextAtCursor: Context:', context);
+async function insertTextAtCursor(text, context = 'viewer', windowId = null) {
+  console.log('insertTextAtCursor: Context:', context, 'WindowId:', windowId);
   
   if (context === 'composer') {
     // Im Composer-Kontext: Text in das aktuelle Composer-Fenster einfügen
     try {
-      const composeSessions = await browser.compose.listComposeSessions();
-      if (composeSessions && composeSessions.length > 0) {
-        // Text an den aktuellen Composer anhängen
-        await browser.compose.setComposeDetails(composeSessions[0].id, {
-          body: text
+      let winId = windowId;
+      if (!winId) {
+        const windowInfo = await browser.windows.getCurrent();
+        if (windowInfo.type === 'messageCompose') {
+          winId = windowInfo.id;
+        }
+      }
+      if (winId) {
+        const details = await browser.compose.getComposeDetails(winId);
+        let currentBody = details.body || '';
+        const separator = currentBody.trim() ? '\n\n' : '';
+        const newBody = currentBody + separator + text;
+        await browser.compose.setComposeDetails(winId, {
+          body: newBody
         });
-        console.log('Text erfolgreich in Composer eingefügt');
+        console.log('Text appended to Composer');
         return;
+      } else {
+        throw new Error('No compose window found');
       }
     } catch (error) {
       console.error('Fehler beim Einfügen in Composer:', error);
@@ -260,12 +309,12 @@ async function insertTextAtCursor(text, context = 'viewer') {
     // Im Viewer-Kontext: Neue Antwort mit Text erstellen
     const mailTab = await getActiveMailTab();
     if (!mailTab) {
-      throw new Error(window.t("alerts.noEmailOpen"));
+      throw new Error(window.t("noMessageContextMsg") || "No message or reply draft open. Please open an email or reply first.");
     }
 
     const message = await browser.messageDisplay.getDisplayedMessage(mailTab.id);
     if (!message) {
-      throw new Error(window.t("alerts.noMessageSelected"));
+      throw new Error(window.t("noMessageContextMsg") || "No message or reply draft open. Please open an email or reply first.");
     }
 
     await browser.compose.beginReply(message.id, { body: text });
@@ -352,7 +401,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       promptInput.focus();
     } catch (err) {
       console.error('Fehler beim Generieren der Antwort:', err);
-      alert(window.t("alerts.noEmailOpen") || err.message);
+      alert(err.message);
     }
   });
 
@@ -410,7 +459,7 @@ Bitte schreibe eine passende Antwort basierend auf dem E-Mail-Kontext und den Be
       const aiResponse = await callOpenAI(fullPrompt);
       
       // Antwort in die E-Mail einfügen
-      await insertTextAtCursor(aiResponse, emailContext.context);
+      await insertTextAtCursor(aiResponse, emailContext.context, emailContext.windowId);
       
       // Popup schließen
       window.close();

@@ -56,6 +56,10 @@
     "apiError": { "message": "API Error: " },
     "generalError": { "message": "Error: " }
   },
+  "noMessageContextMsg": {
+    "message": "No message or reply draft open. Please open an email or reply first.",
+    "description": "Error if neither viewer nor composer context is available"
+  },
   "promptInputPlaceholder": { "message": "Enter your instructions for the AI here..." },
   "textInputBtn": { "message": "📝 Text Input" },
   "submitBtn": { "message": "📤 Submit" },
