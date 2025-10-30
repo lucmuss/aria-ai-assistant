@@ -21,10 +21,25 @@
       <button id="inputSettingsBtn" data-i18n="settingsBtn">⚙️ Settings</button>
       <button id="autoresponseBtn">🪄 Autoresponse</button>
     </div>
-    <div id="stats" style="display: none; margin-top: 10px; font-size: 12px; color: #333; padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
-      <div style="margin-bottom: 2px;"><strong>Input Tokens:</strong> <span id="inputTokens">-</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Output Tokens:</strong> <span id="outputTokens">-</span></div>
-      <div style="margin-bottom: 2px;"><strong>Model:</strong> <span id="model">-</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Time:</strong> <span id="time">-</span>s</div>
-      <div><strong>Cost:</strong> <span id="cost">-</span> <strong>Temperature:</strong> <span id="temperature">-</span></div>
+    <div id="stats" style="display: none; margin-top: 10px; font-size: 11px; color: #333; padding: 5px; border: 1px solid #ddd; border-radius: 4px; width: 100%;">
+      <div class="stats-row">
+        <div class="stats-label"><strong>Input Token:</strong></div>
+        <div class="stats-value"><span id="inputTokens">-</span></div>
+        <div class="stats-label"><strong>Output Token:</strong></div>
+        <div class="stats-value"><span id="outputTokens">-</span></div>
+      </div>
+      <div class="stats-row">
+        <div class="stats-label"><strong>Model:</strong></div>
+        <div class="stats-value"><span id="model">-</span></div>
+        <div class="stats-label"><strong>Time:</strong></div>
+        <div class="stats-value"><span id="time">-</span>s</div>
+      </div>
+      <div class="stats-row">
+        <div class="stats-label"><strong>Cost:</strong></div>
+        <div class="stats-value"><span id="cost">-</span></div>
+        <div class="stats-label"><strong>Temperature:</strong></div>
+        <div class="stats-value"><span id="temperature">-</span></div>
+      </div>
     </div>
   </div>
 

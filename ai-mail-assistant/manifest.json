@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "ARIA - AI Assistant",
-  "version": "1.1",
+  "version": "1.0",
   "donation_url": "https://www.paypal.com/donate?hosted_button_id=YOUR_BUTTON_ID",
   "description": "Antwortet auf E-Mails mit OpenAI oder eigenem ULAMA-Server",
   "applications": {
@@ -11,10 +11,10 @@
     }
   },
   "icons": {
-    "16": "icons/ai-icon.png",
-    "32": "icons/ai-icon.png",
-    "48": "icons/ai-icon.png",
-    "128": "icons/ai-icon.png"
+    "16": "icons/ai-icon_16.png",
+    "32": "icons/ai-icon_32.png",
+    "48": "icons/ai-icon_48.png",
+    "128": "icons/ai-icon_128.png"
   },
   "permissions": [
     "storage",
@@ -25,14 +25,14 @@
   ],
   "browser_action": {
     "default_icon": {
-      "16": "icons/ai-icon.png",
-      "32": "icons/ai-icon.png"
+      "16": "icons/ai-icon_16.png",
+      "32": "icons/ai-icon_32.png"
     }
   },
   "compose_action": {
     "default_icon": {
-      "16": "icons/ai-icon.png",
-      "32": "icons/ai-icon.png"
+      "16": "icons/ai-icon_16.png",
+      "32": "icons/ai-icon_32.png"
     },
     "default_popup": "popup.html",
     "default_title": "ARIA - AI Assistant"

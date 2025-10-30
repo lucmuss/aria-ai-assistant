@@ -113,3 +113,39 @@ input, select {
 h1 {
   white-space: nowrap;
 }
+
+#stats {
+  font-size: 10px;
+  color: #333;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: 100px 50px 10px 50px;
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+.stats-label {
+  padding: 2px 4px;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.stats-value {
+  padding: 2px 4px;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

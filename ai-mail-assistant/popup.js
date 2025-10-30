@@ -192,9 +192,9 @@ async function handleSubmit() {
     // Increment generation counter
     await incrementGenerationCounter();
     
-    // Close popup
-    window.close();
-    
+    // Update UI to show success or stats
+    setButtonState(submitBtn, t('submitBtn'), false);
+
   } catch (error) {
     console.error('Submit error:', error);
     alert(t('generalError') + error.message);
