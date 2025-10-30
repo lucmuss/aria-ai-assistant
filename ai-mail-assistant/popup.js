@@ -592,6 +592,11 @@ Bitte schreibe eine passende Antwort basierend auf dem E-Mail-Kontext und den Be
       
       // Antwort in die E-Mail einfügen
       await insertTextAtCursor(formattedResponse, emailContext.context, emailContext.tabId);
+
+      // Increment generation counter
+      const currentCount = await browser.storage.local.get("generatedEmails");
+      const newCount = (currentCount.generatedEmails || 0) + 1;
+      await browser.storage.local.set({ generatedEmails: newCount });
       
       // Popup schließen
       window.close();

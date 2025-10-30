@@ -169,6 +169,10 @@ async function loadSettings() {
     document.getElementById("uiLanguage").value = settings.uiLanguage || "de";
     window.initialLanguageSet = true;
   }
+
+  // Load generation counter
+  const generatedEmails = settings.generatedEmails || 0;
+  document.getElementById("generationCounter").innerText = `Generated E-Mails: ${generatedEmails}`;
 }
 
 async function saveSettings(t) {
@@ -378,9 +382,9 @@ async function importSettings(file, t) {
       try {
         const importedData = JSON.parse(e.target.result);
         
-        // Validiere die importierten Daten
-        if (!importedData.chat || !importedData.stt) {
-          throw new Error(t("importErrorMsg") || "Invalid file format");
+        // Validiere die importierten Daten - Nur chat erforderlich, stt optional
+        if (!importedData.chat) {
+          throw new Error(t("importErrorMsg") || "Invalid file format: Chat settings missing");
         }
         
         // Übernehme die Einstellungen - API-Keys werden komplett übernommen
@@ -400,11 +404,12 @@ async function importSettings(file, t) {
             clearEmailAfterSubmit: importedData.extension?.clearEmailAfterSubmit || false
           },
           stt: {
-            apiUrl: importedData.stt.apiUrl || "",
-            apiKey: importedData.stt.apiKey || "", // Vollständiger API-Key wird übernommen
-            model: importedData.stt.model || "whisper-1",
-            language: importedData.stt.language || ""
-          }
+            apiUrl: importedData.stt?.apiUrl || "",
+            apiKey: importedData.stt?.apiKey || "", // Vollständiger API-Key wird übernommen, auch wenn stt optional
+            model: importedData.stt?.model || "whisper-1",
+            language: importedData.stt?.language || ""
+          },
+          generatedEmails: importedData.generatedEmails || 0 // Preserve counter if present
         };
         
         // Speichere die importierten Einstellungen

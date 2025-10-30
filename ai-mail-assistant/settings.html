@@ -2,18 +2,20 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title data-i18n="settingsTitle">Einstellungen – AI Mail Assistant</title>
+  <title data-i18n="settingsTitle">ARIA Icon Einstellungen – ARIA - KI-Assistent</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
     <div style="display: flex; align-items: center;">
-      <img src="icons/ai-icon.png" alt="ARIA Icon" style="width: 32px; height: 32px; vertical-align: middle; margin-right: 8px;">
-      <span data-i18n="settingsTitle">AI Mail Assistant Einstellungen</span>
+      <img src="icons/ai-icon.png" alt="ARIA Icon" style="width: 64px; height: 64px; vertical-align: middle; margin-right: 8px;">
+      <span data-i18n="settingsTitle" style="font-size: 1.5em; font-weight: bold;">ARIA Icon Einstellungen – ARIA - KI-Assistent</span>
       <span id="version" style="font-size: 0.8em; color: #666; margin-left: 10px;">v1.1</span>
     </div>
     <button id="donateBtn" style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 0.9em;">Donate</button>
   </div>
+
+  <div id="generationCounter" style="margin: 10px 0; font-weight: bold; color: #333;">Generated E-Mails: 0</div>
 
   <table>
     <tr>
