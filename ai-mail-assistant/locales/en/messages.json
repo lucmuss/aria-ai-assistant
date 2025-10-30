@@ -87,5 +87,6 @@
   "testSttMissingSettings": { "message": "❌ Please fill out all STT API settings first" },
   "extensionSettings": { "message": "Extension Settings" },
   "clearEmailLabel": { "message": "Clear email content after submit" },
-  "clearEmailDesc": { "message": "Clears the email body before inserting the AI response" }
+  "clearEmailDesc": { "message": "Clears the email body before inserting the AI response" },
+  "autoresponsePrompt": { "message": "Write a short and polite confirmation that you have received the email. If the email contains an appointment, confirm it and wish best regards." }
 }

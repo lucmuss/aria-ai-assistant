@@ -217,7 +217,7 @@ async function handleCancel() {
  * Handle autoresponse button click
  */
 async function handleAutoresponse() {
-  const fixedPrompt = 'Schreibe eine kurze Bestätigung, dass die E-Mail erhalten wurde und wünsche beste Grüße.';
+  const fixedPrompt = t('autoresponsePrompt');
   const promptInput = document.getElementById('promptInput');
   promptInput.value = fixedPrompt;
   await savePrompt(fixedPrompt);

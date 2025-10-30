@@ -61,12 +61,13 @@ th {
   background: #f0f0f0;
   text-align: left;
   padding: 6px;
-  font-size: 14px;
+  font-size: 18px;
   min-width: 150px;
+  border: 1px solid #ddd;
 }
 
 td {
-  border-bottom: 1px solid #ddd;
+  border: 1px solid #ddd;
   padding: 6px;
   vertical-align: top;
   min-width: 200px;

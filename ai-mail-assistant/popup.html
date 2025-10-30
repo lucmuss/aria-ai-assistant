@@ -5,7 +5,7 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h3 style="display: flex; align-items: center;"><span data-i18n="popupTitle">AI Mail Assistant</span> <span id="version" style="font-size: 0.8em; color: #666; margin-left: 10px;">v1.1</span></h3>
+  <h3 style="display: flex; align-items: center;"><img src="icons/ai-icon_64.png" alt="ARIA Icon" style="width: 32px; height: 32px; margin-right: 8px;"> <span data-i18n="popupTitle">ARIA - AI Assistant</span> <span id="version" style="font-size: 0.8em; color: #666; margin-left: 10px;">v1.1</span></h3>
   
   <div id="inputSection">
     <textarea id="promptInput" data-i18n-placeholder="promptInputPlaceholder" placeholder="Enter your instructions for the AI here..."></textarea>
@@ -19,25 +19,25 @@
     </div>
     <div class="button-group">
       <button id="inputSettingsBtn" data-i18n="settingsBtn">⚙️ Settings</button>
-      <button id="autoresponseBtn">🪄 Autoresponse</button>
+      <button id="autoresponseBtn" data-i18n="autoresponseBtn">🪄 Autoresponse</button>
     </div>
     <div id="stats" style="display: none; margin-top: 10px; font-size: 11px; color: #333; padding: 5px; border: 1px solid #ddd; border-radius: 4px; width: 100%;">
       <div class="stats-row">
-        <div class="stats-label"><strong>Input Token:</strong></div>
+        <div class="stats-label"><strong data-i18n="statsInputToken">Input Token:</strong></div>
         <div class="stats-value"><span id="inputTokens">-</span></div>
-        <div class="stats-label"><strong>Output Token:</strong></div>
+        <div class="stats-label"><strong data-i18n="statsOutputToken">Output Token:</strong></div>
         <div class="stats-value"><span id="outputTokens">-</span></div>
       </div>
       <div class="stats-row">
-        <div class="stats-label"><strong>Model:</strong></div>
+        <div class="stats-label"><strong data-i18n="statsModel">Model:</strong></div>
         <div class="stats-value"><span id="model">-</span></div>
-        <div class="stats-label"><strong>Time:</strong></div>
+        <div class="stats-label"><strong data-i18n="statsTime">Time:</strong></div>
         <div class="stats-value"><span id="time">-</span>s</div>
       </div>
       <div class="stats-row">
-        <div class="stats-label"><strong>Cost:</strong></div>
+        <div class="stats-label"><strong data-i18n="statsCost">Cost:</strong></div>
         <div class="stats-value"><span id="cost">-</span></div>
-        <div class="stats-label"><strong>Temperature:</strong></div>
+        <div class="stats-label"><strong data-i18n="statsTemperature">Temperature:</strong></div>
         <div class="stats-value"><span id="temperature">-</span></div>
       </div>
     </div>

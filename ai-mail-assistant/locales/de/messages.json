@@ -87,5 +87,6 @@
   "testSttMissingSettings": { "message": "❌ Bitte füllen Sie zuerst alle STT API-Einstellungen aus" },
   "extensionSettings": { "message": "Erweiterungs-Einstellungen" },
   "clearEmailLabel": { "message": "E-Mail-Inhalt nach Submit löschen" },
-  "clearEmailDesc": { "message": "Löscht den E-Mail-Inhalt vor dem Einfügen der KI-Antwort" }
+  "clearEmailDesc": { "message": "Löscht den E-Mail-Inhalt vor dem Einfügen der KI-Antwort" },
+  "autoresponsePrompt": { "message": "Schreibe eine kurze und höfliche Bestätigung, dass du die E-Mail erhalten hast. Falls die E-Mail einen Termin enthält bestätige diesen und wünsche Beste Grüße." }
 }

@@ -9,41 +9,17 @@
   <div class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
     <div style="display: flex; align-items: center;">
       <img src="icons/ai-icon_128.png" alt="ARIA Icon" style="width: 64px; height: 64px; vertical-align: middle; margin-right: 8px;">
-      <span data-i18n="settingsTitle" style="font-size: 1.5em; font-weight: bold;">ARIA - KI-Assistent</span>
+      <span id="settingsTitle" data-i18n="settingsTitle" style="font-size: 1.95em; font-weight: bold;">ARIA - KI-Assistent</span>
       <span id="version" style="font-size: 0.8em; color: #666; margin-left: 10px;">v1.1</span>
     </div>
   </div>
 
   <div id="generationCounter" style="margin: 10px 0; font-weight: bold; color: #333;">Generated E-Mails: 0</div>
 
-  <table>
-    <tr>
-      <td><b data-i18n="languageLabel">Oberflächensprache:</b></td>
-      <td>
-        <select id="uiLanguage">
-          <option value="en">English (English)</option>
-          <option value="zh">中文 (Chinese)</option>
-          <option value="hi">हिन्दी (Hindi)</option>
-          <option value="es">Español (Spanish)</option>
-          <option value="fr">Français (French)</option>
-          <option value="ar">العربية (Arabic)</option>
-          <option value="bn">বাংলা (Bengali)</option>
-          <option value="ru">Русский (Russian)</option>
-          <option value="pt">Português (Portuguese)</option>
-          <option value="ur">اردو (Urdu)</option>
-          <option value="id">Bahasa Indonesia (Indonesian)</option>
-          <option value="de">Deutsch (German)</option>
-          <option value="ja">日本語 (Japanese)</option>
-          <option value="pl">Polski (Polish)</option>
-        </select>
-      </td>
-      <td data-i18n="languageDesc">Wähle die Sprache der Benutzeroberfläche</td>
-    </tr>
-  </table>
 
   <div class="button-row">
     <button id="saveBtn" data-i18n="saveBtn">💾 Einstellungen speichern</button>
-    <button id="donateBtn" style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 0.9em; flex: 0 0 auto; width: auto;">Donate</button>
+    <button id="donateBtn" data-i18n="donateBtn" style="background: #1097d2; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 0.9em; flex: 0 0 auto; width: auto;">Donate</button>
   </div>
 
   <div class="button-row">
@@ -58,6 +34,49 @@
 
   <input type="file" id="importFile" accept=".json" style="display: none;">
   <p id="status" class="status-box"></p>
+
+  <form id="extensionForm">
+      <table>
+        <tr><th colspan="3" data-i18n="extensionSettings">Erweiterungs-Einstellungen</th></tr>
+        <tr>
+          <td><b data-i18n="languageLabel">Oberflächensprache:</b></td>
+          <td>
+            <select id="uiLanguage">
+              <option value="en">English (English)</option>
+              <option value="zh">中文 (Chinese)</option>
+              <option value="hi">हिन्दी (Hindi)</option>
+              <option value="es">Español (Spanish)</option>
+              <option value="fr">Français (French)</option>
+              <option value="ar">العربية (Arabic)</option>
+              <option value="bn">বাংলা (Bengali)</option>
+              <option value="ru">Русский (Russian)</option>
+              <option value="pt">Português (Portuguese)</option>
+              <option value="ur">اردو (Urdu)</option>
+              <option value="id">Bahasa Indonesia (Indonesian)</option>
+              <option value="de">Deutsch (German)</option>
+              <option value="ja">日本語 (Japanese)</option>
+              <option value="pl">Polski (Polish)</option>
+            </select>
+          </td>
+          <td data-i18n="languageDesc">Wähle die Sprache der Benutzeroberfläche</td>
+        </tr>
+        <tr>
+          <td><b data-i18n="contextSizeLabel">Kontextgröße:</b></td>
+          <td><input type="number" id="extensionContextSize" value="5"></td>
+          <td data-i18n="contextSizeDesc">Anzahl der vorherigen Nachrichten, die als Kontext gesendet werden</td>
+        </tr>
+        <tr>
+          <td><b data-i18n="includeSenderLabel">Absender einbeziehen:</b></td>
+          <td><input type="checkbox" id="extensionIncludeSender"></td>
+          <td data-i18n="includeSenderDesc">Fügt die Absenderadresse in den Prompt-Kontext ein</td>
+        </tr>
+        <tr>
+          <td><b data-i18n="clearEmailLabel">E-Mail-Inhalt nach Submit löschen:</b></td>
+          <td><input type="checkbox" id="clearEmailAfterSubmit"></td>
+          <td data-i18n="clearEmailDesc">Löscht den E-Mail-Inhalt vor dem Einfügen der KI-Antwort</td>
+        </tr>
+      </table>
+    </form>
 
   <form id="settingsForm">
     <table>
@@ -89,30 +108,9 @@
       </tr>
       <tr>
         <td><b data-i18n="systemPromptLabel">System Prompt:</b></td>
-        <td><textarea id="chatSystemPrompt" rows="3" data-i18n-placeholder="systemPromptPlaceholder" placeholder="Du bist ein höflicher E-Mail-Assistent."></textarea></td>
+        <td><textarea id="chatSystemPrompt" rows="2" data-i18n-placeholder="systemPromptPlaceholder" placeholder="Du bist ein höflicher E-Mail-Assistent."></textarea></td>
         <td data-i18n="systemPromptDesc">Vorgabetext für den Assistenten (z. B. Tonfall oder Stil)</td>
       </tr>
-      </table>
-    </form>
-
-    <form id="extensionForm">
-      <table>
-        <tr><th colspan="3" data-i18n="extensionSettings">Extension Settings</th></tr>
-        <tr>
-          <td><b data-i18n="contextSizeLabel">Kontextgröße:</b></td>
-          <td><input type="number" id="extensionContextSize" value="5"></td>
-          <td data-i18n="contextSizeDesc">Anzahl der vorherigen Nachrichten, die als Kontext gesendet werden</td>
-        </tr>
-        <tr>
-          <td><b data-i18n="includeSenderLabel">Absender einbeziehen:</b></td>
-          <td><input type="checkbox" id="extensionIncludeSender"></td>
-          <td data-i18n="includeSenderDesc">Fügt die Absenderadresse in den Prompt-Kontext ein</td>
-        </tr>
-        <tr>
-          <td><b data-i18n="clearEmailLabel">E-Mail-Inhalt nach Submit löschen:</b></td>
-          <td><input type="checkbox" id="clearEmailAfterSubmit"></td>
-          <td data-i18n="clearEmailDesc">Löscht den E-Mail-Inhalt vor dem Einfügen der KI-Antwort</td>
-        </tr>
       </table>
     </form>
 
