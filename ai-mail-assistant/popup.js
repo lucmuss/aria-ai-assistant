@@ -275,35 +275,31 @@ async function getEmailContext() {
   };
 }
 
-async function insertTextAtCursor(text, context = 'viewer', tabId = null) {
-  console.log('insertTextAtCursor: Context:', context, 'TabId:', tabId);
+async function insertTextAtCursor(text, context = 'viewer', windowId = null) {
+  console.log('insertTextAtCursor: Context:', context, 'WindowId:', windowId);
   
   if (context === 'composer') {
     // Im Composer-Kontext: Text in das aktuelle Composer-Fenster einfügen
     try {
-      let composeTabId = tabId;
-      if (!composeTabId) {
+      let winId = windowId;
+      if (!winId) {
         const windowInfo = await browser.windows.getCurrent();
         if (windowInfo.type === 'messageCompose') {
-          const tabs = await browser.tabs.query({windowId: windowInfo.id, active: true});
-          if (tabs.length > 0) {
-            composeTabId = tabs[0].id;
-          }
+          winId = windowInfo.id;
         }
       }
-      if (composeTabId) {
-        const details = await browser.compose.getComposeDetails(composeTabId);
+      if (winId) {
+        const details = await browser.compose.getComposeDetails(winId);
         let currentBody = details.body || '';
         const separator = currentBody.trim() ? '\n\n' : '';
-        // Text am Anfang einfügen statt am Ende
-        const newBody = text + separator + currentBody;
-        await browser.compose.setComposeDetails(composeTabId, {
+        const newBody = currentBody + separator + text;
+        await browser.compose.setComposeDetails(winId, {
           body: newBody
         });
-        console.log('Text am Anfang des Composers eingefügt');
+        console.log('Text appended to Composer');
         return;
       } else {
-        throw new Error('No compose tab found');
+        throw new Error('No compose window found');
       }
     } catch (error) {
       console.error('Fehler beim Einfügen in Composer:', error);
@@ -420,6 +416,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       
       const transcript = await transcribeAudio();
       promptInput.value = transcript;
+      submitBtn.style.display = 'block';
       
     } catch (err) {
       alert(window.t("speechRecognitionError") + err.message);
@@ -432,6 +429,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   // Texteingabe - Textfeld fokussieren
   textInputBtn.addEventListener('click', () => {
     promptInput.focus();
+    submitBtn.style.display = 'block';
   });
 
   // Abschicken
@@ -458,20 +456,10 @@ Benutzeranweisungen: ${userPrompt}
 
 Bitte schreibe eine passende Antwort basierend auf dem E-Mail-Kontext und den Benutzeranweisungen.`;
 
-      // Vollständigen Prompt in der Konsole ausgeben
-      console.log('=== Vollständiger Prompt an API ===');
-      console.log(fullPrompt);
-      console.log('=================================');
-
       const aiResponse = await callOpenAI(fullPrompt);
       
-      // API-Antwort in der Konsole ausgeben
-      console.log('=== API-Antwort ===');
-      console.log(aiResponse);
-      console.log('==================');
-      
       // Antwort in die E-Mail einfügen
-      await insertTextAtCursor(aiResponse, emailContext.context, emailContext.tabId);
+      await insertTextAtCursor(aiResponse, emailContext.context, emailContext.windowId);
       
       // Popup schließen
       window.close();
@@ -490,11 +478,6 @@ Bitte schreibe eine passende Antwort basierend auf dem E-Mail-Kontext und den Be
     mainSection.style.display = 'block';
     inputSection.style.display = 'none';
     promptInput.value = '';
+    submitBtn.style.display = 'none';
   });
-
-  // Settings Button im Input-Bereich
-  const inputSettingsBtn = document.getElementById('inputSettingsBtn');
-  if (inputSettingsBtn) {
-    inputSettingsBtn.addEventListener('click', openSettingsTab);
-  }
 });
