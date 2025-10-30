@@ -19,7 +19,8 @@
     "storage",
     "messagesRead",
     "compose",
-    "tabs"
+    "tabs",
+    "accountsRead"
   ],
   "browser_action": {
     "default_icon": {

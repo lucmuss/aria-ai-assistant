@@ -172,7 +172,22 @@ async function transcribeAudio() {
 }
 
 function stripHtml(text) {
-  return text.replace(/<[^>]*>/g, '');
+  // Remove <style> blocks and their contents first
+  let cleaned = text.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+  // Remove <script> blocks
+  cleaned = cleaned.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+  // Parse the remaining HTML
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(cleaned, 'text/html');
+  // Get plain text, removing any remaining style attributes or inline styles
+  let plainText = doc.body.textContent || '';
+  // Remove leading whitespace from each line
+  const lines = plainText.split('\n');
+  const cleanedLines = lines.map(line => line.replace(/^\s+/, ''));
+  plainText = cleanedLines.join('\n');
+  // Additional cleanup: remove multiple newlines and trim
+  plainText = plainText.replace(/\n\s*\n/g, '\n\n').trim();
+  return plainText;
 }
 
 async function getEmailContext() {
@@ -181,6 +196,17 @@ async function getEmailContext() {
   let message = null;
   let ctx = null;
   let windowInfo = null;
+  let userName = '';
+  let userOrganization = '';
+  
+  // Fetch user's default identity from background
+  try {
+    const response = await browser.runtime.sendMessage({ action: 'getUserIdentity' });
+    userName = response.userName || '';
+    userOrganization = response.userOrganization || '';
+  } catch (error) {
+    console.error('getEmailContext: Fehler beim Laden der Identity vom Background:', error);
+  }
   
   try {
     windowInfo = await browser.windows.getCurrent();
@@ -193,6 +219,25 @@ async function getEmailContext() {
         const composeTabId = tabs[0].id;
         const composeDetails = await browser.compose.getComposeDetails(composeTabId);
         console.log('getEmailContext: Compose details:', composeDetails);
+        
+        // Fallback: Extract from signature if no identity
+        if (!userName && composeDetails.signature) {
+          const sigText = stripHtml(composeDetails.signature);
+          // Simple regex to extract name after comma or "Best regards"
+          const nameMatch = sigText.match(/,\s*([A-ZÄÖÜ][a-zäöü]+(?:\s+[A-ZÄÖÜ][a-zäöü]+)*)/i);
+          if (nameMatch) userName = nameMatch[1];
+          // For organization, look for company-like patterns (basic)
+          const orgMatch = sigText.match(/([A-ZÄÖÜ][a-zäöü\s]+(?:GmbH|Inc|Corp|AG|LLC))/i);
+          if (orgMatch) userOrganization = orgMatch[1];
+        }
+
+        // Additional fallback: Extract name from 'from' field
+        if (!userName && composeDetails.from) {
+          const fromName = composeDetails.from.split('<')[0].trim();
+          if (fromName && fromName !== '') {
+            userName = fromName;
+          }
+        }
         
         // Wenn wir Compose Details haben, behandle diesen Kontext
         if (composeDetails) {
@@ -214,6 +259,8 @@ async function getEmailContext() {
                 emailBody: body,
                 subject: compMsg.subject,
                 sender: compMsg.author,
+                userName: userName,
+                userOrganization: userOrganization,
                 context: 'composer',
                 tabId: composeTabId,
                 windowId: windowInfo.id
@@ -231,6 +278,8 @@ async function getEmailContext() {
             emailBody: composeDetails.body || "",
             subject: composeDetails.subject || "",
             sender: composeDetails.to && composeDetails.to.length > 0 ? composeDetails.to[0] : "",
+            userName: userName,
+            userOrganization: userOrganization,
             context: 'composer',
             tabId: composeTabId,
             windowId: windowInfo.id
@@ -275,6 +324,8 @@ async function getEmailContext() {
     emailBody: body,
     subject: message.subject,
     sender: message.author,
+    userName: userName,
+    userOrganization: userOrganization,
     context: ctx
   };
 }
@@ -455,6 +506,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       const fullPrompt = `E-Mail-Kontext:
 Betreff: ${emailContext.subject}
 Absender: ${emailContext.sender}
+Name: ${emailContext.userName}
+Organisation: ${emailContext.userOrganization}
 Nachricht: ${stripHtml(emailContext.emailBody)}
 Erkenne die Sprache der Nachricht und antworte in derselben Sprache.
 
