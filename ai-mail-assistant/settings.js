@@ -383,6 +383,7 @@ function setupImportExportListeners(t) {
     const file = e.target.files[0];
     if (file) {
       await importSettings(file, t);
+      location.reload();
       // Reset file input
       e.target.value = "";
     }

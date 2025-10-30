@@ -70,5 +70,6 @@
   "testApiError": { "message": "❌ APIエラー: " },
   "testApiMissingSettings": { "message": "❌ すべてのAPI設定を最初に記入してください" },
   "noInstructionsProvided": { "message": "AIへの指示を入力してください。" },
-  "speechRecognitionError": { "message": "音声認識エラー: " }
+  "speechRecognitionError": { "message": "音声認識エラー: " },
+  "testApiTesting": { "message": "🧪 API接続をテスト中..." }
 }

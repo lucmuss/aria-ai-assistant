@@ -61,6 +61,7 @@
   "submitBtn": { "message": "📤 提交" },
   "cancelBtn": { "message": "❌ 取消" },
   "testApiBtn": { "message": "🧪 测试API" },
+  "testApiTesting": { "message": "测试API ..." },
   "exportBtn": { "message": "📤 导出设置" },
   "importBtn": { "message": "📥 导入设置" },
   "exportSuccessMsg": { "message": "设置已导出！" },

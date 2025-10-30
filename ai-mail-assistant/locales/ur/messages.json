@@ -70,5 +70,6 @@
   "testApiError": { "message": "❌ API خرابی: " },
   "testApiMissingSettings": { "message": "❌ براہ کرم پہلے تمام API ترتیبات بھریں" },
   "noInstructionsProvided": { "message": "براہ کرم AI کے لیے ہدایات درج کریں۔" },
-  "speechRecognitionError": { "message": "اسپیچ پہچان کی خرابی: " }
+  "speechRecognitionError": { "message": "اسپیچ پہچان کی خرابی: " },
+  "testApiTesting": { "message": "🧪 API کنکشن ٹیسٹ ہو رہا ہے..." }
 }
