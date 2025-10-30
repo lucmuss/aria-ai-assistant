@@ -11,7 +11,7 @@
     <textarea id="promptInput" data-i18n-placeholder="promptInputPlaceholder" placeholder="Enter your instructions for the AI here..."></textarea>
     <div class="button-group">
       <button id="voiceInputBtn" data-i18n="voiceInputBtn">🎤 Voice Input</button>
-      <button id="textInputBtn" data-i18n="textInputBtn">📝 Text Input</button>
+      <button id="stopRecordingBtn" data-i18n="stopRecordingBtn" style="display: none;">⏹️ Stop Recording</button>
     </div>
     <div class="button-group" id="submitCancelGroup" style="display: none;">
       <button id="submitBtn" data-i18n="submitBtn">📤 Submit</button>
@@ -28,6 +28,6 @@
     </div>
   </div>
 
-  <script src="popup.js"></script>
+  <script type="module" src="popup.js"></script>
 </body>
 </html>

@@ -1,662 +1,231 @@
-async function getActiveMailTab() {
-  try {
-    // Zuerst versuchen, den aktuellen MailTab zu erhalten
-    const mailTab = await browser.mailTabs.getCurrent();
-    if (mailTab) {
-      console.log("MailTab gefunden:", mailTab);
-      return mailTab;
-    }
-  } catch (error) {
-    console.log("Kein MailTab verfügbar:", error.message);
-  }
+/**
+ * Main Popup Script
+ * Coordinates all modules and handles user interactions
+ */
 
-  // Fallback: Aktive Tabs abfragen
-  const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-  if (!tabs || tabs.length === 0) {
-    console.log("Keine aktiven Tabs gefunden");
-    return null;
-  }
-  
-  const tab = tabs[0];
-  console.log("Aktiver Tab:", tab);
-  
-  // Prüfen ob es sich um einen MailTab handelt
-  if (tab.mailTab) {
-    console.log("Tab ist ein MailTab");
-    return tab;
-  }
-  
-  return null;
-}
+import { loadI18n, localizePage } from './modules/i18n.js';
+import { STTRecorder, transcribeAudio, getSTTSettings } from './modules/stt-recorder.js';
+import { getEmailContext, insertTextAtCursor, stripHtml } from './modules/email-context.js';
+import { callOpenAI, buildPrompt, saveStats, incrementGenerationCounter, getExtensionSettings } from './modules/api-client.js';
+import { displayStats, updateSubmitCancelVisibility, openSettingsTab, loadLastPrompt, savePrompt, setButtonState, toggleRecordingUI } from './modules/ui-helpers.js';
 
-async function getSettings() {
-  let settings = await browser.storage.local.get("chat");
-  return settings.chat || {};
-}
+// Global state
+let sttRecorder = null;
+let t = null;
 
-async function getExtensionSettings() {
-  let settings = await browser.storage.local.get("extension");
-  return settings.extension || {};
-}
-
-async function getSTTSettings() {
-  let settings = await browser.storage.local.get("stt");
-  return settings.stt || {};
-}
-
-function calculateCost(model, inputTokens, outputTokens) {
-  const prices = {
-    'gpt-4o-mini': { input: 0.00000015, output: 0.00000060 }, // per token
-    // Add more models as needed
-  };
-  const price = prices[model] || { input: 0, output: 0 };
-  const inputCost = inputTokens * price.input;
-  const outputCost = outputTokens * price.output;
-  const totalCost = inputCost + outputCost;
-  if (totalCost === 0) return '< $0.01';
-  return `$${totalCost.toFixed(6)}`;
-}
-
-async function loadI18n() {
-  let langSetting = await browser.storage.local.get("uiLanguage");
-  const lang = langSetting.uiLanguage || "en";
-  
-  const messagesUrl = browser.runtime.getURL(`locales/${lang}/messages.json`);
-  
-  try {
-    const response = await fetch(messagesUrl);
-    if (!response.ok) {
-      throw new Error(`Failed to load messages: ${response.status}`);
-    }
-    const messages = await response.json();
-
-    const t = (key) => {
-      if (key.startsWith("alerts.")) {
-        const nestedKey = key.split(".")[1];
-        return messages.alerts?.[nestedKey]?.message || key;
-      }
-      return messages[key]?.message || key;
-    };
-
-    console.log('Custom i18n loaded for language:', lang);
-    return t;
-  } catch (error) {
-    console.error("Failed to load custom i18n:", error);
-    const fallbackMessages = {
-      "alerts.noEmailOpen": "Please open or display an email first.",
-      "alerts.noMessageSelected": "No message selected.",
-      "alerts.apiSettingsMissing": "Please save API URL, API Key, and Model in settings first.",
-      "alerts.sttSettingsMissing": "Please enter STT API in settings first!",
-      "noMessageContextMsg": "No message or reply draft open. Please open an email or reply first.",
-      "generalError": "Error: ",
-      "speechRecognitionError": "Speech recognition error: ",
-      "noInstructionsProvided": "Please provide instructions for the AI.",
-      "popupTitle": "AI Mail Assistant",
-      "generateReplyBtn": "✉️ Generate Reply",
-      "settingsBtn": "⚙️ Settings",
-      "voiceInputBtn": "🎤 Voice Input",
-      "textInputBtn": "📝 Text Input",
-      "submitBtn": "📤 Submit",
-      "cancelBtn": "❌ Cancel",
-      "promptInputPlaceholder": "Enter your instructions for the AI here..."
-    };
-    const fallbackT = (key) => fallbackMessages[key] || key;
-    console.log('Using fallback i18n (English)');
-    return fallbackT;
-  }
-}
-
-async function callOpenAI(prompt) {
-  const settings = await getSettings();
-
-  if (!settings.apiUrl || !settings.apiKey || !settings.model) {
-    throw new Error(window.t("alerts.apiSettingsMissing"));
-  }
-
-  const startTime = performance.now();
-
-  const body = {
-    model: settings.model,
-    messages: [
-      { role: "system", content: settings.systemPrompt || "Du bist ein hilfreicher E-Mail-Assistent." },
-      { role: "user", content: prompt }
-    ],
-    temperature: settings.temperature || 1.0,
-    max_tokens: settings.maxTokens || 2000
-  };
-
-  const response = await fetch(settings.apiUrl, {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${settings.apiKey}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(body)
-  });
-
-  if (!response.ok) {
-    throw new Error("API-Fehler: " + (await response.text()));
-  }
-
-  const data = await response.json();
-  const endTime = performance.now();
-  const time = ((endTime - startTime) / 1000).toFixed(2);
-
-  const content = data.choices[0].message.content.trim();
-  const usage = data.usage || { prompt_tokens: 0, completion_tokens: 0 };
-  const inputTokens = usage.prompt_tokens || 0;
-  const outputTokens = usage.completion_tokens || 0;
-  const cost = calculateCost(settings.model, inputTokens, outputTokens);
-
-  return { content, usage: { input: inputTokens, output: outputTokens }, model: settings.model, time, cost };
-}
-
-async function transcribeAudio() {
-  let sttSettings = await getSTTSettings();
-
-  if (!sttSettings.apiUrl || !sttSettings.apiKey || !sttSettings.model) {
-    throw new Error(window.t("alerts.sttSettingsMissing"));
-  }
-
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-  const mediaRecorder = new MediaRecorder(stream);
-  let audioChunks = [];
-
-  return new Promise((resolve, reject) => {
-    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-    mediaRecorder.onstop = async () => {
-      try {
-        let audioBlob = new Blob(audioChunks, { type: "audio/wav" });
-
-        const formData = new FormData();
-        formData.append("file", audioBlob, "input.wav");
-        formData.append("model", sttSettings.model);
-        if (sttSettings.language) formData.append("language", sttSettings.language);
-
-        const resp = await fetch(sttSettings.apiUrl, {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${sttSettings.apiKey}`
-          },
-          body: formData
-        });
-
-        if (!resp.ok) throw new Error(await resp.text());
-
-        const data = await resp.json();
-        let transcript = data.text || "";
-        resolve(transcript);
-      } catch (err) {
-        reject(err);
-      } finally {
-        stream.getTracks().forEach(track => track.stop());
-      }
-    };
-
-    mediaRecorder.start();
-    setTimeout(() => {
-      mediaRecorder.stop();
-    }, 5000); // 5 Sekunden Aufnahme
-  });
-}
-
-function stripHtml(text) {
-  // Remove <style> blocks and their contents first
-  let cleaned = text.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
-  // Remove <script> blocks
-  cleaned = cleaned.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
-  // Parse the remaining HTML
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(cleaned, 'text/html');
-  // Get plain text, removing any remaining style attributes or inline styles
-  let plainText = doc.body.textContent || '';
-  // Remove leading whitespace from each line
-  const lines = plainText.split('\n');
-  const cleanedLines = lines.map(line => line.replace(/^\s+/, ''));
-  plainText = cleanedLines.join('\n');
-  // Additional cleanup: remove multiple newlines and trim
-  plainText = plainText.replace(/\n\s*\n/g, '\n\n').trim();
-  return plainText;
-}
-
-async function getEmailContext() {
-  console.log('getEmailContext: Starte Kontext-Erkennung...');
-  
-  let message = null;
-  let ctx = null;
-  let windowInfo = null;
-  let userName = '';
-  let userOrganization = '';
-  
-  // Fetch user's default identity from background
-  try {
-    const response = await browser.runtime.sendMessage({ action: 'getUserIdentity' });
-    userName = response.userName || '';
-    userOrganization = response.userOrganization || '';
-  } catch (error) {
-    console.error('getEmailContext: Fehler beim Laden der Identity vom Background:', error);
-  }
-  
-  try {
-    windowInfo = await browser.windows.getCurrent();
-    console.log('getEmailContext: Current window:', windowInfo);
-    
-    if (windowInfo.type === 'messageCompose') {
-      console.log('getEmailContext: Composer context detected');
-      const tabs = await browser.tabs.query({windowId: windowInfo.id, active: true});
-      if (tabs.length > 0) {
-        const composeTabId = tabs[0].id;
-        const composeDetails = await browser.compose.getComposeDetails(composeTabId);
-        console.log('getEmailContext: Compose details:', composeDetails);
-        
-        // Fallback: Extract from signature if no identity
-        if (!userName && composeDetails.signature) {
-          const sigText = stripHtml(composeDetails.signature);
-          // Simple regex to extract name after comma or "Best regards"
-          const nameMatch = sigText.match(/,\s*([A-ZÄÖÜ][a-zäöü]+(?:\s+[A-ZÄÖÜ][a-zäöü]+)*)/i);
-          if (nameMatch) userName = nameMatch[1];
-          // For organization, look for company-like patterns (basic)
-          const orgMatch = sigText.match(/([A-ZÄÖÜ][a-zäöü\s]+(?:GmbH|Inc|Corp|AG|LLC))/i);
-          if (orgMatch) userOrganization = orgMatch[1];
-        }
-
-        // Additional fallback: Extract name from 'from' field
-        if (!userName && composeDetails.from) {
-          const fromName = composeDetails.from.split('<')[0].trim();
-          if (fromName && fromName !== '') {
-            userName = fromName;
-          }
-        }
-        
-        // Wenn wir Compose Details haben, behandle diesen Kontext
-        if (composeDetails) {
-          // Fall 1: Antwort auf eine existierende E-Mail (inReplyTo vorhanden)
-          if (composeDetails.inReplyTo) {
-            try {
-              const compMsg = await browser.messages.get(composeDetails.inReplyTo);
-              const full = await browser.messages.getFull(compMsg.id);
-              let body = "";
-              for (let part of Object.values(full.parts)) {
-                if (part.contentType === "text/plain" && part.body) {
-                  body = part.body;
-                  break;
-                }
-              }
-              
-              return {
-                messageId: compMsg.id,
-                emailBody: body,
-                subject: compMsg.subject,
-                sender: compMsg.author,
-                userName: userName,
-                userOrganization: userOrganization,
-                context: 'composer',
-                tabId: composeTabId,
-                windowId: windowInfo.id
-              };
-            } catch (error) {
-              console.error('getEmailContext: Fehler beim Laden der Reply-Message:', error);
-            }
-          }
-          
-          // Fall 2: Neue E-Mail oder Draft ohne inReplyTo
-          // Verwende die vorhandenen Compose-Details
-          console.log('getEmailContext: Compose window ohne inReplyTo - verwende aktuelle Compose Details');
-          return {
-            messageId: null,
-            emailBody: composeDetails.body || "",
-            subject: composeDetails.subject || "",
-            sender: composeDetails.to && composeDetails.to.length > 0 ? composeDetails.to[0] : "",
-            userName: userName,
-            userOrganization: userOrganization,
-            context: 'composer',
-            tabId: composeTabId,
-            windowId: windowInfo.id
-          };
-        }
-      }
-    }
-  } catch (error) {
-    console.error('getEmailContext: Fehler beim Window/Compose-Check:', error);
-  }
-
-  // Fallback to viewer context
-  console.log('getEmailContext: Checking viewer context...');
-  const mailTab = await getActiveMailTab();
-  if (mailTab) {
-    try {
-      message = await browser.messageDisplay.getDisplayedMessage(mailTab.id);
-      console.log('getEmailContext: Angezeigte Nachricht:', message);
-      if (message) {
-        ctx = 'viewer';
-      }
-    } catch (error) {
-      console.log('getEmailContext: Fehler beim Viewer-Check:', error);
-    }
-  }
-
-  if (!message) {
-    throw new Error(window.t("noMessageContextMsg") || "No message or reply draft open. Please open an email or reply first.");
-  }
-
-  const full = await browser.messages.getFull(message.id);
-  let body = "";
-  for (let part of Object.values(full.parts)) {
-    if (part.contentType === "text/plain" && part.body) {
-      body = part.body;
-      break;
-    }
-  }
-
-  return {
-    messageId: message.id,
-    emailBody: body,
-    subject: message.subject,
-    sender: message.author,
-    userName: userName,
-    userOrganization: userOrganization,
-    context: ctx
-  };
-}
-
-async function insertTextAtCursor(text, context = 'viewer', tabId = null) {
-  console.log('insertTextAtCursor: Context:', context, 'TabId:', tabId);
-  
-  if (context === 'composer') {
-    // Im Composer-Kontext: Text in das aktuelle Composer-Fenster einfügen
-    try {
-      let composeTabId = tabId;
-      if (!composeTabId) {
-        const windowInfo = await browser.windows.getCurrent();
-        if (windowInfo.type === 'messageCompose') {
-          const tabs = await browser.tabs.query({windowId: windowInfo.id, active: true});
-          if (tabs.length > 0) {
-            composeTabId = tabs[0].id;
-          }
-        }
-      }
-      if (composeTabId) {
-        const details = await browser.compose.getComposeDetails(composeTabId);
-        let currentBody = details.body || '';
-        const extensionSettings = await getExtensionSettings();
-        let newBody;
-        if (extensionSettings.clearEmailAfterSubmit) {
-          newBody = text;
-        } else {
-          const separator = currentBody.trim() ? '\n\n' : '';
-          newBody = currentBody + separator + text;
-        }
-        await browser.compose.setComposeDetails(composeTabId, {
-          body: newBody
-        });
-        console.log('Text inserted to Composer');
-        return;
-      } else {
-        throw new Error('No compose tab found');
-      }
-    } catch (error) {
-      console.error('Fehler beim Einfügen in Composer:', error);
-      throw new Error(window.t("generalError") + error.message);
-    }
-  } else {
-    // Im Viewer-Kontext: Neue Antwort mit Text erstellen
-    const mailTab = await getActiveMailTab();
-    if (!mailTab) {
-      throw new Error(window.t("noMessageContextMsg") || "No message or reply draft open. Please open an email or reply first.");
-    }
-
-    const message = await browser.messageDisplay.getDisplayedMessage(mailTab.id);
-    if (!message) {
-      throw new Error(window.t("noMessageContextMsg") || "No message or reply draft open. Please open an email or reply first.");
-    }
-
-    await browser.compose.beginReply(message.id, { body: text });
-  }
-}
-
-async function openSettingsTab() {
-  const settingsURL = browser.runtime.getURL('settings.html');
-
-  // 1) Find existing settings tab
-  let tabs = await browser.tabs.query({ url: settingsURL });
-  let settingsTab;
-  if (tabs.length) {
-    settingsTab = tabs[0];
-    // Activate existing tab
-    await browser.tabs.update(settingsTab.id, { active: true });
-  } else {
-    // Create a new settings tab
-    settingsTab = await browser.tabs.create({ url: settingsURL, active: true });
-  }
-
-  // 2) Focus the window containing that tab
-  await browser.windows.update(settingsTab.windowId, { focused: true });
-
-  // 3) Close the popup
-  window.close();
-}
-
-// Vollständige Lokalisierungs-Funktion
-async function localizePage(t) {
-  // Alle Elemente mit data-i18n-Attribut übersetzen
-  const elements = document.querySelectorAll('[data-i18n]');
-  elements.forEach(element => {
-    const key = element.getAttribute('data-i18n');
-    element.textContent = t(key);
-  });
-
-  // Placeholder übersetzen
-  const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
-  placeholderElements.forEach(element => {
-    const key = element.getAttribute('data-i18n-placeholder');
-    element.setAttribute('placeholder', t(key));
-  });
-
-  console.log('Lokalisierung abgeschlossen');
-}
-
-// Lokalisierung nach Sprachwechsel anwenden
-async function refreshTranslations(t) {
-  await localizePage(t);
-}
-
-// UI Event Handler
-document.addEventListener('DOMContentLoaded', async function() {
-  // Load custom i18n
-  const t = await loadI18n();
+/**
+ * Initialize the popup
+ */
+async function init() {
+  // Load translations
+  t = await loadI18n();
   window.t = t;
   
+  // Set version
   const manifest = browser.runtime.getManifest();
   document.getElementById('version').textContent = `v${manifest.version}`;
 
-  // Lokalisierung anwenden
+  // Apply translations
   await localizePage(t);
   
-  const inputSection = document.getElementById('inputSection');
+  // Load last prompt
+  const lastPrompt = await loadLastPrompt();
+  const promptInput = document.getElementById('promptInput');
+  if (lastPrompt) {
+    promptInput.value = lastPrompt;
+    updateSubmitCancelVisibility(true);
+  }
+
+  // Display stats
+  await displayStats();
+
+  // Setup event listeners
+  setupEventListeners();
+}
+
+/**
+ * Setup all event listeners
+ */
+function setupEventListeners() {
+  const promptInput = document.getElementById('promptInput');
   const voiceInputBtn = document.getElementById('voiceInputBtn');
-  const textInputBtn = document.getElementById('textInputBtn');
+  const stopRecordingBtn = document.getElementById('stopRecordingBtn');
   const submitBtn = document.getElementById('submitBtn');
   const cancelBtn = document.getElementById('cancelBtn');
-  const promptInput = document.getElementById('promptInput');
+  const inputSettingsBtn = document.getElementById('inputSettingsBtn');
+  const autoresponseBtn = document.getElementById('autoresponseBtn');
 
-  // Speichere Eingabe bei Änderung
-  promptInput.addEventListener('input', () => {
-    browser.storage.local.set({ lastPrompt: promptInput.value });
-    const group = document.getElementById('submitCancelGroup');
-    if (promptInput.value.trim()) {
-      group.style.display = 'flex';
-    } else {
-      group.style.display = 'none';
-    }
+  // Prompt input changes
+  promptInput.addEventListener('input', async () => {
+    await savePrompt(promptInput.value);
+    updateSubmitCancelVisibility(promptInput.value.trim().length > 0);
   });
 
-  // Lade gespeicherte Eingabe beim Öffnen des Input-Bereichs
-  async function loadLastPrompt() {
-    const result = await browser.storage.local.get('lastPrompt');
-    if (result.lastPrompt) {
-      promptInput.value = result.lastPrompt;
-    }
-  }
+  // Voice input button
+  voiceInputBtn.addEventListener('click', handleVoiceInput);
 
-  // Initialisiere Input-Bereich
-  async function initializeInput() {
-    await loadLastPrompt();
-    if (promptInput.value.trim()) {
-      document.getElementById('submitCancelGroup').style.display = 'flex';
-    }
-    promptInput.focus();
-  }
+  // Stop recording button
+  stopRecordingBtn.addEventListener('click', handleStopRecording);
 
-  // Spracheingabe
-  voiceInputBtn.addEventListener('click', async () => {
-    try {
-      voiceInputBtn.disabled = true;
-      voiceInputBtn.textContent = "🎤 Aufnahme läuft...";
-      
-      const transcript = await transcribeAudio();
-      promptInput.value = transcript;
-      document.getElementById('submitCancelGroup').style.display = 'flex';
-      
-    } catch (err) {
-      alert(window.t("speechRecognitionError") + err.message);
-    } finally {
-      voiceInputBtn.disabled = false;
-      voiceInputBtn.textContent = window.t("voiceInputBtn");
-    }
-  });
+  // Submit button
+  submitBtn.addEventListener('click', handleSubmit);
 
-  // Texteingabe - Textfeld fokussieren
-  textInputBtn.addEventListener('click', () => {
-    promptInput.focus();
-    document.getElementById('submitCancelGroup').style.display = 'flex';
-  });
+  // Cancel button
+  cancelBtn.addEventListener('click', handleCancel);
 
-  // Abschicken
-  submitBtn.addEventListener('click', async () => {
-    try {
-      const userPrompt = promptInput.value.trim();
-      if (!userPrompt) {
-        alert(window.t("noInstructionsProvided"));
-        return;
-      }
+  // Settings button
+  inputSettingsBtn.addEventListener('click', openSettingsTab);
 
-      submitBtn.disabled = true;
-      submitBtn.textContent = "📤 Wird generiert...";
+  // Autoresponse button
+  autoresponseBtn.addEventListener('click', handleAutoresponse);
+}
 
-      const emailContext = await getEmailContext();
-      console.log('Email context:', emailContext);
-      
-      const extensionSettings = await getExtensionSettings();
-      let senderInfo = '';
-      if (extensionSettings.includeSender) {
-        senderInfo = `Absender: ${emailContext.sender}\n`;
-      }
-      
-      // Vollständiger Prompt mit E-Mail-Kontext und Benutzeranweisungen
-      const fullPrompt = `E-Mail-Kontext:
-Betreff: ${emailContext.subject}
-${senderInfo}Name: ${emailContext.userName}
-Organisation: ${emailContext.userOrganization}
-Nachricht: ${stripHtml(emailContext.emailBody)}
-Erkenne die Sprache der Nachricht und antworte in derselben Sprache.
-
-Benutzeranweisungen: ${userPrompt}
-
-Bitte schreibe eine passende Antwort basierend auf dem E-Mail-Kontext und den Benutzeranweisungen. Formatiere die Antwort mit Zeilenumbrüchen und mehreren Absätzen, damit sie gut in Thunderbird als E-Mail-Körper eingefügt werden kann. Schreibe nur den Inhalt der E-Mail-Antwort, ohne den Betreff einzuschließen. Beginne die Antwort nicht mit 'AI response received:' oder ähnlichen Phrasen.`;
-
-      console.log('Full prompt sent to API:', fullPrompt);
-
-      const apiResult = await callOpenAI(fullPrompt);
-      const { content, usage, model, time, cost } = apiResult;
-      
-      const settings = await getSettings();
-      const temperature = settings.temperature || 1.0;
-      
-      const formattedResponse = content.replace(/\n/g, '<br>');
-      
-      console.log('AI response received:', content);
-      
-      // Save stats
-      const lastStats = {
-        inputTokens: usage.input,
-        outputTokens: usage.output,
-        model,
-        time,
-        cost,
-        temperature
-      };
-      await browser.storage.local.set({ lastStats });
-      
-      // Display stats
-      displayStats();
-      
-      // Antwort in die E-Mail einfügen
-      await insertTextAtCursor(formattedResponse, emailContext.context, emailContext.tabId);
-
-      // Increment generation counter
-      const currentCount = await browser.storage.local.get("generatedEmails");
-      const newCount = (currentCount.generatedEmails || 0) + 1;
-      await browser.storage.local.set({ generatedEmails: newCount });
-      
-      // Popup schließen
-      window.close();
-      
-    } catch (err) {
-      console.error(err);
-      alert(window.t("generalError") + err.message);
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = window.t("submitBtn") || "📤 Submit";
-    }
-  });
-
-  // Abbrechen - nur Textfeld leeren
-  cancelBtn.addEventListener('click', () => {
-    promptInput.value = '';
-    browser.storage.local.set({ lastPrompt: '' });
-    document.getElementById('submitCancelGroup').style.display = 'none';
-  });
-
-async function displayStats() {
+/**
+ * Handle voice input button click
+ */
+async function handleVoiceInput() {
   try {
-    const result = await browser.storage.local.get('lastStats');
-    const stats = result.lastStats;
-    if (stats) {
-      document.getElementById('inputTokens').textContent = stats.inputTokens;
-      document.getElementById('outputTokens').textContent = stats.outputTokens;
-      document.getElementById('model').textContent = stats.model;
-      document.getElementById('time').textContent = stats.time;
-      document.getElementById('cost').textContent = stats.cost;
-      document.getElementById('temperature').textContent = stats.temperature ? stats.temperature.toFixed(2) : '1.00';
-      document.getElementById('stats').style.display = 'block';
-    } else {
-      document.getElementById('stats').style.display = 'none';
-    }
-  } catch (err) {
-    console.error('Error displaying stats:', err);
-    document.getElementById('stats').style.display = 'none';
+    sttRecorder = new STTRecorder();
+    await sttRecorder.startRecording();
+    
+    toggleRecordingUI(true);
+    setButtonState(document.getElementById('stopRecordingBtn'), t('recordingInProgress'), false);
+  } catch (error) {
+    console.error('Failed to start recording:', error);
+    alert(t('speechRecognitionError') + error.message);
+    sttRecorder = null;
+    toggleRecordingUI(false);
   }
 }
 
-// Initialisiere beim Laden
-  initializeInput();
+/**
+ * Handle stop recording button click
+ */
+async function handleStopRecording() {
+  if (!sttRecorder) return;
 
-  // Display stats
-  displayStats();
+  try {
+    const stopBtn = document.getElementById('stopRecordingBtn');
+    setButtonState(stopBtn, t('transcribing'), true);
 
-  // Settings im Input-Bereich
-  const inputSettingsBtn = document.getElementById('inputSettingsBtn');
-  inputSettingsBtn.addEventListener('click', openSettingsTab);
+    // Stop recording and get audio blob
+    const audioBlob = await sttRecorder.stopRecording();
+    
+    // Get STT settings
+    const sttSettings = await getSTTSettings();
+    
+    // Transcribe audio
+    const transcript = await transcribeAudio(audioBlob, sttSettings);
+    
+    // Update UI
+    const promptInput = document.getElementById('promptInput');
+    promptInput.value = transcript;
+    await savePrompt(transcript);
+    updateSubmitCancelVisibility(true);
+    
+  } catch (error) {
+    console.error('Transcription failed:', error);
+    alert(t('speechRecognitionError') + error.message);
+  } finally {
+    sttRecorder = null;
+    toggleRecordingUI(false);
+  }
+}
 
-  // Autoresponse
-  const autoresponseBtn = document.getElementById('autoresponseBtn');
-  autoresponseBtn.addEventListener('click', async () => {
-    const fixedPrompt = 'Schreibe eine kurze Bestätigung, dass die E-Mail erhalten wurde und wünsche beste Grüße.';
-    promptInput.value = fixedPrompt;
-    browser.storage.local.set({ lastPrompt: fixedPrompt });
-    document.getElementById('submitCancelGroup').style.display = 'flex';
+/**
+ * Handle submit button click
+ */
+async function handleSubmit() {
+  const promptInput = document.getElementById('promptInput');
+  const submitBtn = document.getElementById('submitBtn');
+  
+  try {
+    const userPrompt = promptInput.value.trim();
+    if (!userPrompt) {
+      alert(t('noInstructionsProvided'));
+      return;
+    }
 
-    // Automatisch absenden
-    submitBtn.click();
-  });
-});
+    setButtonState(submitBtn, t('generating'), true);
+
+    // Get email context
+    const emailContext = await getEmailContext();
+    console.log('Email context:', emailContext);
+    
+    // Get extension settings
+    const extensionSettings = await getExtensionSettings();
+    emailContext.extensionSettings = extensionSettings;
+    
+    // Build full prompt
+    const fullPrompt = buildPrompt(emailContext, userPrompt, stripHtml);
+    console.log('Full prompt sent to API:', fullPrompt);
+
+    // Call OpenAI API
+    const apiResult = await callOpenAI(fullPrompt);
+    const { content, usage, model, time, cost } = apiResult;
+    
+    const settings = await browser.storage.local.get('chat');
+    const temperature = settings.chat?.temperature || 1.0;
+    
+    // Format response for HTML display
+    const formattedResponse = content.replace(/\n/g, '<br>');
+    
+    console.log('AI response received:', content);
+    
+    // Save statistics
+    const stats = {
+      inputTokens: usage.input,
+      outputTokens: usage.output,
+      model,
+      time,
+      cost,
+      temperature
+    };
+    await saveStats(stats);
+    
+    // Display statistics
+    await displayStats();
+    
+    // Insert response into email
+    await insertTextAtCursor(formattedResponse, emailContext.context, emailContext.tabId);
+
+    // Increment generation counter
+    await incrementGenerationCounter();
+    
+    // Close popup
+    window.close();
+    
+  } catch (error) {
+    console.error('Submit error:', error);
+    alert(t('generalError') + error.message);
+  } finally {
+    setButtonState(submitBtn, t('submitBtn'), false);
+  }
+}
+
+/**
+ * Handle cancel button click
+ */
+async function handleCancel() {
+  const promptInput = document.getElementById('promptInput');
+  promptInput.value = '';
+  await savePrompt('');
+  updateSubmitCancelVisibility(false);
+}
+
+/**
+ * Handle autoresponse button click
+ */
+async function handleAutoresponse() {
+  const fixedPrompt = 'Schreibe eine kurze Bestätigung, dass die E-Mail erhalten wurde und wünsche beste Grüße.';
+  const promptInput = document.getElementById('promptInput');
+  promptInput.value = fixedPrompt;
+  await savePrompt(fixedPrompt);
+  updateSubmitCancelVisibility(true);
+
+  // Auto submit
+  await handleSubmit();
+}
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', init);

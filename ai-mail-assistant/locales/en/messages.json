@@ -75,5 +75,17 @@
   "importBtn": { "message": "📥 Import Settings" },
   "exportSuccessMsg": { "message": "Settings exported successfully!" },
   "importSuccessMsg": { "message": "Settings imported successfully!" },
-  "importErrorMsg": { "message": "Import error: " }
+  "importErrorMsg": { "message": "Import error: " },
+  "stopRecordingBtn": { "message": "⏹️ Stop Recording" },
+  "recordingInProgress": { "message": "🎤 Recording..." },
+  "transcribing": { "message": "Transcribing..." },
+  "generating": { "message": "📤 Generating..." },
+  "testSttBtn": { "message": "🧪 Test STT API" },
+  "testSttTesting": { "message": "🧪 Testing STT API connection..." },
+  "testSttSuccess": { "message": "✅ STT API connection tested successfully! Transcription: " },
+  "testSttError": { "message": "❌ STT API Error: " },
+  "testSttMissingSettings": { "message": "❌ Please fill out all STT API settings first" },
+  "extensionSettings": { "message": "Extension Settings" },
+  "clearEmailLabel": { "message": "Clear email content after submit" },
+  "clearEmailDesc": { "message": "Clears the email body before inserting the AI response" }
 }

@@ -75,5 +75,17 @@
   "importBtn": { "message": "📥 Einstellungen importieren" },
   "exportSuccessMsg": { "message": "Einstellungen wurden exportiert!" },
   "importSuccessMsg": { "message": "Einstellungen wurden erfolgreich importiert!" },
-  "importErrorMsg": { "message": "Fehler beim Import: " }
+  "importErrorMsg": { "message": "Fehler beim Import: " },
+  "stopRecordingBtn": { "message": "⏹️ Aufnahme stoppen" },
+  "recordingInProgress": { "message": "🎤 Aufnahme läuft..." },
+  "transcribing": { "message": "Transkribiere..." },
+  "generating": { "message": "📤 Generiere..." },
+  "testSttBtn": { "message": "🧪 STT API testen" },
+  "testSttTesting": { "message": "🧪 Teste STT API-Verbindung..." },
+  "testSttSuccess": { "message": "✅ STT API-Verbindung erfolgreich getestet! Transkription: " },
+  "testSttError": { "message": "❌ STT API-Fehler: " },
+  "testSttMissingSettings": { "message": "❌ Bitte füllen Sie zuerst alle STT API-Einstellungen aus" },
+  "extensionSettings": { "message": "Erweiterungs-Einstellungen" },
+  "clearEmailLabel": { "message": "E-Mail-Inhalt nach Submit löschen" },
+  "clearEmailDesc": { "message": "Löscht den E-Mail-Inhalt vor dem Einfügen der KI-Antwort" }
 }
