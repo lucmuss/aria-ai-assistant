@@ -103,7 +103,17 @@ async function loadI18n() {
         "testApiTesting": "🧪 Testing API connection...",
         "testApiSuccess": "✅ API connection tested successfully!",
         "testApiError": "❌ API Error: ",
-        "testApiMissingSettings": "❌ Please fill out all API settings first"
+        "testApiMissingSettings": "❌ Please fill out all API settings first",
+        "testSttBtn": "🧪 Test STT API",
+        "testSttTesting": "🧪 Testing STT API connection...",
+        "testSttSuccess": "✅ STT API connection tested successfully! Transcription: ",
+        "testSttError": "❌ STT API Error: ",
+        "testSttMissingSettings": "❌ Please fill out all STT API settings first",
+        "extensionSettings": "Extension Settings",
+        "clearEmailLabel": "Clear email content after submit",
+        "clearEmailDesc": "Clears the email body before inserting the AI response",
+        "contextSizeLabel": "Context Size",
+        "includeSenderLabel": "Include Sender"
       };
       return fallbackMessages[key] || key;
     };
@@ -139,8 +149,12 @@ async function loadSettings() {
   document.getElementById("chatTemperature").value = settings.chat?.temperature || 1.0;
   document.getElementById("chatMaxTokens").value = settings.chat?.maxTokens || 2000;
   document.getElementById("chatSystemPrompt").value = settings.chat?.systemPrompt || "";
-  document.getElementById("chatContextSize").value = settings.chat?.contextSize || 5;
-  document.getElementById("chatIncludeSender").checked = settings.chat?.includeSender || false;
+
+  // Extension Einstellungen
+  let extension = settings.extension || {};
+  document.getElementById("extensionContextSize").value = extension.contextSize || 5;
+  document.getElementById("extensionIncludeSender").checked = extension.includeSender || false;
+  document.getElementById("clearEmailAfterSubmit").checked = extension.clearEmailAfterSubmit || false;
 
   // STT Einstellungen
   let stt = settings.stt || {};
@@ -166,9 +180,12 @@ async function saveSettings(t) {
       model: document.getElementById("chatModel").value,
       temperature: parseFloat(document.getElementById("chatTemperature").value),
       maxTokens: parseInt(document.getElementById("chatMaxTokens").value),
-      systemPrompt: document.getElementById("chatSystemPrompt").value,
-      contextSize: parseInt(document.getElementById("chatContextSize").value),
-      includeSender: document.getElementById("chatIncludeSender").checked
+      systemPrompt: document.getElementById("chatSystemPrompt").value
+    },
+    extension: {
+      contextSize: parseInt(document.getElementById("extensionContextSize").value),
+      includeSender: document.getElementById("extensionIncludeSender").checked,
+      clearEmailAfterSubmit: document.getElementById("clearEmailAfterSubmit").checked
     },
     stt: {
       apiUrl: document.getElementById("sttApiUrl").value,
@@ -260,6 +277,68 @@ async function testApi(t) {
   }
 }
 
+// STT-Test-Funktion
+async function testStt(t) {
+  const statusElement = document.getElementById("status");
+  
+  // STT-Einstellungen aus dem Formular lesen
+  const apiUrl = document.getElementById("sttApiUrl").value.trim();
+  const apiKey = document.getElementById("sttApiKey").value.trim();
+  const model = document.getElementById("sttModel").value.trim();
+  
+  // Prüfen ob alle Felder ausgefüllt sind
+  if (!apiUrl || !apiKey || !model) {
+    statusElement.textContent = t("testSttMissingSettings");
+    statusElement.style.color = "red";
+    return;
+  }
+  
+  try {
+    statusElement.textContent = t("testSttTesting");
+    statusElement.style.color = "blue";
+    
+    // Test.wav aus der Extension laden
+    const testAudioUrl = browser.runtime.getURL('test.wav');
+    const audioResponse = await fetch(testAudioUrl);
+    if (!audioResponse.ok) {
+      throw new Error('test.wav not found. Please add a test.wav file to the extension directory.');
+    }
+    const audioBlob = await audioResponse.blob();
+    
+    const formData = new FormData();
+    formData.append("file", audioBlob, "test.wav");
+    formData.append("model", model);
+    const language = document.getElementById("sttLanguage").value;
+    if (language) formData.append("language", language);
+    
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`
+      },
+      body: formData
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP ${response.status}: ${errorText}`);
+    }
+    
+    const data = await response.json();
+    const transcript = data.text || "No transcription returned";
+    
+    // Erfolgreiche Antwort
+    statusElement.textContent = t("testSttSuccess") + transcript;
+    statusElement.style.color = "green";
+    console.log("STT-Test erfolgreich:", data);
+    
+  } catch (error) {
+    console.error("STT-Test fehlgeschlagen:", error);
+    statusElement.textContent = t("testSttError") + error.message;
+    statusElement.style.color = "red";
+  }
+}
+
 // Export-Funktion - API Keys werden jetzt komplett exportiert
 async function exportSettings(t) {
   const settings = await browser.storage.local.get();
@@ -313,9 +392,12 @@ async function importSettings(file, t) {
             model: importedData.chat.model || "gpt-4o-mini",
             temperature: importedData.chat.temperature || 1.0,
             maxTokens: importedData.chat.maxTokens || 2000,
-            systemPrompt: importedData.chat.systemPrompt || "",
-            contextSize: importedData.chat.contextSize || 5,
-            includeSender: importedData.chat.includeSender || false
+            systemPrompt: importedData.chat.systemPrompt || ""
+          },
+          extension: {
+            contextSize: importedData.extension?.contextSize || importedData.chat?.contextSize || 5,
+            includeSender: importedData.extension?.includeSender || importedData.chat?.includeSender || false,
+            clearEmailAfterSubmit: importedData.extension?.clearEmailAfterSubmit || false
           },
           stt: {
             apiUrl: importedData.stt.apiUrl || "",
@@ -367,6 +449,12 @@ function setupImportExportListeners(t) {
   // API-Test Button
   testBtn._listener = () => testApi(t);
   testBtn.addEventListener("click", testBtn._listener);
+
+  // STT-Test Button
+  const testSttBtn = document.getElementById("testSttBtn");
+  testSttBtn.removeEventListener("click", testSttBtn._listener);
+  testSttBtn._listener = () => testStt(t);
+  testSttBtn.addEventListener("click", testSttBtn._listener);
   
   // Export Button
   exportBtn._listener = () => exportSettings(t);

@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "AI Mail Assistant",
+  "name": "ARIA - AI Assistant",
   "version": "1.1",
   "description": "Antwortet auf E-Mails mit OpenAI oder eigenem ULAMA-Server",
   "applications": {
@@ -34,7 +34,7 @@
       "32": "icons/ai-icon.png"
     },
     "default_popup": "popup.html",
-    "default_title": "AI Assistant"
+    "default_title": "ARIA - AI Assistant"
   },
   "options_ui": {
     "page": "settings.html",

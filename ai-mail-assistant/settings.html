@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1 data-i18n="settingsTitle">⚙️ AI Mail Assistant Einstellungen</h1>
+  <h1><img src="icons/ai-icon.png" alt="ARIA Icon" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 8px;"><span data-i18n="settingsTitle">AI Mail Assistant Einstellungen</span></h1>
 
   <table>
     <tr>
@@ -34,11 +34,19 @@
   </table>
 
   <button id="saveBtn" data-i18n="saveBtn">💾 Einstellungen speichern</button>
-  <button id="testApiBtn" data-i18n="testApiBtn">🧪 API testen</button>
-  <button id="exportBtn" data-i18n="exportBtn">📤 Einstellungen exportieren</button>
-  <button id="importBtn" data-i18n="importBtn">📥 Einstellungen importieren</button>
+
+  <div class="button-row">
+    <button id="testApiBtn" data-i18n="testApiBtn">🧪 API testen</button>
+    <button id="testSttBtn" data-i18n="testSttBtn">🧪 STT API testen</button>
+  </div>
+
+  <div class="button-row">
+    <button id="exportBtn" data-i18n="exportBtn">📤 Einstellungen exportieren</button>
+    <button id="importBtn" data-i18n="importBtn">📥 Einstellungen importieren</button>
+  </div>
+
   <input type="file" id="importFile" accept=".json" style="display: none;">
-  <p id="status"></p>
+  <p id="status" class="status-box"></p>
 
   <form id="settingsForm">
     <table>
@@ -73,18 +81,33 @@
         <td><textarea id="chatSystemPrompt" rows="3" data-i18n-placeholder="systemPromptPlaceholder" placeholder="Du bist ein höflicher E-Mail-Assistent."></textarea></td>
         <td data-i18n="systemPromptDesc">Vorgabetext für den Assistenten (z. B. Tonfall oder Stil)</td>
       </tr>
-      <tr>
-        <td><b data-i18n="contextSizeLabel">Kontextgröße:</b></td>
-        <td><input type="number" id="chatContextSize" value="5"></td>
-        <td data-i18n="contextSizeDesc">Anzahl der vorherigen Nachrichten, die als Kontext gesendet werden</td>
-      </tr>
-      <tr>
-        <td><b data-i18n="includeSenderLabel">Absender einbeziehen:</b></td>
-        <td><input type="checkbox" id="chatIncludeSender"></td>
-        <td data-i18n="includeSenderDesc">Fügt die Absenderadresse in den Prompt-Kontext ein</td>
-      </tr>
+      </table>
+    </form>
 
-      <tr><th colspan="3" data-i18n="sttSettings">Speech-to-Text Einstellungen</th></tr>
+    <form id="extensionForm">
+      <table>
+        <tr><th colspan="3" data-i18n="extensionSettings">Extension Settings</th></tr>
+        <tr>
+          <td><b data-i18n="contextSizeLabel">Kontextgröße:</b></td>
+          <td><input type="number" id="extensionContextSize" value="5"></td>
+          <td data-i18n="contextSizeDesc">Anzahl der vorherigen Nachrichten, die als Kontext gesendet werden</td>
+        </tr>
+        <tr>
+          <td><b data-i18n="includeSenderLabel">Absender einbeziehen:</b></td>
+          <td><input type="checkbox" id="extensionIncludeSender"></td>
+          <td data-i18n="includeSenderDesc">Fügt die Absenderadresse in den Prompt-Kontext ein</td>
+        </tr>
+        <tr>
+          <td><b data-i18n="clearEmailLabel">E-Mail-Inhalt nach Submit löschen:</b></td>
+          <td><input type="checkbox" id="clearEmailAfterSubmit"></td>
+          <td data-i18n="clearEmailDesc">Löscht den E-Mail-Inhalt vor dem Einfügen der KI-Antwort</td>
+        </tr>
+      </table>
+    </form>
+
+    <form id="sttForm">
+      <table>
+        <tr><th colspan="3" data-i18n="sttSettings">Speech-to-Text Einstellungen</th></tr>
       <tr>
         <td><b data-i18n="sttApiUrlLabel">STT API URL:</b></td>
         <td><input type="text" id="sttApiUrl" data-i18n-placeholder="sttApiUrlPlaceholder" placeholder="https://api.openai.com/v1/audio/transcriptions"></td>

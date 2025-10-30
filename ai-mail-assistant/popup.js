@@ -34,6 +34,11 @@ async function getSettings() {
   return settings.chat || {};
 }
 
+async function getExtensionSettings() {
+  let settings = await browser.storage.local.get("extension");
+  return settings.extension || {};
+}
+
 async function getSTTSettings() {
   let settings = await browser.storage.local.get("stt");
   return settings.stt || {};
@@ -373,12 +378,18 @@ async function insertTextAtCursor(text, context = 'viewer', tabId = null) {
       if (composeTabId) {
         const details = await browser.compose.getComposeDetails(composeTabId);
         let currentBody = details.body || '';
-        const separator = currentBody.trim() ? '\n\n' : '';
-        const newBody = currentBody + separator + text;
+        const extensionSettings = await getExtensionSettings();
+        let newBody;
+        if (extensionSettings.clearEmailAfterSubmit) {
+          newBody = text;
+        } else {
+          const separator = currentBody.trim() ? '\n\n' : '';
+          newBody = currentBody + separator + text;
+        }
         await browser.compose.setComposeDetails(composeTabId, {
           body: newBody
         });
-        console.log('Text appended to Composer');
+        console.log('Text inserted to Composer');
         return;
       } else {
         throw new Error('No compose tab found');
@@ -532,11 +543,16 @@ document.addEventListener('DOMContentLoaded', async function() {
       const emailContext = await getEmailContext();
       console.log('Email context:', emailContext);
       
+      const extensionSettings = await getExtensionSettings();
+      let senderInfo = '';
+      if (extensionSettings.includeSender) {
+        senderInfo = `Absender: ${emailContext.sender}\n`;
+      }
+      
       // Vollständiger Prompt mit E-Mail-Kontext und Benutzeranweisungen
       const fullPrompt = `E-Mail-Kontext:
 Betreff: ${emailContext.subject}
-Absender: ${emailContext.sender}
-Name: ${emailContext.userName}
+${senderInfo}Name: ${emailContext.userName}
 Organisation: ${emailContext.userOrganization}
 Nachricht: ${stripHtml(emailContext.emailBody)}
 Erkenne die Sprache der Nachricht und antworte in derselben Sprache.

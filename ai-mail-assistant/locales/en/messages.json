@@ -1,8 +1,8 @@
 {
-  "extensionName": { "message": "AI Mail Assistant" },
+  "extensionName": { "message": "ARIA - AI Assistant" },
   "extensionDescription": { "message": "Generate intelligent replies and transcriptions using AI" },
   "browserActionTitle": { "message": "AI Mail Assistant" },
-  "settingsTitle": { "message": "Settings – AI Mail Assistant" },
+  "settingsTitle": { "message": "Settings – ARIA - AI Assistant" },
   "saveBtn": { "message": "💾 Save Settings" },
   "savedMsg": { "message": "Settings saved successfully!" },
   "languageLabel": { "message": "Interface Language:" },
@@ -16,7 +16,7 @@
   "apiKeyPlaceholder": { "message": "sk-xxxxxxxxxxxx" },
   "apiKeyDesc": { "message": "Your API key from the provider (e.g. OpenAI, Ollama etc.)" },
   "modelLabel": { "message": "Model:" },
-  "modelDesc": { "message": "Model name (e.g. gpt-4o, llama3, mistral)" },
+  "modelDesc": { "message": "Model name (e.g. gpt-3.5-turbo, gpt-4o-mini, llama3, mistral:7b)" },
   "temperatureLabel": { "message": "Temperature:" },
   "temperatureDesc": { "message": "Controls creativity (0 = factual, 1 = creative)" },
   "maxTokensLabel": { "message": "Max Tokens:" },
@@ -41,7 +41,7 @@
   "sttLanguageLabel": { "message": "Language:" },
   "sttLanguageDesc": { "message": "Recognition language (empty = automatic)" },
   
-  "popupTitle": { "message": "AI Mail Assistant" },
+  "popupTitle": { "message": "ARIA - AI Assistant" },
   "generateReplyBtn": { "message": "✉️ Generate Reply" },
   "voiceInputBtn": { "message": "🎤 Voice Input" },
   "settingsBtn": { "message": "⚙️ Settings" },

@@ -17,6 +17,7 @@ button {
   border: 1px solid #ddd;
   border-radius: 4px;
   background: #f9f9f9;
+  font-weight: bold;
 }
 
 button:hover {
@@ -78,7 +79,33 @@ input, select {
   min-width: 250px;
 }
 
-#status {
-  color: green;
+.button-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.button-row button {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+#status.status-box {
+  border: 1px solid #ddd;
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 8px;
   font-weight: bold;
+  color: green;
+}
+
+#submitBtn, #saveBtn {
+  background-color: #f0f9f0;
+  border: 1px solid #28a745;
+  color: #155724;
+}
+
+#submitBtn:hover, #saveBtn:hover {
+  background-color: #e6f4e6;
+  border-color: #1e7e34;
 }
