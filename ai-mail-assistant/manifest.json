@@ -2,6 +2,7 @@
   "manifest_version": 2,
   "name": "ARIA - AI Assistant",
   "version": "1.1",
+  "donation_url": "https://www.paypal.com/donate?hosted_button_id=YOUR_BUTTON_ID",
   "description": "Antwortet auf E-Mails mit OpenAI oder eigenem ULAMA-Server",
   "applications": {
     "gecko": {

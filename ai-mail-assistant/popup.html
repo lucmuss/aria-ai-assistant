@@ -5,7 +5,7 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h3 data-i18n="popupTitle">AI Mail Assistant</h3>
+  <h3 style="display: flex; align-items: center;"><span data-i18n="popupTitle">AI Mail Assistant</span> <span id="version" style="font-size: 0.8em; color: #666; margin-left: 10px;">v1.1</span></h3>
   
   <div id="inputSection">
     <textarea id="promptInput" data-i18n-placeholder="promptInputPlaceholder" placeholder="Enter your instructions for the AI here..."></textarea>
@@ -24,7 +24,7 @@
     <div id="stats" style="display: none; margin-top: 10px; font-size: 12px; color: #333; padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
       <div style="margin-bottom: 2px;"><strong>Input Tokens:</strong> <span id="inputTokens">-</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Output Tokens:</strong> <span id="outputTokens">-</span></div>
       <div style="margin-bottom: 2px;"><strong>Model:</strong> <span id="model">-</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Time:</strong> <span id="time">-</span>s</div>
-      <div><strong>Cost:</strong> <span id="cost">-</span></div>
+      <div><strong>Cost:</strong> <span id="cost">-</span> <strong>Temperature:</strong> <span id="temperature">-</span></div>
     </div>
   </div>
 

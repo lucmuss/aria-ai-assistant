@@ -109,3 +109,7 @@ input, select {
   background-color: #e6f4e6;
   border-color: #1e7e34;
 }
+
+h1 {
+  white-space: nowrap;
+}

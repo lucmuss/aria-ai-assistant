@@ -489,6 +489,17 @@ function setupSaveBtnListener(t) {
 document.addEventListener("DOMContentLoaded", async () => {
   const t = await loadI18n();
   window.currentT = t;
+
+  const manifest = browser.runtime.getManifest();
+  document.getElementById('version').textContent = `v${manifest.version}`;
+
+  const donateBtn = document.getElementById('donateBtn');
+  if (donateBtn) {
+    donateBtn.addEventListener('click', () => {
+      browser.tabs.create({ url: manifest.donation_url });
+    });
+  }
+
   await loadSettings();
   setupLanguageChangeListener(t);
   setupImportExportListeners(t);

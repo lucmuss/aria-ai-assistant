@@ -6,7 +6,14 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1><img src="icons/ai-icon.png" alt="ARIA Icon" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 8px;"><span data-i18n="settingsTitle">AI Mail Assistant Einstellungen</span></h1>
+  <div class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <div style="display: flex; align-items: center;">
+      <img src="icons/ai-icon.png" alt="ARIA Icon" style="width: 32px; height: 32px; vertical-align: middle; margin-right: 8px;">
+      <span data-i18n="settingsTitle">AI Mail Assistant Einstellungen</span>
+      <span id="version" style="font-size: 0.8em; color: #666; margin-left: 10px;">v1.1</span>
+    </div>
+    <button id="donateBtn" style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 0.9em;">Donate</button>
+  </div>
 
   <table>
     <tr>

@@ -466,6 +466,9 @@ document.addEventListener('DOMContentLoaded', async function() {
   const t = await loadI18n();
   window.t = t;
   
+  const manifest = browser.runtime.getManifest();
+  document.getElementById('version').textContent = `v${manifest.version}`;
+
   // Lokalisierung anwenden
   await localizePage(t);
   
@@ -566,6 +569,9 @@ Bitte schreibe eine passende Antwort basierend auf dem E-Mail-Kontext und den Be
       const apiResult = await callOpenAI(fullPrompt);
       const { content, usage, model, time, cost } = apiResult;
       
+      const settings = await getSettings();
+      const temperature = settings.temperature || 1.0;
+      
       const formattedResponse = content.replace(/\n/g, '<br>');
       
       console.log('AI response received:', content);
@@ -576,7 +582,8 @@ Bitte schreibe eine passende Antwort basierend auf dem E-Mail-Kontext und den Be
         outputTokens: usage.output,
         model,
         time,
-        cost
+        cost,
+        temperature
       };
       await browser.storage.local.set({ lastStats });
       
@@ -615,6 +622,7 @@ async function displayStats() {
       document.getElementById('model').textContent = stats.model;
       document.getElementById('time').textContent = stats.time;
       document.getElementById('cost').textContent = stats.cost;
+      document.getElementById('temperature').textContent = stats.temperature ? stats.temperature.toFixed(2) : '1.00';
       document.getElementById('stats').style.display = 'block';
     } else {
       document.getElementById('stats').style.display = 'none';
