@@ -383,10 +383,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   // Lokalisierung anwenden
   await localizePage(t);
   
-  const mainSection = document.getElementById('mainSection');
   const inputSection = document.getElementById('inputSection');
-  const generateReplyBtn = document.getElementById('generateReplyBtn');
-  const settingsBtn = document.getElementById('settingsBtn');
   const voiceInputBtn = document.getElementById('voiceInputBtn');
   const textInputBtn = document.getElementById('textInputBtn');
   const submitBtn = document.getElementById('submitBtn');
@@ -406,28 +403,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   }
 
-  // Hauptfunktion: Antwort generieren
-  generateReplyBtn.addEventListener('click', async () => {
-    console.log('Generate Reply Button geklickt');
-    try {
-      // Prüfen ob eine E-Mail geöffnet ist
-      console.log('Prüfe E-Mail-Kontext...');
-      await getEmailContext();
-      
-      // UI umschalten
-      console.log('Schalte UI um');
-      mainSection.style.display = 'none';
-      inputSection.style.display = 'block';
-      await loadLastPrompt();
-      promptInput.focus();
-    } catch (err) {
-      console.error('Fehler beim Generieren der Antwort:', err);
-      alert(err.message);
+  // Initialisiere Input-Bereich
+  async function initializeInput() {
+    await loadLastPrompt();
+    if (promptInput.value.trim()) {
+      submitBtn.style.display = 'block';
     }
-  });
-
-  // Einstellungen öffnen
-  settingsBtn.addEventListener('click', openSettingsTab);
+    promptInput.focus();
+  }
 
   // Spracheingabe
   voiceInputBtn.addEventListener('click', async () => {
@@ -508,6 +491,9 @@ Bitte schreibe eine passende Antwort basierend auf dem E-Mail-Kontext und den Be
     browser.storage.local.set({ lastPrompt: '' });
     submitBtn.style.display = 'none';
   });
+
+  // Initialisiere beim Laden
+  initializeInput();
 
   // Settings im Input-Bereich
   const inputSettingsBtn = document.getElementById('inputSettingsBtn');
