@@ -60,18 +60,19 @@ export function stripHtml(text) {
 }
 
 /**
- * Get user identity from background
+ * Get user identity (receiver) from background
  */
 async function getUserIdentity() {
   try {
     const response = await browser.runtime.sendMessage({ action: 'getUserIdentity' });
     return {
-      userName: response.userName || '',
-      userOrganization: response.userOrganization || ''
+      receiverName: response.receiverName || '',
+      receiverEmail: response.receiverEmail || '',
+      receiverOrganization: response.receiverOrganization || ''
     };
   } catch (error) {
     console.error('Failed to get user identity:', error);
-    return { userName: '', userOrganization: '' };
+    return { receiverName: '', receiverEmail: '', receiverOrganization: '' };
   }
 }
 
@@ -86,22 +87,27 @@ async function getComposerContext(windowInfo) {
   const composeDetails = await browser.compose.getComposeDetails(composeTabId);
   console.log('Compose details:', composeDetails);
 
-  let { userName, userOrganization } = await getUserIdentity();
+  let { receiverName, receiverEmail, receiverOrganization } = await getUserIdentity();
 
   // Fallback: Extract from signature
-  if (!userName && composeDetails.signature) {
+  if (!receiverName && composeDetails.signature) {
     const sigText = stripHtml(composeDetails.signature);
     const nameMatch = sigText.match(/,\s*([A-ZÄÖÜ][a-zäöü]+(?:\s+[A-ZÄÖÜ][a-zäöü]+)*)/i);
-    if (nameMatch) userName = nameMatch[1];
+    if (nameMatch) receiverName = nameMatch[1];
     
     const orgMatch = sigText.match(/([A-ZÄÖÜ][a-zäöü\s]+(?:GmbH|Inc|Corp|AG|LLC))/i);
-    if (orgMatch) userOrganization = orgMatch[1];
+    if (orgMatch) receiverOrganization = orgMatch[1];
   }
 
   // Fallback: Extract from 'from' field
-  if (!userName && composeDetails.from) {
+  if (!receiverName && composeDetails.from) {
     const fromName = composeDetails.from.split('<')[0].trim();
-    if (fromName) userName = fromName;
+    if (fromName) receiverName = fromName;
+    
+    // Extract email from 'from' field
+    const emailMatch = composeDetails.from.match(/<([^>]+)>/);
+    if (emailMatch) receiverEmail = emailMatch[1];
+    else if (composeDetails.from.includes('@')) receiverEmail = composeDetails.from;
   }
 
   // Reply context
@@ -123,8 +129,9 @@ async function getComposerContext(windowInfo) {
         emailBody: body,
         subject: compMsg.subject,
         sender: compMsg.author,
-        userName,
-        userOrganization,
+        receiver: receiverEmail,
+        receiverName,
+        receiverOrganization,
         context: 'composer',
         tabId: composeTabId,
         windowId: windowInfo.id
@@ -140,8 +147,9 @@ async function getComposerContext(windowInfo) {
     emailBody: composeDetails.body || '',
     subject: composeDetails.subject || '',
     sender: composeDetails.to && composeDetails.to.length > 0 ? composeDetails.to[0] : '',
-    userName,
-    userOrganization,
+    receiver: receiverEmail,
+    receiverName,
+    receiverOrganization,
     context: 'composer',
     tabId: composeTabId,
     windowId: windowInfo.id
@@ -169,15 +177,16 @@ async function getViewerContext() {
       }
     }
 
-    const { userName, userOrganization } = await getUserIdentity();
+    const { receiverName, receiverEmail, receiverOrganization } = await getUserIdentity();
 
     return {
       messageId: message.id,
       emailBody: body,
       subject: message.subject,
       sender: message.author,
-      userName,
-      userOrganization,
+      receiver: receiverEmail,
+      receiverName,
+      receiverOrganization,
       context: 'viewer'
     };
   } catch (error) {

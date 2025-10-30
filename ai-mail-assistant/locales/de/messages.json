@@ -108,12 +108,13 @@
   "promptContextEmail": { "message": "E-Mail-Kontext:" },
   "promptContextSubject": { "message": "Betreff:" },
   "promptContextSender": { "message": "Absender:" },
-  "promptContextName": { "message": "Name:" },
-  "promptContextOrganization": { "message": "Organisation:" },
+  "promptContextReceiver": { "message": "Empfänger:" },
+  "promptContextReceiverName": { "message": "Empfänger Name:" },
+  "promptContextReceiverOrganization": { "message": "Empfänger Organisation:" },
   "promptContextMessage": { "message": "Nachricht:" },
   "promptContextLanguageDetect": { "message": "Erkenne die Sprache der Nachricht und antworte in derselben Sprache." },
   "promptContextInstructions": { "message": "Benutzeranweisungen:" },
-  "promptContextFormat": { "message": "Bitte schreibe eine passende Antwort basierend auf dem E-Mail-Kontext und den Benutzeranweisungen. Formatiere die Antwort mit Zeilenumbrüchen und mehreren Absätzen, damit sie gut in Thunderbird als E-Mail-Körper eingefügt werden kann. Schreibe nur den Inhalt der E-Mail-Antwort, ohne den Betreff einzuschließen. Beginne die Antwort nicht mit 'AI response received:' oder ähnlichen Phrasen." },
+  "promptContextFormat": { "message": "WICHTIGE ANWEISUNGEN:\n1. Schreibe die E-Mail-Antwort aus der Sicht des EMPFÄNGERS (siehe oben: Empfänger Name, Empfänger Organisation)\n2. Der Empfänger antwortet auf die Nachricht vom ABSENDER\n3. Verwende einen natürlichen, professionellen und höflichen Ton\n4. Strukturiere die Antwort klar mit sinnvollen Absätzen\n5. Behalte den gleichen Formalitätsgrad wie die ursprüngliche Nachricht\n6. Gehe direkt auf die Punkte der ursprünglichen Nachricht ein\n7. Sei präzise und vermeide unnötige Wiederholungen\n8. Schreibe NUR den E-Mail-Text, OHNE Betreff, Anrede-Formel oder Signatur\n9. Beginne NICHT mit Phrasen wie 'Hier ist die Antwort' oder 'AI response'\n10. Verwende die gleiche Sprache wie die ursprüngliche Nachricht\n\nFormatierung:\n- Verwende kurze, klare Absätze\n- Füge Leerzeilen zwischen Absätzen ein (ein einfacher Zeilenumbruch)\n- Vermeide übermäßige Formatierung oder Aufzählungen, es sei denn, sie sind notwendig" },
   
   "autoresponsePrompt": { "message": "Schreibe eine kurze und höfliche Bestätigung, dass du die E-Mail erhalten hast. Falls die E-Mail einen Termin enthält bestätige diesen und wünsche Beste Grüße." }
 }

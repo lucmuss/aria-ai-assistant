@@ -108,12 +108,13 @@
   "promptContextEmail": { "message": "Contexto del Correo:" },
   "promptContextSubject": { "message": "Asunto:" },
   "promptContextSender": { "message": "Remitente:" },
-  "promptContextName": { "message": "Nombre:" },
-  "promptContextOrganization": { "message": "Organización:" },
+  "promptContextReceiver": { "message": "Destinatario:" },
+  "promptContextReceiverName": { "message": "Nombre del Destinatario:" },
+  "promptContextReceiverOrganization": { "message": "Organización del Destinatario:" },
   "promptContextMessage": { "message": "Mensaje:" },
   "promptContextLanguageDetect": { "message": "Detecta el idioma del mensaje y responde en el mismo idioma." },
   "promptContextInstructions": { "message": "Instrucciones del Usuario:" },
-  "promptContextFormat": { "message": "Por favor escribe una respuesta apropiada basada en el contexto del correo y las instrucciones del usuario. Formatea la respuesta con saltos de línea y múltiples párrafos para que encaje bien en Thunderbird como cuerpo de correo. Escribe solo el contenido de la respuesta del correo, sin incluir el asunto. No comiences la respuesta con 'Respuesta de IA recibida:' o frases similares." },
+  "promptContextFormat": { "message": "IMPORTANT INSTRUCTIONS:\n1. Write the email response from the RECEIVER's perspective (see above: Receiver Name, Receiver Organization)\n2. The receiver is responding to the message from the SENDER\n3. Use a natural, professional, and polite tone\n4. Structure the response clearly with meaningful paragraphs\n5. Match the same level of formality as the original message\n6. Directly address the points raised in the original message\n7. Be concise and avoid unnecessary repetition\n8. Write ONLY the email body text, WITHOUT subject line, salutation, or signature\n9. Do NOT begin with phrases like 'Here is the response' or 'AI response'\n10. Use the same language as the original message\n\nFormatting:\n- Use short, clear paragraphs\n- Add blank lines between paragraphs (a single line break)\n- Avoid excessive formatting or bullet points unless necessary" },
   
   "autoresponsePrompt": { "message": "Escribe una confirmación breve y cortés de que has recibido el correo. Si el correo contiene una cita, confírmala y desea los mejores saludos." }
 }

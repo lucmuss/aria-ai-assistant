@@ -7,20 +7,22 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     (async () => {
       try {
         const accounts = await browser.accounts.getAll();
-        let userName = '';
-        let userOrganization = '';
+        let receiverName = '';
+        let receiverEmail = '';
+        let receiverOrganization = '';
         if (accounts.length > 0) {
           const defaultAccount = accounts[0];
           const identity = defaultAccount.defaultIdentity;
           if (identity) {
-            userName = identity.name || '';
-            userOrganization = identity.organization || '';
+            receiverName = identity.name || '';
+            receiverEmail = identity.email || '';
+            receiverOrganization = identity.organization || '';
           }
         }
-        sendResponse({ userName, userOrganization });
+        sendResponse({ receiverName, receiverEmail, receiverOrganization });
       } catch (error) {
         console.error('Background: Error fetching accounts:', error);
-        sendResponse({ userName: '', userOrganization: '' });
+        sendResponse({ receiverName: '', receiverEmail: '', receiverOrganization: '' });
       }
     })();
     return true; // Keep message channel open for async response

@@ -108,12 +108,13 @@
   "promptContextEmail": { "message": "Email Context:" },
   "promptContextSubject": { "message": "Subject:" },
   "promptContextSender": { "message": "Sender:" },
-  "promptContextName": { "message": "Name:" },
-  "promptContextOrganization": { "message": "Organization:" },
+  "promptContextReceiver": { "message": "Receiver:" },
+  "promptContextReceiverName": { "message": "Receiver Name:" },
+  "promptContextReceiverOrganization": { "message": "Receiver Organization:" },
   "promptContextMessage": { "message": "Message:" },
   "promptContextLanguageDetect": { "message": "Detect the language of the message and respond in the same language." },
   "promptContextInstructions": { "message": "User Instructions:" },
-  "promptContextFormat": { "message": "Please write an appropriate response based on the email context and user instructions. Format the response with line breaks and multiple paragraphs so it fits well in Thunderbird as an email body. Write only the content of the email response, without including the subject. Do not begin the response with 'AI response received:' or similar phrases." },
+  "promptContextFormat": { "message": "IMPORTANT INSTRUCTIONS:\n1. Write the email response from the RECEIVER's perspective (see above: Receiver Name, Receiver Organization)\n2. The receiver is responding to the message from the SENDER\n3. Use a natural, professional, and polite tone\n4. Structure the response clearly with meaningful paragraphs\n5. Match the same level of formality as the original message\n6. Directly address the points raised in the original message\n7. Be concise and avoid unnecessary repetition\n8. Write ONLY the email body text, WITHOUT subject line, salutation, or signature\n9. Do NOT begin with phrases like 'Here is the response' or 'AI response'\n10. Use the same language as the original message\n\nFormatting:\n- Use short, clear paragraphs\n- Add blank lines between paragraphs (a single line break)\n- Avoid excessive formatting or bullet points unless necessary" },
   
   "autoresponsePrompt": { "message": "Write a short and polite confirmation that you have received the email. If the email contains an appointment, confirm it and wish best regards." }
 }

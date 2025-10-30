@@ -108,12 +108,13 @@
   "promptContextEmail": { "message": "Contexto do E-mail:" },
   "promptContextSubject": { "message": "Assunto:" },
   "promptContextSender": { "message": "Remetente:" },
-  "promptContextName": { "message": "Nome:" },
-  "promptContextOrganization": { "message": "Organização:" },
+  "promptContextReceiver": { "message": "Destinatário:" },
+  "promptContextReceiverName": { "message": "Nome do Destinatário:" },
+  "promptContextReceiverOrganization": { "message": "Organização do Destinatário:" },
   "promptContextMessage": { "message": "Mensagem:" },
   "promptContextLanguageDetect": { "message": "Detecte o idioma da mensagem e responda no mesmo idioma." },
   "promptContextInstructions": { "message": "Instruções do Usuário:" },
-  "promptContextFormat": { "message": "Por favor escreva uma resposta apropriada baseada no contexto do e-mail e nas instruções do usuário. Formate a resposta com quebras de linha e múltiplos parágrafos para que se encaixe bem no Thunderbird como corpo de e-mail. Escreva apenas o conteúdo da resposta do e-mail, sem incluir o assunto. Não comece a resposta com 'Resposta de IA recebida:' ou frases similares." },
+  "promptContextFormat": { "message": "IMPORTANT INSTRUCTIONS:\n1. Write the email response from the RECEIVER's perspective (see above: Receiver Name, Receiver Organization)\n2. The receiver is responding to the message from the SENDER\n3. Use a natural, professional, and polite tone\n4. Structure the response clearly with meaningful paragraphs\n5. Match the same level of formality as the original message\n6. Directly address the points raised in the original message\n7. Be concise and avoid unnecessary repetition\n8. Write ONLY the email body text, WITHOUT subject line, salutation, or signature\n9. Do NOT begin with phrases like 'Here is the response' or 'AI response'\n10. Use the same language as the original message\n\nFormatting:\n- Use short, clear paragraphs\n- Add blank lines between paragraphs (a single line break)\n- Avoid excessive formatting or bullet points unless necessary" },
   
   "autoresponsePrompt": { "message": "Escreva uma confirmação breve e educada de que você recebeu o e-mail. Se o e-mail contém um compromisso, confirme-o e deseje cumprimentos." }
 }

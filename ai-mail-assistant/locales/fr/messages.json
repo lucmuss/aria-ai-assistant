@@ -108,12 +108,13 @@
   "promptContextEmail": { "message": "Contexte de l'E-mail :" },
   "promptContextSubject": { "message": "Sujet :" },
   "promptContextSender": { "message": "Expéditeur :" },
-  "promptContextName": { "message": "Nom :" },
-  "promptContextOrganization": { "message": "Organisation :" },
+  "promptContextReceiver": { "message": "Destinataire :" },
+  "promptContextReceiverName": { "message": "Nom du Destinataire :" },
+  "promptContextReceiverOrganization": { "message": "Organisation du Destinataire :" },
   "promptContextMessage": { "message": "Message :" },
   "promptContextLanguageDetect": { "message": "Détectez la langue du message et répondez dans la même langue." },
   "promptContextInstructions": { "message": "Instructions de l'Utilisateur :" },
-  "promptContextFormat": { "message": "Veuillez rédiger une réponse appropriée basée sur le contexte de l'e-mail et les instructions de l'utilisateur. Formatez la réponse avec des sauts de ligne et plusieurs paragraphes pour qu'elle s'intègre bien dans Thunderbird en tant que corps d'e-mail. Écrivez uniquement le contenu de la réponse de l'e-mail, sans inclure le sujet. Ne commencez pas la réponse par 'Réponse IA reçue :' ou des phrases similaires." },
+  "promptContextFormat": { "message": "IMPORTANT INSTRUCTIONS:\n1. Write the email response from the RECEIVER's perspective (see above: Receiver Name, Receiver Organization)\n2. The receiver is responding to the message from the SENDER\n3. Use a natural, professional, and polite tone\n4. Structure the response clearly with meaningful paragraphs\n5. Match the same level of formality as the original message\n6. Directly address the points raised in the original message\n7. Be concise and avoid unnecessary repetition\n8. Write ONLY the email body text, WITHOUT subject line, salutation, or signature\n9. Do NOT begin with phrases like 'Here is the response' or 'AI response'\n10. Use the same language as the original message\n\nFormatting:\n- Use short, clear paragraphs\n- Add blank lines between paragraphs (a single line break)\n- Avoid excessive formatting or bullet points unless necessary" },
   
   "autoresponsePrompt": { "message": "Rédigez une confirmation brève et polie que vous avez reçu l'e-mail. Si l'e-mail contient un rendez-vous, confirmez-le et souhaitez vos meilleurs vœux." }
 }
