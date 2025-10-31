@@ -317,6 +317,6 @@ If you find ARIA useful, consider supporting its development:
 ---
 
 **Version**: 1.0.0  
-**Author**: Your Name  
+**Author**: Lucas Mußmächer
 **Website**: https://github.com/yourusername/aria-thunderbird  
 **License**: MIT
