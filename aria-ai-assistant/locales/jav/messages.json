@@ -1,0 +1,188 @@
+{
+  "extensionName": {
+    "message": "ARIA - Asisten AI"
+  },
+  "popupTitle": {
+    "message": "ARIA - Asisten AI"
+  },
+  "promptInputPlaceholder": {
+    "message": "Masukkan instruksi Anda untuk AI di sini..."
+  },
+  "voiceInputBtn": {
+    "message": "🎤 Input Suara"
+  },
+  "stopRecordingBtn": {
+    "message": "⏹️ Hentikan Perekaman"
+  },
+  "submitBtn": {
+    "message": "📤 Kirim"
+  },
+  "cancelBtn": {
+    "message": "❌ Batal"
+  },
+  "settingsBtn": {
+    "message": "⚙️ Pengaturan"
+  },
+  "autoresponseBtn": {
+    "message": "🪄 Respons Otomatis"
+  },
+  "statsInputToken": {
+    "message": "Token Masukan:"
+  },
+  "statsOutputToken": {
+    "message": "Token Keluaran:"
+  },
+  "statsModel": {
+    "message": "Model:"
+  },
+  "statsTime": {
+    "message": "Waktu:"
+  },
+  "statsCost": {
+    "message": "Biaya:"
+  },
+  "statsTemperature": {
+    "message": "Suhu:"
+  },
+  "recordingInProgress": {
+    "message": "Sedang merekam..."
+  },
+  "transcribing": {
+    "message": "Mentranskripsikan..."
+  },
+  "speechRecognitionError": {
+    "message": "Kesalahan pengenalan suara: "
+  },
+  "noInstructionsProvided": {
+    "message": "Tidak ada instruksi yang diberikan."
+  },
+  "generalError": {
+    "message": "Terjadi kesalahan: "
+  },
+  "settingsTitle": {
+    "message": "ARIA - Asisten AI"
+  },
+  "saveBtn": {
+    "message": "💾 Simpan Pengaturan"
+  },
+  "donateBtn": {
+    "message": "Donasi"
+  },
+  "testApiBtn": {
+    "message": "🧪 Uji API"
+  },
+  "testSttBtn": {
+    "message": "🧪 Uji API STT"
+  },
+  "exportBtn": {
+    "message": "📤 Ekspor Pengaturan"
+  },
+  "importBtn": {
+    "message": "📥 Impor Pengaturan"
+  },
+  "extensionSettings": {
+    "message": "Pengaturan Ekstensi"
+  },
+  "languageLabel": {
+    "message": "Bahasa Antarmuka:"
+  },
+  "languageDesc": {
+    "message": "Pilih bahasa antarmuka ekstensi"
+  },
+  "contextSizeLabel": {
+    "message": "Ukuran Konteks:"
+  },
+  "contextSizeDesc": {
+    "message": "Jumlah pesan sebelumnya yang disertakan sebagai konteks saat menghasilkan respons"
+  },
+  "includeSenderLabel": {
+    "message": "Sertakan Pengirim:"
+  },
+  "includeSenderDesc": {
+    "message": "Sertakan alamat email pengirim dalam konteks prompt"
+  },
+  "clearEmailLabel": {
+    "message": "Hapus Konten Email Setelah Submit:"
+  },
+  "clearEmailDesc": {
+    "message": "Hapus konten email sebelum memasukkan respons AI"
+  },
+  "chatSettings": {
+    "message": "Pengaturan API Chat"
+  },
+  "apiUrlLabel": {
+    "message": "URL API:"
+  },
+  "apiUrlDesc": {
+    "message": "Endpoint untuk model Anda (misalnya OpenAI atau server ULAMA lokal)"
+  },
+  "apiKeyLabel": {
+    "message": "Kunci API:"
+  },
+  "apiKeyDesc": {
+    "message": "Kunci API Anda dari penyedia (misalnya OpenAI, Ollama, dll.)"
+  },
+  "modelLabel": {
+    "message": "Model:"
+  },
+  "modelDesc": {
+    "message": "Nama model (misalnya <code>gpt-4o</code>, <code>llama3</code>, <code>mistral</code>)"
+  },
+  "temperatureLabel": {
+    "message": "Suhu:"
+  },
+  "temperatureDesc": {
+    "message": "Mengontrol kreativitas (0 = faktual, 1 = kreatif)"
+  },
+  "maxTokensLabel": {
+    "message": "Maks Token:"
+  },
+  "maxTokensDesc": {
+    "message": "Panjang maksimum teks respons"
+  },
+  "systemPromptLabel": {
+    "message": "Prompt Sistem:"
+  },
+  "systemPromptDesc": {
+    "message": "Teks default untuk asisten (misalnya nada atau gaya)"
+  },
+  "sttSettings": {
+    "message": "Pengaturan Speech-to-Text"
+  },
+  "sttApiUrlLabel": {
+    "message": "URL API STT:"
+  },
+  "sttApiUrlDesc": {
+    "message": "URL untuk transkripsi suara (misalnya Whisper)"
+  },
+  "sttApiKeyLabel": {
+    "message": "Kunci API STT:"
+  },
+  "sttApiKeyDesc": {
+    "message": "Kunci API untuk penyedia STT"
+  },
+  "sttModelLabel": {
+    "message": "Model:"
+  },
+  "sttModelDesc": {
+    "message": "Model suara (misalnya <code>whisper-1</code> atau lokal <code>tiny</code>)"
+  },
+  "sttLanguageLabel": {
+    "message": "Bahasa:"
+  },
+  "sttLanguageAuto": {
+    "message": "Otomatis"
+  },
+  "autoresponsePrompt": {
+    "message": "Tolong buatkan balasan yang sopan dan profesional untuk email ini."
+  },
+  "speechRecognitionError": {
+    "message": "Kesalahan pengenalan suara: "
+  },
+  "noInstructionsProvided": {
+    "message": "Tidak ada instruksi yang diberikan."
+  },
+  "generalError": {
+    "message": "Terjadi kesalahan: "
+  }
+}

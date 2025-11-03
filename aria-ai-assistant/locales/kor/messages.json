@@ -1,0 +1,188 @@
+{
+  "extensionName": {
+    "message": "ARIA - AI 어시스턴트"
+  },
+  "popupTitle": {
+    "message": "ARIA - AI 어시스턴트"
+  },
+  "promptInputPlaceholder": {
+    "message": "AI에 대한 지시사항을 여기에 입력하세요..."
+  },
+  "voiceInputBtn": {
+    "message": "🎤 음성 입력"
+  },
+  "stopRecordingBtn": {
+    "message": "⏹️ 녹음 중지"
+  },
+  "submitBtn": {
+    "message": "📤 제출"
+  },
+  "cancelBtn": {
+    "message": "❌ 취소"
+  },
+  "settingsBtn": {
+    "message": "⚙️ 설정"
+  },
+  "autoresponseBtn": {
+    "message": "🪄 자동 응답"
+  },
+  "statsInputToken": {
+    "message": "입력 토큰:"
+  },
+  "statsOutputToken": {
+    "message": "출력 토큰:"
+  },
+  "statsModel": {
+    "message": "모델:"
+  },
+  "statsTime": {
+    "message": "시간:"
+  },
+  "statsCost": {
+    "message": "비용:"
+  },
+  "statsTemperature": {
+    "message": "온도:"
+  },
+  "recordingInProgress": {
+    "message": "녹음 중..."
+  },
+  "transcribing": {
+    "message": "전사 중..."
+  },
+  "speechRecognitionError": {
+    "message": "음성 인식 오류: "
+  },
+  "noInstructionsProvided": {
+    "message": "지시사항이 제공되지 않았습니다."
+  },
+  "generalError": {
+    "message": "오류가 발생했습니다: "
+  },
+  "settingsTitle": {
+    "message": "ARIA - AI 어시스턴트"
+  },
+  "saveBtn": {
+    "message": "💾 설정 저장"
+  },
+  "donateBtn": {
+    "message": "기부"
+  },
+  "testApiBtn": {
+    "message": "🧪 API 테스트"
+  },
+  "testSttBtn": {
+    "message": "🧪 STT API 테스트"
+  },
+  "exportBtn": {
+    "message": "📤 설정 내보내기"
+  },
+  "importBtn": {
+    "message": "📥 설정 가져오기"
+  },
+  "extensionSettings": {
+    "message": "확장 프로그램 설정"
+  },
+  "languageLabel": {
+    "message": "인터페이스 언어:"
+  },
+  "languageDesc": {
+    "message": "확장 프로그램 인터페이스 언어를 선택하세요"
+  },
+  "contextSizeLabel": {
+    "message": "컨텍스트 크기:"
+  },
+  "contextSizeDesc": {
+    "message": "응답을 생성할 때 컨텍스트로 포함할 이전 메시지 수"
+  },
+  "includeSenderLabel": {
+    "message": "보내는 사람 포함:"
+  },
+  "includeSenderDesc": {
+    "message": "프롬프트 컨텍스트에 보내는 사람의 이메일 주소 포함"
+  },
+  "clearEmailLabel": {
+    "message": "제출 후 이메일 내용 지우기:"
+  },
+  "clearEmailDesc": {
+    "message": "AI 응답을 삽입하기 전에 이메일 내용 지우기"
+  },
+  "chatSettings": {
+    "message": "채팅 API 설정"
+  },
+  "apiUrlLabel": {
+    "message": "API URL:"
+  },
+  "apiUrlDesc": {
+    "message": "모델에 대한 엔드포인트 (예: OpenAI 또는 로컬 ULAMA 서버)"
+  },
+  "apiKeyLabel": {
+    "message": "API 키:"
+  },
+  "apiKeyDesc": {
+    "message": "공급자로부터의 API 키 (예: OpenAI, Ollama 등)"
+  },
+  "modelLabel": {
+    "message": "모델:"
+  },
+  "modelDesc": {
+    "message": "모델 이름 (예: <code>gpt-4o</code>, <code>llama3</code>, <code>mistral</code>)"
+  },
+  "temperatureLabel": {
+    "message": "온도:"
+  },
+  "temperatureDesc": {
+    "message": "창의성 제어 (0 = 사실적, 1 = 창의적)"
+  },
+  "maxTokensLabel": {
+    "message": "최대 토큰:"
+  },
+  "maxTokensDesc": {
+    "message": "응답 텍스트의 최대 길이"
+  },
+  "systemPromptLabel": {
+    "message": "시스템 프롬프트:"
+  },
+  "systemPromptDesc": {
+    "message": "어시스턴트에 대한 기본 텍스트 (예: 어조 또는 스타일)"
+  },
+  "sttSettings": {
+    "message": "음성-텍스트 설정"
+  },
+  "sttApiUrlLabel": {
+    "message": "STT API URL:"
+  },
+  "sttApiUrlDesc": {
+    "message": "음성 전사에 대한 URL (예: Whisper)"
+  },
+  "sttApiKeyLabel": {
+    "message": "STT API 키:"
+  },
+  "sttApiKeyDesc": {
+    "message": "STT 공급자에 대한 API 키"
+  },
+  "sttModelLabel": {
+    "message": "모델:"
+  },
+  "sttModelDesc": {
+    "message": "음성 모델 (예: <code>whisper-1</code> 또는 로컬 <code>tiny</code>)"
+  },
+  "sttLanguageLabel": {
+    "message": "언어:"
+  },
+  "sttLanguageAuto": {
+    "message": "자동"
+  },
+  "autoresponsePrompt": {
+    "message": "이 이메일에 대한 예의 바르고 전문적인 응답을 만들어 주세요."
+  },
+  "speechRecognitionError": {
+    "message": "음성 인식 오류: "
+  },
+  "noInstructionsProvided": {
+    "message": "지시사항이 제공되지 않았습니다."
+  },
+  "generalError": {
+    "message": "오류가 발생했습니다: "
+  }
+}

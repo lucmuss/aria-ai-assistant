@@ -1,0 +1,188 @@
+{
+  "extensionName": {
+    "message": "ARIA - AI اسسٹنٹ"
+  },
+  "popupTitle": {
+    "message": "ARIA - AI اسسٹنٹ"
+  },
+  "promptInputPlaceholder": {
+    "message": "ای آئی کے لئے اپنی ہدایات یہاں درج کریں..."
+  },
+  "voiceInputBtn": {
+    "message": "🎤 وائس ان پٹ"
+  },
+  "stopRecordingBtn": {
+    "message": "⏹️ ریکارڈنگ روکیں"
+  },
+  "submitBtn": {
+    "message": "📤 جمع کریں"
+  },
+  "cancelBtn": {
+    "message": "❌ منسوخ کریں"
+  },
+  "settingsBtn": {
+    "message": "⚙️ ترتیبات"
+  },
+  "autoresponseBtn": {
+    "message": "🪄 خودکار جواب"
+  },
+  "statsInputToken": {
+    "message": "ان پٹ ٹوکن:"
+  },
+  "statsOutputToken": {
+    "message": "آؤٹ پٹ ٹوکن:"
+  },
+  "statsModel": {
+    "message": "ماڈل:"
+  },
+  "statsTime": {
+    "message": "وقت:"
+  },
+  "statsCost": {
+    "message": "لاگت:"
+  },
+  "statsTemperature": {
+    "message": "درجہ حرارت:"
+  },
+  "recordingInProgress": {
+    "message": "ریکارڈنگ جاری ہے..."
+  },
+  "transcribing": {
+    "message": "ٹرانسکرائب کر رہا ہے..."
+  },
+  "speechRecognitionError": {
+    "message": "سپیچ ریکگنیشن کی غلطی: "
+  },
+  "noInstructionsProvided": {
+    "message": "کوئی ہدایات فراہم نہیں کی گئیں۔"
+  },
+  "generalError": {
+    "message": "ایک غلطی ہوئی: "
+  },
+  "settingsTitle": {
+    "message": "ARIA - AI اسسٹنٹ"
+  },
+  "saveBtn": {
+    "message": "💾 ترتیبات محفوظ کریں"
+  },
+  "donateBtn": {
+    "message": "عطا کریں"
+  },
+  "testApiBtn": {
+    "message": "🧪 API کا ٹیسٹ کریں"
+  },
+  "testSttBtn": {
+    "message": "🧪 STT API کا ٹیسٹ کریں"
+  },
+  "exportBtn": {
+    "message": "📤 ترتیبات برآمد کریں"
+  },
+  "importBtn": {
+    "message": "📥 ترتیبات درآمد کریں"
+  },
+  "extensionSettings": {
+    "message": "ایکسٹینشن ترتیبات"
+  },
+  "languageLabel": {
+    "message": "انٹرفیس زبان:"
+  },
+  "languageDesc": {
+    "message": "ایکسٹینشن کی انٹرفیس زبان منتخب کریں"
+  },
+  "contextSizeLabel": {
+    "message": "کنٹیکسٹ سائز:"
+  },
+  "contextSizeDesc": {
+    "message": "جواب تیار کرتے وقت کنٹیکسٹ کے طور پر شامل کیے جانے والے پچھلے پیغامات کی تعداد"
+  },
+  "includeSenderLabel": {
+    "message": "بھیجنے والے کو شامل کریں:"
+  },
+  "includeSenderDesc": {
+    "message": "پرومپٹ کنٹیکسٹ میں بھیجنے والے کا ای میل پتہ شامل کریں"
+  },
+  "clearEmailLabel": {
+    "message": "جمع کرنے کے بعد ای میل کا مواد صاف کریں:"
+  },
+  "clearEmailDesc": {
+    "message": "AI جواب داخل کرنے سے پہلے ای میل کا مواد صاف کریں"
+  },
+  "chatSettings": {
+    "message": "چیٹ API ترتیبات"
+  },
+  "apiUrlLabel": {
+    "message": "API یو آر ایل:"
+  },
+  "apiUrlDesc": {
+    "message": "آپ کے ماڈل کے لیے اینڈ پوائنٹ (مثال کے طور پر OpenAI یا مقامی ULAMA سرور)"
+  },
+  "apiKeyLabel": {
+    "message": "API کی:"
+  },
+  "apiKeyDesc": {
+    "message": "فراہم کنندہ سے آپ کی API کی (مثال کے طور پر OpenAI, Ollama وغیرہ)"
+  },
+  "modelLabel": {
+    "message": "ماڈل:"
+  },
+  "modelDesc": {
+    "message": "ماڈل کا نام (مثال کے طور پر <code>gpt-4o</code>, <code>llama3</code>, <code>mistral</code>)"
+  },
+  "temperatureLabel": {
+    "message": "درجہ حرارت:"
+  },
+  "temperatureDesc": {
+    "message": " creativity کو کنٹرول کریں (0 = حقیقت پسندانہ, 1 = تخلیقی)"
+  },
+  "maxTokensLabel": {
+    "message": "زیادہ سے زیادہ ٹوکن:"
+  },
+  "maxTokensDesc": {
+    "message": "جواب کے متن کی زیادہ سے زیادہ لمبائی"
+  },
+  "systemPromptLabel": {
+    "message": "سسٹم پرومپٹ:"
+  },
+  "systemPromptDesc": {
+    "message": "اسسٹنٹ کے لیے ڈیفالٹ متن (مثال کے طور پر لہجہ یا سٹائل)"
+  },
+  "sttSettings": {
+    "message": "سپیچ ٹو ٹیکسٹ ترتیبات"
+  },
+  "sttApiUrlLabel": {
+    "message": "STT API یو آر ایل:"
+  },
+  "sttApiUrlDesc": {
+    "message": "سپیچ ٹرانسکرپشن کے لیے یو آر ایل (مثال کے طور پر Whisper)"
+  },
+  "sttApiKeyLabel": {
+    "message": "STT API کی:"
+  },
+  "sttApiKeyDesc": {
+    "message": "STT فراہم کنندہ کے لیے API کی"
+  },
+  "sttModelLabel": {
+    "message": "ماڈل:"
+  },
+  "sttModelDesc": {
+    "message": "سپیچ ماڈل (مثال کے طور پر <code>whisper-1</code> یا مقامی <code>tiny</code>)"
+  },
+  "sttLanguageLabel": {
+    "message": "زبان:"
+  },
+  "sttLanguageAuto": {
+    "message": "خودکار"
+  },
+  "autoresponsePrompt": {
+    "message": "براہ کرم اس ای میل کے لیے ایک مہذب اور پیشہ ورانہ جواب تیار کریں۔"
+  },
+  "speechRecognitionError": {
+    "message": "سپیچ ریکگنیشن کی غلطی: "
+  },
+  "noInstructionsProvided": {
+    "message": "کوئی ہدایات فراہم نہیں کی گئیں۔"
+  },
+  "generalError": {
+    "message": "ایک غلطی ہوئی: "
+  }
+}

@@ -3,7 +3,7 @@
   "name": "ARIA - AI Assistant",
   "version": "1.0.0",
   "author": "ARIA Contributors",
-  "homepage_url": "https://github.com/yourusername/aria-thunderbird",
+  "homepage_url": "https://gitlab.com/thunderbird-extension/ai-mail-assistant",
   "donation_url": "https://www.paypal.com/pool/9jCVLXPPmR?sr=wccr",
   "description": "AI-powered email assistant: Generate intelligent responses, use voice input, support for OpenAI & local AI models. Multi-language support in 14 languages.",
   "applications": {
