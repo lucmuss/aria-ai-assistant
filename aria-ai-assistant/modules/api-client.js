@@ -143,10 +143,11 @@ export async function callOpenAI(prompt) {
 /**
  * Build full prompt from email context and user instructions
  */
-export function buildPrompt(emailContext, userInstructions, stripHtmlFn) {
+export function buildPrompt(emailContext, userInstructions, stripHtmlFn, tone = 'formal') {
   logger.logFunctionCall('buildPrompt', {
     hasContext: !!emailContext,
-    instructionsLength: userInstructions.length
+    instructionsLength: userInstructions.length,
+    tone
   });
   
   const extensionSettings = emailContext.extensionSettings || {};
@@ -159,6 +160,22 @@ export function buildPrompt(emailContext, userInstructions, stripHtmlFn) {
 
   const emailBody = stripHtmlFn(emailContext.emailBody);
 
+  // Add tone-specific string to the system prompt
+  let toneString = '';
+  switch (tone) {
+    case 'formal':
+      toneString = t('toneFormalPrompt') || 'Respond in a formal, professional tone.';
+      break;
+    case 'casual':
+      toneString = t('toneCasualPrompt') || 'Respond in a casual, conversational tone.';
+      break;
+    case 'friendly':
+      toneString = t('toneFriendlyPrompt') || 'Respond in a friendly, approachable tone.';
+      break;
+    default:
+      toneString = t('toneFormalPrompt') || 'Respond in a formal, professional tone.';
+  }
+
   const prompt = `${t('promptContextEmail')}
 ${t('promptContextSubject')} ${emailContext.subject}
 ${senderInfo}${t('promptContextReceiver')} ${emailContext.receiver}
@@ -169,12 +186,15 @@ ${t('promptContextLanguageDetect')}
 
 ${t('promptContextInstructions')} ${userInstructions}
 
-${t('promptContextFormat')}`;
+${t('promptContextFormat')}
+
+${toneString}`;
 
   logger.debug('Prompt built', {
     promptLength: prompt.length,
     includedSender: !!senderInfo,
-    emailBodyLength: emailBody.length
+    emailBodyLength: emailBody.length,
+    toneString
   });
 
   return prompt;

@@ -12,6 +12,7 @@ import { displayStats, updateSubmitCancelVisibility, openSettingsTab, loadLastPr
 // Global state
 let sttRecorder = null;
 let t = null;
+let tone = 'formal'; // Default tone
 
 /**
  * Initialize the popup
@@ -34,6 +35,12 @@ async function init() {
   if (lastPrompt) {
     promptInput.value = lastPrompt;
     updateSubmitCancelVisibility(true);
+  }
+
+  // Load tone setting
+  const toneSetting = await browser.storage.local.get('tone');
+  if (toneSetting.tone) {
+    tone = toneSetting.tone;
   }
 
   // Display stats
@@ -184,7 +191,7 @@ async function handleSubmit() {
     emailContext.extensionSettings = extensionSettings;
     
     // Build full prompt
-    const fullPrompt = buildPrompt(emailContext, userPrompt, stripHtml);
+    const fullPrompt = buildPrompt(emailContext, userPrompt, stripHtml, tone);
     console.log('Full prompt sent to API:', fullPrompt);
 
     // Call OpenAI API

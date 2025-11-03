@@ -121,6 +121,15 @@
             <textarea id="chatSystemPrompt" rows="2" data-i18n-placeholder="systemPromptPlaceholder" placeholder="Du bist ein höflicher E-Mail-Assistent." title="Default text for the assistant (e.g., tone or style)"></textarea>
             <span class="help-text" data-i18n="systemPromptDesc">Vorgabetext für den Assistenten (z. B. Tonfall oder Stil)</span>
           </div>
+          <div class="form-group">
+            <label for="chatTone" data-i18n="toneLabel">Response Tone:</label>
+            <select id="chatTone" title="Select the tone for AI responses">
+              <option value="formal" data-i18n="toneFormal">Formal</option>
+              <option value="casual" data-i18n="toneCasual">Casual</option>
+              <option value="friendly" data-i18n="toneFriendly">Friendly</option>
+            </select>
+            <span class="help-text" data-i18n="toneDesc">Select the tone for AI responses (this will modify the system prompt)</span>
+          </div>
         </form>
       </div>
 

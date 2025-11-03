@@ -71,7 +71,8 @@ export async function importSettings(file, t) {
             model: importedData.stt?.model || 'whisper-1',
             language: importedData.stt?.language || ''
           },
-          generatedEmails: importedData.generatedEmails || 0
+          generatedEmails: importedData.generatedEmails || 0,
+          tone: importedData.tone || 'formal'
         };
         
         await browser.storage.local.set(settingsToImport);

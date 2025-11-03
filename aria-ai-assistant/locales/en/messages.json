@@ -116,5 +116,14 @@
   "promptContextInstructions": { "message": "User Instructions:" },
   "promptContextFormat": { "message": "IMPORTANT INSTRUCTIONS:\n1. Write the email response from the RECEIVER's perspective (see above: Receiver Name, Receiver Organization)\n2. The receiver is responding to the message from the SENDER\n3. Use a natural, professional, and polite tone\n4. Structure the response clearly with meaningful paragraphs\n5. Match the same level of formality as the original message\n6. Directly address the points raised in the original message\n7. Be concise and avoid unnecessary repetition\n8. Write ONLY the email body text, WITHOUT subject line, salutation, or signature\n9. Do NOT begin with phrases like 'Here is the response' or 'AI response'\n10. Use the same language as the original message\n\nFormatting:\n- Use short, clear paragraphs\n- Add blank lines between paragraphs (a single line break)\n- Avoid excessive formatting or bullet points unless necessary" },
   
-  "autoresponsePrompt": { "message": "Write a short and polite confirmation that you have received the email. If the email contains an appointment, confirm it and wish best regards." }
+  "autoresponsePrompt": { "message": "Write a short and polite confirmation that you have received the email. If the email contains an appointment, confirm it and wish best regards." },
+  
+  "toneLabel": { "message": "Response Tone:" },
+  "toneFormal": { "message": "Formal" },
+  "toneCasual": { "message": "Casual" },
+  "toneFriendly": { "message": "Friendly" },
+  "toneDesc": { "message": "Select the tone for AI responses (this will modify the system prompt)" },
+  "toneFormalPrompt": { "message": "Respond in a formal, professional tone." },
+  "toneCasualPrompt": { "message": "Respond in a casual, conversational tone." },
+  "toneFriendlyPrompt": { "message": "Respond in a friendly, approachable tone." }
 }

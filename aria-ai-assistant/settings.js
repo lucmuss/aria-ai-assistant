@@ -35,6 +35,12 @@ async function init() {
 
   // Setup event listeners
   setupEventListeners();
+  
+  // Load tone setting
+  const tone = await browser.storage.local.get('tone');
+  if (tone.tone) {
+    document.getElementById('chatTone').value = tone.tone;
+  }
 }
 
 /**
@@ -43,6 +49,11 @@ async function init() {
 function setupEventListeners() {
   // Save button
   document.getElementById('saveBtn').addEventListener('click', async () => {
+    await saveSettings(t);
+  });
+  
+  // Tone change - auto save
+  document.getElementById('chatTone').addEventListener('change', async () => {
     await saveSettings(t);
   });
 
