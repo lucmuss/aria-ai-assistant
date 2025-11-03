@@ -36,6 +36,19 @@ export async function loadSettings() {
     window.initialLanguageSet = true;
   }
 
+  // Tone and Length Settings
+  if (settings.tone) {
+    document.getElementById('chatTone').value = settings.tone;
+  } else {
+    document.getElementById('chatTone').value = 'none';
+  }
+  
+  if (settings.length) {
+    document.getElementById('chatLength').value = settings.length;
+  } else {
+    document.getElementById('chatLength').value = 'none';
+  }
+
   // Load generation counter
   const generatedEmails = settings.generatedEmails || 0;
   const t = window.currentT || ((key) => key);
@@ -66,7 +79,9 @@ export async function saveSettings(t) {
       apiKey: document.getElementById('sttApiKey').value,
       model: document.getElementById('sttModel').value,
       language: document.getElementById('sttLanguage').value
-    }
+    },
+    tone: document.getElementById('chatTone').value,
+    length: document.getElementById('chatLength').value
   };
 
   await browser.storage.local.set(settings);

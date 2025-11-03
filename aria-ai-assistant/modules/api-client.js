@@ -143,11 +143,12 @@ export async function callOpenAI(prompt) {
 /**
  * Build full prompt from email context and user instructions
  */
-export function buildPrompt(emailContext, userInstructions, stripHtmlFn, tone = 'formal') {
+export function buildPrompt(emailContext, userInstructions, stripHtmlFn, tone = 'none', length = 'none') {
   logger.logFunctionCall('buildPrompt', {
     hasContext: !!emailContext,
     instructionsLength: userInstructions.length,
-    tone
+    tone,
+    length
   });
   
   const extensionSettings = emailContext.extensionSettings || {};
@@ -162,18 +163,38 @@ export function buildPrompt(emailContext, userInstructions, stripHtmlFn, tone = 
 
   // Add tone-specific string to the system prompt
   let toneString = '';
-  switch (tone) {
-    case 'formal':
-      toneString = t('toneFormalPrompt') || 'Respond in a formal, professional tone.';
-      break;
-    case 'casual':
-      toneString = t('toneCasualPrompt') || 'Respond in a casual, conversational tone.';
-      break;
-    case 'friendly':
-      toneString = t('toneFriendlyPrompt') || 'Respond in a friendly, approachable tone.';
-      break;
-    default:
-      toneString = t('toneFormalPrompt') || 'Respond in a formal, professional tone.';
+  if (tone !== 'none') {
+    switch (tone) {
+      case 'formal':
+        toneString = t('toneFormalPrompt') || 'Respond in a formal, professional tone.';
+        break;
+      case 'casual':
+        toneString = t('toneCasualPrompt') || 'Respond in a casual, conversational tone.';
+        break;
+      case 'friendly':
+        toneString = t('toneFriendlyPrompt') || 'Respond in a friendly, approachable tone.';
+        break;
+      default:
+        toneString = t('toneFormalPrompt') || 'Respond in a formal, professional tone.';
+    }
+  }
+
+  // Add length-specific string to the system prompt
+  let lengthString = '';
+  if (length !== 'none') {
+    switch (length) {
+      case 'short':
+        lengthString = t('lengthShortPrompt') || 'Keep the response concise and to the point (under 100 words).';
+        break;
+      case 'medium':
+        lengthString = t('lengthMediumPrompt') || 'Provide a balanced response with sufficient detail (100-300 words).';
+        break;
+      case 'long':
+        lengthString = t('lengthLongPrompt') || 'Provide a comprehensive response with detailed explanations (300+ words).';
+        break;
+      default:
+        lengthString = t('lengthMediumPrompt') || 'Provide a balanced response with sufficient detail (100-300 words).';
+    }
   }
 
   const prompt = `${t('promptContextEmail')}
@@ -188,13 +209,16 @@ ${t('promptContextInstructions')} ${userInstructions}
 
 ${t('promptContextFormat')}
 
-${toneString}`;
+${toneString}
+
+${lengthString}`;
 
   logger.debug('Prompt built', {
     promptLength: prompt.length,
     includedSender: !!senderInfo,
     emailBodyLength: emailBody.length,
-    toneString
+    toneString,
+    lengthString
   });
 
   return prompt;

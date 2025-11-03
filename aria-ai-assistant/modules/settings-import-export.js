@@ -72,7 +72,8 @@ export async function importSettings(file, t) {
             language: importedData.stt?.language || ''
           },
           generatedEmails: importedData.generatedEmails || 0,
-          tone: importedData.tone || 'formal'
+          tone: importedData.tone || 'none',
+          length: importedData.length || 'none'
         };
         
         await browser.storage.local.set(settingsToImport);

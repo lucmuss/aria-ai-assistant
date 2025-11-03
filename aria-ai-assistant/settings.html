@@ -124,11 +124,22 @@
           <div class="form-group">
             <label for="chatTone" data-i18n="toneLabel">Response Tone:</label>
             <select id="chatTone" title="Select the tone for AI responses">
+              <option value="none" data-i18n="toneNone">None</option>
               <option value="formal" data-i18n="toneFormal">Formal</option>
               <option value="casual" data-i18n="toneCasual">Casual</option>
               <option value="friendly" data-i18n="toneFriendly">Friendly</option>
             </select>
             <span class="help-text" data-i18n="toneDesc">Select the tone for AI responses (this will modify the system prompt)</span>
+          </div>
+          <div class="form-group">
+            <label for="chatLength" data-i18n="lengthLabel">Response Length:</label>
+            <select id="chatLength" title="Select the length for AI responses">
+              <option value="none" data-i18n="lengthNone">None</option>
+              <option value="short" data-i18n="lengthShort">Short</option>
+              <option value="medium" data-i18n="lengthMedium">Medium</option>
+              <option value="long" data-i18n="lengthLong">Long</option>
+            </select>
+            <span class="help-text" data-i18n="lengthDesc">Select the length for AI responses (this will modify the system prompt)</span>
           </div>
         </form>
       </div>

@@ -119,11 +119,22 @@
   "autoresponsePrompt": { "message": "Write a short and polite confirmation that you have received the email. If the email contains an appointment, confirm it and wish best regards." },
   
   "toneLabel": { "message": "Response Tone:" },
+  "toneNone": { "message": "None" },
   "toneFormal": { "message": "Formal" },
   "toneCasual": { "message": "Casual" },
   "toneFriendly": { "message": "Friendly" },
   "toneDesc": { "message": "Select the tone for AI responses (this will modify the system prompt)" },
   "toneFormalPrompt": { "message": "Respond in a formal, professional tone." },
   "toneCasualPrompt": { "message": "Respond in a casual, conversational tone." },
-  "toneFriendlyPrompt": { "message": "Respond in a friendly, approachable tone." }
+  "toneFriendlyPrompt": { "message": "Respond in a friendly, approachable tone." },
+  
+  "lengthLabel": { "message": "Response Length:" },
+  "lengthNone": { "message": "None" },
+  "lengthShort": { "message": "Short" },
+  "lengthMedium": { "message": "Medium" },
+  "lengthLong": { "message": "Long" },
+  "lengthDesc": { "message": "Select the length for AI responses (this will modify the system prompt)" },
+  "lengthShortPrompt": { "message": "Keep the response concise and to the point (under 100 words)." },
+  "lengthMediumPrompt": { "message": "Provide a balanced response with sufficient detail (100-300 words)." },
+  "lengthLongPrompt": { "message": "Provide a comprehensive response with detailed explanations (300+ words)." }
 }

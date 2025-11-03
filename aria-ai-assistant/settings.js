@@ -40,6 +40,16 @@ async function init() {
   const tone = await browser.storage.local.get('tone');
   if (tone.tone) {
     document.getElementById('chatTone').value = tone.tone;
+  } else {
+    document.getElementById('chatTone').value = 'none';
+  }
+  
+  // Load length setting
+  const length = await browser.storage.local.get('length');
+  if (length.length) {
+    document.getElementById('chatLength').value = length.length;
+  } else {
+    document.getElementById('chatLength').value = 'none';
   }
 }
 
@@ -54,6 +64,11 @@ function setupEventListeners() {
   
   // Tone change - auto save
   document.getElementById('chatTone').addEventListener('change', async () => {
+    await saveSettings(t);
+  });
+  
+  // Length change - auto save
+  document.getElementById('chatLength').addEventListener('change', async () => {
     await saveSettings(t);
   });
 
