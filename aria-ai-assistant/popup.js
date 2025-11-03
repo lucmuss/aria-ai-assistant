@@ -73,6 +73,21 @@ function setupEventListeners() {
     }
   });
 
+  // Add keyboard shortcuts for voice input and autoresponse
+  document.addEventListener('keydown', async (event) => {
+    // Voice input shortcut: Ctrl+V (or Cmd+V on Mac)
+    if ((event.ctrlKey || event.metaKey) && event.key === 'v' && !event.shiftKey && !event.altKey) {
+      event.preventDefault();
+      voiceInputBtn.click();
+    }
+    
+    // Autoresponse shortcut: Ctrl+A (or Cmd+A on Mac)
+    if ((event.ctrlKey || event.metaKey) && event.key === 'a' && !event.shiftKey && !event.altKey) {
+      event.preventDefault();
+      autoresponseBtn.click();
+    }
+  });
+
   // Voice input button
   voiceInputBtn.addEventListener('click', handleVoiceInput);
 
