@@ -2,45 +2,48 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-i18n="settingsTitle">ARIA - KI-Assistent</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <div style="display: flex; align-items: center;">
-      <img src="icons/ai-icon_128.png" alt="ARIA Icon" style="width: 64px; height: 64px; vertical-align: middle; margin-right: 8px;">
-      <span id="settingsTitle" data-i18n="settingsTitle" style="font-size: 1.95em; font-weight: bold;">ARIA - KI-Assistent</span>
-      <span id="version" style="font-size: 0.8em; color: #666; margin-left: 10px;">v1.1</span>
+  <div class="container">
+    <header class="header">
+      <div class="header-content">
+        <div class="logo-container">
+          <img src="icons/ai-icon_128.png" alt="ARIA Icon" class="logo">
+          <div class="title-container">
+            <h1 id="settingsTitle" data-i18n="settingsTitle">ARIA - KI-Assistent</h1>
+            <span id="version" class="version">v1.1</span>
+          </div>
+        </div>
+        <div id="generationCounter" class="generation-counter"></div>
+      </div>
+    </header>
+
+    <div class="actions-container">
+      <div class="action-buttons">
+        <button id="saveBtn" data-i18n="saveBtn">💾 Einstellungen speichern</button>
+        <button id="donateBtn" data-i18n="donateBtn" class="donate-btn">Donate</button>
+      </div>
+      <div class="action-buttons">
+        <button id="testApiBtn" data-i18n="testApiBtn">🧪 API testen</button>
+        <button id="testSttBtn" data-i18n="testSttBtn">🧪 STT API testen</button>
+      </div>
+      <div class="action-buttons">
+        <button id="exportBtn" data-i18n="exportBtn">📤 Einstellungen exportieren</button>
+        <button id="importBtn" data-i18n="importBtn">📥 Einstellungen importieren</button>
+      </div>
+      <input type="file" id="importFile" accept=".json" class="import-file">
+      <p id="status" class="status-box"></p>
     </div>
-  </div>
 
-  <div id="generationCounter" style="margin: 10px 0; font-weight: bold; color: #333;"></div>
-
-
-  <div class="button-row">
-    <button id="saveBtn" data-i18n="saveBtn">💾 Einstellungen speichern</button>
-    <button id="donateBtn" data-i18n="donateBtn" style="background: #1097d2; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 0.9em; flex: 0 0 auto; width: auto;">Donate</button>
-  </div>
-
-  <div class="button-row">
-    <button id="testApiBtn" data-i18n="testApiBtn">🧪 API testen</button>
-    <button id="testSttBtn" data-i18n="testSttBtn">🧪 STT API testen</button>
-  </div>
-
-  <div class="button-row">
-    <button id="exportBtn" data-i18n="exportBtn">📤 Einstellungen exportieren</button>
-    <button id="importBtn" data-i18n="importBtn">📥 Einstellungen importieren</button>
-  </div>
-
-  <input type="file" id="importFile" accept=".json" style="display: none;">
-  <p id="status" class="status-box"></p>
-
-  <form id="extensionForm">
-      <table>
-        <tr><th colspan="3" data-i18n="extensionSettings">Erweiterungs-Einstellungen</th></tr>
-        <tr>
-          <td><b data-i18n="languageLabel">Oberflächensprache:</b></td>
-          <td>
+    <div class="settings-container">
+      <div class="settings-section">
+        <h2 class="section-title" data-i18n="extensionSettings">Erweiterungs-Einstellungen</h2>
+        <form id="extensionForm">
+          <div class="form-group">
+            <label for="uiLanguage" data-i18n="languageLabel">Oberflächensprache:</label>
             <select id="uiLanguage" title="Select the interface language for the extension">
               <option value="en">English (English)</option>
               <option value="zh">中文 (Chinese)</option>
@@ -57,104 +60,105 @@
               <option value="ja">日本語 (Japanese)</option>
               <option value="pl">Polski (Polish)</option>
             </select>
-          </td>
-          <td data-i18n="languageDesc">Wähle die Sprache der Benutzeroberfläche</td>
-        </tr>
-        <tr>
-          <td><b data-i18n="contextSizeLabel">Kontextgröße:</b></td>
-          <td><input type="number" id="extensionContextSize" value="5" title="Number of previous messages to include as context when generating responses"></td>
-          <td data-i18n="contextSizeDesc">Anzahl der vorherigen Nachrichten, die als Kontext gesendet werden</td>
-        </tr>
-        <tr>
-          <td><b data-i18n="includeSenderLabel">Absender einbeziehen:</b></td>
-          <td><input type="checkbox" id="extensionIncludeSender" title="Include the sender's email address in the prompt context"></td>
-          <td data-i18n="includeSenderDesc">Fügt die Absenderadresse in den Prompt-Kontext ein</td>
-        </tr>
-        <tr>
-          <td><b data-i18n="clearEmailLabel">E-Mail-Inhalt nach Submit löschen:</b></td>
-          <td><input type="checkbox" id="clearEmailAfterSubmit" title="Clear the email content before inserting the AI response"></td>
-          <td data-i18n="clearEmailDesc">Löscht den E-Mail-Inhalt vor dem Einfügen der KI-Antwort</td>
-        </tr>
-      </table>
-    </form>
+            <span class="help-text" data-i18n="languageDesc">Wähle die Sprache der Benutzeroberfläche</span>
+          </div>
+          <div class="form-group">
+            <label for="extensionContextSize" data-i18n="contextSizeLabel">Kontextgröße:</label>
+            <input type="number" id="extensionContextSize" value="5" title="Number of previous messages to include as context when generating responses">
+            <span class="help-text" data-i18n="contextSizeDesc">Anzahl der vorherigen Nachrichten, die als Kontext gesendet werden</span>
+          </div>
+          <div class="form-group">
+            <label for="extensionIncludeSender" data-i18n="includeSenderLabel">Absender einbeziehen:</label>
+            <input type="checkbox" id="extensionIncludeSender" title="Include the sender's email address in the prompt context">
+            <span class="help-text" data-i18n="includeSenderDesc">Fügt die Absenderadresse in den Prompt-Kontext ein</span>
+          </div>
+          <div class="form-group">
+            <label for="clearEmailAfterSubmit" data-i18n="clearEmailLabel">E-Mail-Inhalt nach Submit löschen:</label>
+            <input type="checkbox" id="clearEmailAfterSubmit" title="Clear the email content before inserting the AI response">
+            <span class="help-text" data-i18n="clearEmailDesc">Löscht den E-Mail-Inhalt vor dem Einfügen der KI-Antwort</span>
+          </div>
+        </form>
+      </div>
 
-  <form id="settingsForm">
-    <table>
-      <tr><th colspan="3" data-i18n="chatSettings">Chat API Einstellungen</th></tr>
-      <tr>
-        <td><b data-i18n="apiUrlLabel">API URL:</b></td>
-        <td><input type="text" id="chatApiUrl" data-i18n-placeholder="apiUrlPlaceholder" placeholder="https://api.openai.com/v1/chat/completions" title="API endpoint URL for your AI model (e.g., OpenAI or local ULAMA server)"></td>
-        <td data-i18n="apiUrlDesc">Endpoint für dein Modell (z. B. OpenAI oder lokaler ULAMA-Server)</td>
-      </tr>
-      <tr>
-        <td><b data-i18n="apiKeyLabel">API Key:</b></td>
-        <td><input type="password" id="chatApiKey" data-i18n-placeholder="apiKeyPlaceholder" placeholder="sk-xxxxxxxxxxxx" title="Your API key from the provider (e.g., OpenAI, Ollama, etc.)"></td>
-        <td data-i18n="apiKeyDesc">Dein API-Schlüssel vom Anbieter (z. B. OpenAI, Ollama etc.)</td>
-      </tr>
-      <tr>
-        <td><b data-i18n="modelLabel">Modell:</b></td>
-        <td><input type="text" id="chatModel" value="gpt-4o-mini" title="Model name (e.g., gpt-4o, llama3, mistral)"></td>
-        <td data-i18n="modelDesc">Modellname (z. B. <code>gpt-4o</code>, <code>llama3</code>, <code>mistral</code>)</td>
-      </tr>
-      <tr>
-        <td><b data-i18n="temperatureLabel">Temperatur:</b></td>
-        <td><input type="number" step="0.1" min="0" max="2" id="chatTemperature" value="1.0" title="Controls creativity (0 = factual, 1 = creative)"></td>
-        <td data-i18n="temperatureDesc">Steuert Kreativität (0 = sachlich, 1 = kreativ)</td>
-      </tr>
-      <tr>
-        <td><b data-i18n="maxTokensLabel">Max Tokens:</b></td>
-        <td><input type="number" id="chatMaxTokens" value="2000" title="Maximum length of the response text"></td>
-        <td data-i18n="maxTokensDesc">Maximale Textlänge der Antwort</td>
-      </tr>
-      <tr>
-        <td><b data-i18n="systemPromptLabel">System Prompt:</b></td>
-        <td><textarea id="chatSystemPrompt" rows="2" data-i18n-placeholder="systemPromptPlaceholder" placeholder="Du bist ein höflicher E-Mail-Assistent." title="Default text for the assistant (e.g., tone or style)"></textarea></td>
-        <td data-i18n="systemPromptDesc">Vorgabetext für den Assistenten (z. B. Tonfall oder Stil)</td>
-      </tr>
-      </table>
-    </form>
+      <div class="settings-section">
+        <h2 class="section-title" data-i18n="chatSettings">Chat API Einstellungen</h2>
+        <form id="settingsForm">
+          <div class="form-group">
+            <label for="chatApiUrl" data-i18n="apiUrlLabel">API URL:</label>
+            <input type="text" id="chatApiUrl" data-i18n-placeholder="apiUrlPlaceholder" placeholder="https://api.openai.com/v1/chat/completions" title="API endpoint URL for your AI model (e.g., OpenAI or local ULAMA server)">
+            <span class="help-text" data-i18n="apiUrlDesc">Endpoint für dein Modell (z. B. OpenAI oder lokaler ULAMA-Server)</span>
+          </div>
+          <div class="form-group">
+            <label for="chatApiKey" data-i18n="apiKeyLabel">API Key:</label>
+            <input type="password" id="chatApiKey" data-i18n-placeholder="apiKeyPlaceholder" placeholder="sk-xxxxxxxxxxxx" title="Your API key from the provider (e.g., OpenAI, Ollama, etc.)">
+            <span class="help-text" data-i18n="apiKeyDesc">Dein API-Schlüssel vom Anbieter (z. B. OpenAI, Ollama etc.)</span>
+          </div>
+          <div class="form-group">
+            <label for="chatModel" data-i18n="modelLabel">Modell:</label>
+            <input type="text" id="chatModel" value="gpt-4o-mini" title="Model name (e.g., gpt-4o, llama3, mistral)">
+            <span class="help-text" data-i18n="modelDesc">Modellname (z. B. <code>gpt-4o</code>, <code>llama3</code>, <code>mistral</code>)</span>
+          </div>
+          <div class="form-group">
+            <label for="chatTemperature" data-i18n="temperatureLabel">Temperatur:</label>
+            <input type="number" step="0.1" min="0" max="2" id="chatTemperature" value="1.0" title="Controls creativity (0 = factual, 1 = creative)">
+            <span class="help-text" data-i18n="temperatureDesc">Steuert Kreativität (0 = sachlich, 1 = kreativ)</span>
+          </div>
+          <div class="form-group">
+            <label for="chatMaxTokens" data-i18n="maxTokensLabel">Max Tokens:</label>
+            <input type="number" id="chatMaxTokens" value="2000" title="Maximum length of the response text">
+            <span class="help-text" data-i18n="maxTokensDesc">Maximale Textlänge der Antwort</span>
+          </div>
+          <div class="form-group">
+            <label for="chatSystemPrompt" data-i18n="systemPromptLabel">System Prompt:</label>
+            <textarea id="chatSystemPrompt" rows="2" data-i18n-placeholder="systemPromptPlaceholder" placeholder="Du bist ein höflicher E-Mail-Assistent." title="Default text for the assistant (e.g., tone or style)"></textarea>
+            <span class="help-text" data-i18n="systemPromptDesc">Vorgabetext für den Assistenten (z. B. Tonfall oder Stil)</span>
+          </div>
+        </form>
+      </div>
 
-    <form id="sttForm">
-      <table>
-        <tr><th colspan="3" data-i18n="sttSettings">Speech-to-Text Einstellungen</th></tr>
-      <tr>
-        <td><b data-i18n="sttApiUrlLabel">STT API URL:</b></td>
-        <td><input type="text" id="sttApiUrl" data-i18n-placeholder="sttApiUrlPlaceholder" placeholder="https://api.openai.com/v1/audio/transcriptions" title="URL for speech transcription (e.g., Whisper)"></td>
-        <td data-i18n="sttApiUrlDesc">URL für Sprachtranskription (z. B. Whisper)</td>
-      </tr>
-      <tr>
-        <td><b data-i18n="sttApiKeyLabel">STT API Key:</b></td>
-        <td><input type="password" id="sttApiKey" data-i18n-placeholder="sttApiKeyPlaceholder" placeholder="sk-xxxxxxxxxxxx" title="API key for the STT provider"></td>
-        <td data-i18n="sttApiKeyDesc">API-Key für den STT-Anbieter</td>
-      </tr>
-      <tr>
-        <td><b data-i18n="sttModelLabel">Modell:</b></td>
-        <td><input type="text" id="sttModel" value="whisper-1" title="Speech model (e.g., whisper-1 or local tiny)"></td>
-        <td data-i18n="sttModelDesc">Sprachmodell (z. B. <code>whisper-1</code> oder lokal <code>tiny</code>)</td>
-      </tr>
-      <tr>
-        <td><b data-i18n="sttLanguageLabel">Sprache:</b></td>
-        <td>
-          <select id="sttLanguage" title="Language for speech recognition (empty = automatic)">
-            <option value="" data-i18n="sttLanguageAuto">Auto</option>
-            <option value="en">English (en)</option>
-            <option value="zh">中文 (zh)</option>
-            <option value="hi">हिन्दी (hi)</option>
-            <option value="es">Español (es)</option>
-            <option value="fr">Français (fr)</option>
-            <option value="ar">العربية (ar)</option>
-            <option value="bn">বাংলা (bn)</option>
-            <option value="ru">Русский (ru)</option>
-            <option value="pt">Português (pt)</option>
-            <option value="ur">اردو (ur)</option>
-            <option value="id">Bahasa Indonesia (id)</option>
-            <option value="de">Deutsch (de)</option>
-            <option value="ja">日本語 (ja)</option>
-            <option value="pl">Polski (pl)</option>
-          </select>
-        </
-    </table>
-  </form>
+      <div class="settings-section">
+        <h2 class="section-title" data-i18n="sttSettings">Speech-to-Text Einstellungen</h2>
+        <form id="sttForm">
+          <div class="form-group">
+            <label for="sttApiUrl" data-i18n="sttApiUrlLabel">STT API URL:</label>
+            <input type="text" id="sttApiUrl" data-i18n-placeholder="sttApiUrlPlaceholder" placeholder="https://api.openai.com/v1/audio/transcriptions" title="URL for speech transcription (e.g., Whisper)">
+            <span class="help-text" data-i18n="sttApiUrlDesc">URL für Sprachtranskription (z. B. Whisper)</span>
+          </div>
+          <div class="form-group">
+            <label for="sttApiKey" data-i18n="sttApiKeyLabel">STT API Key:</label>
+            <input type="password" id="sttApiKey" data-i18n-placeholder="sttApiKeyPlaceholder" placeholder="sk-xxxxxxxxxxxx" title="API key for the STT provider">
+            <span class="help-text" data-i18n="sttApiKeyDesc">API-Key für den STT-Anbieter</span>
+          </div>
+          <div class="form-group">
+            <label for="sttModel" data-i18n="sttModelLabel">Modell:</label>
+            <input type="text" id="sttModel" value="whisper-1" title="Speech model (e.g., whisper-1 or local tiny)">
+            <span class="help-text" data-i18n="sttModelDesc">Sprachmodell (z. B. <code>whisper-1</code> oder lokal <code>tiny</code>)</span>
+          </div>
+          <div class="form-group">
+            <label for="sttLanguage" data-i18n="sttLanguageLabel">Sprache:</label>
+            <select id="sttLanguage" title="Language for speech recognition (empty = automatic)">
+              <option value="" data-i18n="sttLanguageAuto">Auto</option>
+              <option value="en">English (en)</option>
+              <option value="zh">中文 (zh)</option>
+              <option value="hi">हिन्दी (hi)</option>
+              <option value="es">Español (es)</option>
+              <option value="fr">Français (fr)</option>
+              <option value="ar">العربية (ar)</option>
+              <option value="bn">বাংলা (bn)</option>
+              <option value="ru">Русский (ru)</option>
+              <option value="pt">Português (pt)</option>
+              <option value="ur">اردو (ur)</option>
+              <option value="id">Bahasa Indonesia (id)</option>
+              <option value="de">Deutsch (de)</option>
+              <option value="ja">日本語 (ja)</option>
+              <option value="pl">Polski (pl)</option>
+            </select>
+            <span class="help-text" data-i18n="sttLanguageDesc">Sprache für die Spracherkennung (leer = automatisch)</span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <script type="module" src="settings.js"></script>
 </body>

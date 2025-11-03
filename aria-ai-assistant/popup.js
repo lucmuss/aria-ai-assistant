@@ -61,6 +61,18 @@ function setupEventListeners() {
     updateSubmitCancelVisibility(promptInput.value.trim().length > 0);
   });
 
+  // Handle Enter key press to submit or autoresponse
+  promptInput.addEventListener('keydown', async (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault(); // Prevent adding new line
+      if (promptInput.value.trim().length > 0) {
+        submitBtn.click();
+      } else {
+        autoresponseBtn.click();
+      }
+    }
+  });
+
   // Voice input button
   voiceInputBtn.addEventListener('click', handleVoiceInput);
 
