@@ -115,22 +115,37 @@ body {
 }
 
 .donate-btn {
-  background: #1097d2;
+  background: #3498db;
   color: white;
-  border: 1px solid #0d7fa8;
-  padding: 8px 12px;
-  border-radius: 4px;
+  border: 2px solid #2980b9;
+  padding: 12px 24px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
-  transition: all 0.2s ease;
+  font-size: 1.1em;
+  transition: all 0.3s ease;
   flex: 1;
-  min-width: 120px;
+  min-width: 140px;
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
 }
 
 .donate-btn:hover {
-  background: #0d7fa8;
-  border-color: #0a6b8c;
-  transform: translateY(-1px);
+  background: #2980b9;
+  border-color: #1c5980;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 12px rgba(52, 152, 219, 0.4);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .import-file {
