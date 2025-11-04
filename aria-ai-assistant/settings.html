@@ -117,11 +117,6 @@
             <span class="help-text" data-i18n="maxTokensDesc">Maximale Textlänge der Antwort</span>
           </div>
           <div class="form-group">
-            <label for="chatSystemPrompt" data-i18n="systemPromptLabel">System Prompt:</label>
-            <textarea id="chatSystemPrompt" rows="2" data-i18n-placeholder="systemPromptPlaceholder" placeholder="Du bist ein höflicher E-Mail-Assistent." title="Default text for the assistant (e.g., tone or style)"></textarea>
-            <span class="help-text" data-i18n="systemPromptDesc">Vorgabetext für den Assistenten (z. B. Tonfall oder Stil)</span>
-          </div>
-          <div class="form-group">
             <label for="chatTone" data-i18n="toneLabel">Response Tone:</label>
             <select id="chatTone" title="Select the tone for AI responses">
               <option value="none" data-i18n="toneNone">None</option>
@@ -140,6 +135,33 @@
               <option value="long" data-i18n="lengthLong">Long</option>
             </select>
             <span class="help-text" data-i18n="lengthDesc">Select the length for AI responses (this will modify the system prompt)</span>
+          </div>
+        </form>
+      </div>
+
+      <div class="settings-section">
+        <h2 class="section-title" data-i18n="systemPromptSettings">System Prompt Einstellungen</h2>
+        <form id="systemPromptForm">
+          <div class="form-group">
+            <label for="systemPromptLibrary" data-i18n="systemPromptLibraryLabel">System Prompt Library:</label>
+            <select id="systemPromptLibrary" title="Select a saved system prompt to load">
+              <option value="">-- Select a saved system prompt --</option>
+            </select>
+            <span class="help-text" data-i18n="systemPromptLibraryDesc">Select a saved system prompt to load</span>
+          </div>
+          <div class="form-group">
+            <label for="systemPromptName" data-i18n="systemPromptNameLabel">System Prompt Name:</label>
+            <input type="text" id="systemPromptName" placeholder="Default" title="Enter a name for the current system prompt">
+            <span class="help-text" data-i18n="systemPromptNameDesc">Enter a name for the current system prompt</span>
+          </div>
+          <div class="form-group">
+            <label for="systemPromptContent" data-i18n="systemPromptContentLabel">System Prompt:</label>
+            <textarea id="systemPromptContent" rows="4" placeholder="systemPromptDefault" title="Default text for the assistant (e.g., tone or style)"></textarea>
+            <span class="help-text" data-i18n="systemPromptContentDesc">Vorgabetext für den Assistenten (z. B. Tonfall oder Stil)</span>
+          </div>
+          <div class="action-buttons">
+            <button type="button" id="saveSystemPromptBtn" data-i18n="saveSystemPromptBtn">💾 Save System Prompt</button>
+            <button type="button" id="deleteSystemPromptBtn" data-i18n="deleteSystemPromptBtn">🗑️ Delete System Prompt</button>
           </div>
         </form>
       </div>

@@ -136,5 +136,22 @@
   "lengthDesc": { "message": "Select the length for AI responses (this will modify the system prompt)" },
   "lengthShortPrompt": { "message": "Keep the response concise and to the point (under 100 words)." },
   "lengthMediumPrompt": { "message": "Provide a balanced response with sufficient detail (100-300 words)." },
-  "lengthLongPrompt": { "message": "Provide a comprehensive response with detailed explanations (300+ words)." }
+  "lengthLongPrompt": { "message": "Provide a comprehensive response with detailed explanations (300+ words)." },
+  
+  "systemPromptSettings": { "message": "System Prompt Settings" },
+  "systemPromptLibraryLabel": { "message": "System Prompt Library:" },
+  "systemPromptLibraryDesc": { "message": "Select a saved system prompt to load" },
+  "systemPromptNameLabel": { "message": "System Prompt Name:" },
+  "systemPromptNameDesc": { "message": "Enter a name for the current system prompt" },
+  "systemPromptContentLabel": { "message": "System Prompt:" },
+  "systemPromptContentDesc": { "message": "Default text for the assistant (e.g. tone or style)" },
+  "saveSystemPromptBtn": { "message": "💾 Save System Prompt" },
+  "deleteSystemPromptBtn": { "message": "🗑️ Delete System Prompt" },
+  "systemPromptNameRequired": { "message": "Please enter a name for the system prompt." },
+  "systemPromptSaved": { "message": "System prompt saved successfully!" },
+  "systemPromptSaveError": { "message": "Error saving system prompt: " },
+  "systemPromptSelectToDelete": { "message": "Please select a system prompt from the library to delete." },
+  "systemPromptDeleteConfirm": { "message": "Are you sure you want to delete this system prompt?" },
+  "systemPromptDeleted": { "message": "System prompt deleted successfully!" },
+  "systemPromptDeleteError": { "message": "Error deleting system prompt: " }
 }

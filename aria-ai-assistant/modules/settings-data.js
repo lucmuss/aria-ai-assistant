@@ -15,7 +15,6 @@ export async function loadSettings() {
   document.getElementById('chatModel').value = settings.chat?.model || 'gpt-4o-mini';
   document.getElementById('chatTemperature').value = settings.chat?.temperature || 1.0;
   document.getElementById('chatMaxTokens').value = settings.chat?.maxTokens || 2000;
-  document.getElementById('chatSystemPrompt').value = settings.chat?.systemPrompt || '';
 
   // Extension Settings
   let extension = settings.extension || {};
@@ -53,6 +52,11 @@ export async function loadSettings() {
   const generatedEmails = settings.generatedEmails || 0;
   const t = window.currentT || ((key) => key);
   document.getElementById('generationCounter').innerText = `${t('generatedEmailsLabel')} ${generatedEmails}`;
+  
+  // Load current system prompt if available
+  if (settings.currentSystemPrompt) {
+    document.getElementById('systemPromptContent').value = settings.currentSystemPrompt;
+  }
 }
 
 /**
@@ -66,8 +70,7 @@ export async function saveSettings(t) {
       apiKey: document.getElementById('chatApiKey').value,
       model: document.getElementById('chatModel').value,
       temperature: parseFloat(document.getElementById('chatTemperature').value),
-      maxTokens: parseInt(document.getElementById('chatMaxTokens').value),
-      systemPrompt: document.getElementById('chatSystemPrompt').value
+      maxTokens: parseInt(document.getElementById('chatMaxTokens').value)
     },
     extension: {
       contextSize: parseInt(document.getElementById('extensionContextSize').value),

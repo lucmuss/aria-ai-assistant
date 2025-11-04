@@ -17,6 +17,18 @@ export async function getChatSettings() {
 }
 
 /**
+ * Get current system prompt from storage
+ * Returns the content of the currently selected system prompt or a default
+ */
+export async function getCurrentSystemPrompt() {
+  logger.logFunctionCall('getCurrentSystemPrompt');
+  const result = await browser.storage.local.get('currentSystemPrompt');
+  const systemPrompt = result.currentSystemPrompt || (window.t ? window.t('systemPromptDefault') : 'You are a helpful email assistant.');
+  logger.logFunctionResult('getCurrentSystemPrompt', { promptLength: systemPrompt.length });
+  return systemPrompt;
+}
+
+/**
  * Get extension settings from storage
  */
 export async function getExtensionSettings() {
@@ -71,12 +83,15 @@ export async function callOpenAI(prompt) {
   const startTime = performance.now();
   logger.info('Starting API call', { model: settings.model, promptLength: prompt.length });
 
+  // Get the current system prompt from System Prompt Settings
+  const systemPrompt = await getCurrentSystemPrompt();
+
   const body = {
     model: settings.model,
     messages: [
       { 
         role: 'system', 
-        content: settings.systemPrompt || (window.t ? window.t('systemPromptDefault') : 'You are a helpful email assistant.')
+        content: systemPrompt
       },
       { 
         role: 'user', 

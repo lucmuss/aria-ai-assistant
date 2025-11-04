@@ -7,6 +7,12 @@ import { loadI18n } from './modules/settings-i18n.js';
 import { testChatApi, testSttApi } from './modules/settings-api-test.js';
 import { exportSettings, importSettings } from './modules/settings-import-export.js';
 import { loadSettings, saveSettings } from './modules/settings-data.js';
+import { 
+  populateSystemPromptLibrary, 
+  loadSystemPromptIntoForm, 
+  saveSystemPrompt, 
+  deleteSystemPrompt 
+} from './modules/system-prompt-manager.js';
 
 let t = null;
 
@@ -32,6 +38,9 @@ async function init() {
 
   // Load settings
   await loadSettings();
+  
+  // Populate system prompt library
+  await populateSystemPromptLibrary(document.getElementById('systemPromptLibrary'));
 
   // Setup event listeners
   setupEventListeners();
@@ -105,6 +114,93 @@ function setupEventListeners() {
       await importSettings(file, t);
       location.reload();
       e.target.value = '';
+    }
+  });
+  
+  // System Prompt Library dropdown change
+  document.getElementById('systemPromptLibrary').addEventListener('change', async (e) => {
+    const selectedName = e.target.value;
+    if (selectedName) {
+      const nameInput = document.getElementById('systemPromptName');
+      const contentTextarea = document.getElementById('systemPromptContent');
+      await loadSystemPromptIntoForm(selectedName, nameInput, contentTextarea);
+      
+      // Save this as the current system prompt
+      await browser.storage.local.set({ currentSystemPrompt: contentTextarea.value });
+    }
+  });
+  
+  // System Prompt Content change - auto save as current
+  document.getElementById('systemPromptContent').addEventListener('input', async (e) => {
+    const content = e.target.value;
+    await browser.storage.local.set({ currentSystemPrompt: content });
+  });
+  
+  // Save System Prompt button
+  document.getElementById('saveSystemPromptBtn').addEventListener('click', async () => {
+    const nameInput = document.getElementById('systemPromptName');
+    const contentTextarea = document.getElementById('systemPromptContent');
+    const name = nameInput.value.trim();
+    const content = contentTextarea.value;
+    
+    if (!name) {
+      alert(t('systemPromptNameRequired') || 'Please enter a name for the system prompt.');
+      return;
+    }
+    
+    try {
+      await saveSystemPrompt(name, content);
+      await populateSystemPromptLibrary(document.getElementById('systemPromptLibrary'));
+      
+      // Update the dropdown to show the saved prompt
+      document.getElementById('systemPromptLibrary').value = name;
+      
+      // Save this as the current system prompt
+      await browser.storage.local.set({ currentSystemPrompt: content });
+      
+      const statusBox = document.getElementById('status');
+      statusBox.textContent = t('systemPromptSaved') || 'System prompt saved successfully!';
+      statusBox.style.display = 'block';
+      setTimeout(() => {
+        statusBox.style.display = 'none';
+      }, 3000);
+    } catch (error) {
+      alert(t('systemPromptSaveError') || 'Error saving system prompt: ' + error.message);
+    }
+  });
+  
+  // Delete System Prompt button
+  document.getElementById('deleteSystemPromptBtn').addEventListener('click', async () => {
+    const libraryDropdown = document.getElementById('systemPromptLibrary');
+    const selectedName = libraryDropdown.value;
+    
+    if (!selectedName) {
+      alert(t('systemPromptSelectToDelete') || 'Please select a system prompt from the library to delete.');
+      return;
+    }
+    
+    const confirmed = confirm(t('systemPromptDeleteConfirm') || `Are you sure you want to delete the system prompt "${selectedName}"?`);
+    if (!confirmed) {
+      return;
+    }
+    
+    try {
+      await deleteSystemPrompt(selectedName);
+      await populateSystemPromptLibrary(libraryDropdown);
+      
+      // Clear the form fields
+      document.getElementById('systemPromptName').value = '';
+      document.getElementById('systemPromptContent').value = '';
+      libraryDropdown.value = '';
+      
+      const statusBox = document.getElementById('status');
+      statusBox.textContent = t('systemPromptDeleted') || 'System prompt deleted successfully!';
+      statusBox.style.display = 'block';
+      setTimeout(() => {
+        statusBox.style.display = 'none';
+      }, 3000);
+    } catch (error) {
+      alert(t('systemPromptDeleteError') || 'Error deleting system prompt: ' + error.message);
     }
   });
 }

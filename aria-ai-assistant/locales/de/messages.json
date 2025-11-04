@@ -116,5 +116,36 @@
   "promptContextInstructions": { "message": "Benutzeranweisungen:" },
   "promptContextFormat": { "message": "WICHTIGE ANWEISUNGEN:\n1. Schreibe die E-Mail-Antwort aus der Sicht des EMPFÄNGERS (siehe oben: Empfänger Name, Empfänger Organisation)\n2. Der Empfänger antwortet auf die Nachricht vom ABSENDER\n3. Verwende einen natürlichen, professionellen und höflichen Ton\n4. Strukturiere die Antwort klar mit sinnvollen Absätzen\n5. Behalte den gleichen Formalitätsgrad wie die ursprüngliche Nachricht\n6. Gehe direkt auf die Punkte der ursprünglichen Nachricht ein\n7. Sei präzise und vermeide unnötige Wiederholungen\n8. Schreibe NUR den E-Mail-Text, OHNE Betreff, Anrede-Formel oder Signatur\n9. Beginne NICHT mit Phrasen wie 'Hier ist die Antwort' oder 'AI response'\n10. Verwende die gleiche Sprache wie die ursprüngliche Nachricht\n\nFormatierung:\n- Verwende kurze, klare Absätze\n- Füge Leerzeilen zwischen Absätzen ein (ein einfacher Zeilenumbruch)\n- Vermeide übermäßige Formatierung oder Aufzählungen, es sei denn, sie sind notwendig" },
   
-  "autoresponsePrompt": { "message": "Schreibe eine kurze und höfliche Bestätigung, dass du die E-Mail erhalten hast. Falls die E-Mail einen Termin enthält bestätige diesen und wünsche Beste Grüße." }
+  "autoresponsePrompt": { "message": "Schreibe eine kurze und höfliche Bestätigung, dass du die E-Mail erhalten hast. Falls die E-Mail einen Termin enthält bestätige diesen und wünsche Beste Grüße." },
+  
+  "systemPromptSettings": { "message": "System Prompt Einstellungen" },
+  "systemPromptLibraryLabel": { "message": "System Prompt Library:" },
+  "systemPromptLibraryDesc": { "message": "Select a saved system prompt to load" },
+  "systemPromptNameLabel": { "message": "System Prompt Name:" },
+  "systemPromptNameDesc": { "message": "Enter a name for the current system prompt" },
+  "systemPromptContentLabel": { "message": "System Prompt:" },
+  "systemPromptContentDesc": { "message": "Vorgabetext für den Assistenten (z. B. Tonfall oder Stil)" },
+  "saveSystemPromptBtn": { "message": "💾 Save System Prompt" },
+  "deleteSystemPromptBtn": { "message": "🗑️ Delete System Prompt" },
+  "systemPromptNameRequired": { "message": "Bitte geben Sie einen Namen für den System Prompt ein." },
+  "systemPromptSaved": { "message": "System Prompt erfolgreich gespeichert!" },
+  "systemPromptSaveError": { "message": "Fehler beim Speichern des System Prompts: " },
+  "systemPromptSelectToDelete": { "message": "Bitte wählen Sie einen System Prompt aus der Library zum Löschen aus." },
+  "systemPromptDeleteConfirm": { "message": "Sind Sie sicher, dass Sie den System Prompt löschen möchten?" },
+  "systemPromptDeleted": { "message": "System Prompt erfolgreich gelöscht!" },
+  "systemPromptDeleteError": { "message": "Fehler beim Löschen des System Prompts: " },
+  
+  "toneLabel": { "message": "Response Tone:" },
+  "toneDesc": { "message": "Select the tone for AI responses (this will modify the system prompt)" },
+  "toneNone": { "message": "None" },
+  "toneFormal": { "message": "Formal" },
+  "toneCasual": { "message": "Casual" },
+  "toneFriendly": { "message": "Friendly" },
+  
+  "lengthLabel": { "message": "Response Length:" },
+  "lengthDesc": { "message": "Select the length for AI responses (this will modify the system prompt)" },
+  "lengthNone": { "message": "None" },
+  "lengthShort": { "message": "Short" },
+  "lengthMedium": { "message": "Medium" },
+  "lengthLong": { "message": "Long" }
 }
