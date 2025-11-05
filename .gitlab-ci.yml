@@ -24,6 +24,7 @@ build:
   stage: build
   image: node:18-alpine
   before_script:
+    - apk add --no-cache zip jq
     - npm install -g web-ext
   script:
     - web-ext build --source-dir $WEB_EXT_SOURCE_DIR --overwrite-dest
@@ -134,6 +135,8 @@ release-tag:
   image: node:18-alpine
   dependencies:
     - build
+  before_script:
+    - apk add --no-cache zip
   script:
     - |
       # Create ZIP archive of the extension (alternative to XPI)
