@@ -4,8 +4,10 @@
  */
 
 import { createLogger } from './logger.js';
-import yaml from './js-yaml.min.js';
 const logger = createLogger('API-Client');
+
+// Use global js-yaml from CDN
+const yaml = window.jsyaml;
 
 // Cache for app config
 let appConfigCache = null;
@@ -32,23 +34,37 @@ async function loadAppConfig() {
     logger.error('Failed to load app config, using defaults', error);
     // Return default config if loading fails
     appConfigCache = {
-      system_prompt_template: "You are a helpful email assistant. {tone} {length}",
+      system_prompt_template: "You are an expert email assistant specializing in professional communication. {tone} {length}",
+      tone_options: {
+        none: "",
+        formal: "Always use formal, professional language with proper business etiquette.",
+        casual: "Use friendly, conversational language while maintaining professionalism.",
+        friendly: "Be warm and approachable, using positive and engaging language."
+      },
+      length_options: {
+        none: "",
+        short: "Keep responses concise and to the point (50-100 words).",
+        medium: "Provide balanced responses with sufficient detail (100-250 words).",
+        long: "Give comprehensive responses with detailed explanations (250+ words)."
+      },
       user_prompt_template: `EMAIL CONTEXT:
 • Subject: {subject}
-{senderInfo}• To: {receiver} ({receiverName} at {receiverOrganization})
+{senderInfo}• From: {receiver} ({receiverName} at {receiverOrganization})
 • Original Message: {message}
 
-INSTRUCTIONS:
+TASK:
 {userInstructions}
 
-RESPONSE GUIDELINES:
-• Write from {receiverName}'s perspective at {receiverOrganization}
-• Respond in the same language as the original message
-• Match the formality level of the original email
-• Be professional, clear, and concise
-• Address all key points from the original message
-• Write ONLY the email body - no subject, greeting, or signature
-• Use natural paragraph structure with line breaks between paragraphs`
+RESPONSE REQUIREMENTS:
+• Write as {receiverName} from {receiverOrganization}
+• Respond in the same language as the original email
+• Match the formality and tone of the original message
+• Be professional, clear, and helpful
+• Address all key points and questions from the original email
+• Provide specific, actionable information when appropriate
+• Use natural, conversational language
+• Structure your response with clear paragraphs
+• Write ONLY the email body content - no subject line, greeting, or signature`
     };
     return appConfigCache;
   }
@@ -81,40 +97,12 @@ export async function getCurrentSystemPrompt(tone = 'none', length = 'none') {
 
   // If using the default, apply the template with tone and length
   if (!result.currentSystemPrompt) {
-    // Build tone and length strings
-    let toneString = '';
-    if (tone !== 'none') {
-      switch (tone) {
-        case 'formal':
-          toneString = 'Respond in a formal, professional tone.';
-          break;
-        case 'casual':
-          toneString = 'Respond in a casual, conversational tone.';
-          break;
-        case 'friendly':
-          toneString = 'Respond in a friendly, approachable tone.';
-          break;
-        default:
-          toneString = '';
-      }
-    }
+    // Get tone and length options from config
+    const toneOptions = appConfig.tone_options || {};
+    const lengthOptions = appConfig.length_options || {};
 
-    let lengthString = '';
-    if (length !== 'none') {
-      switch (length) {
-        case 'short':
-          lengthString = 'Keep the response concise and to the point (under 100 words).';
-          break;
-        case 'medium':
-          lengthString = 'Provide a balanced response with sufficient detail (100-300 words).';
-          break;
-        case 'long':
-          lengthString = 'Provide a comprehensive response with detailed explanations (300+ words).';
-          break;
-        default:
-          lengthString = '';
-      }
-    }
+    const toneString = toneOptions[tone] || '';
+    const lengthString = lengthOptions[length] || '';
 
     // Apply template
     systemPrompt = template

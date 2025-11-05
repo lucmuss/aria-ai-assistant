@@ -8,6 +8,7 @@ import { STTRecorder, transcribeAudio, getSTTSettings } from './modules/stt-reco
 import { getEmailContext, insertTextAtCursor, stripHtml } from './modules/email-context.js';
 import { callOpenAI, buildPrompt, saveStats, incrementGenerationCounter, getExtensionSettings } from './modules/api-client.js';
 import { displayStats, updateSubmitCancelVisibility, openSettingsTab, loadLastPrompt, savePrompt, setButtonState, toggleRecordingUI } from './modules/ui-helpers.js';
+import { getAutoresponseDefault } from './modules/settings-data.js';
 
 // Global state
 let sttRecorder = null;
@@ -262,7 +263,7 @@ async function handleCancel() {
  * Handle autoresponse button click
  */
 async function handleAutoresponse() {
-  const fixedPrompt = t('autoresponsePrompt');
+  const fixedPrompt = await getAutoresponseDefault();
   const promptInput = document.getElementById('promptInput');
   promptInput.value = fixedPrompt;
   await savePrompt(fixedPrompt);

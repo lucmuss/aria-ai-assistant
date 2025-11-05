@@ -33,6 +33,7 @@ export async function exportSettings(t) {
   const statusElement = document.getElementById('status');
   statusElement.innerText = t('exportSuccessMsg');
   statusElement.style.color = 'green';
+  statusElement.style.display = 'block';
 }
 
 /**
@@ -77,16 +78,20 @@ export async function importSettings(file, t) {
         };
         
         await browser.storage.local.set(settingsToImport);
-        
+
         const statusElement = document.getElementById('status');
         statusElement.innerText = t('importSuccessMsg');
         statusElement.style.color = 'green';
+        statusElement.style.display = 'block';
+
         resolve();
       } catch (error) {
         console.error('Import error:', error);
         const statusElement = document.getElementById('status');
         statusElement.innerText = t('importErrorMsg') + error.message;
         statusElement.style.color = 'red';
+        statusElement.style.display = 'block';
+
         reject(error);
       }
     };

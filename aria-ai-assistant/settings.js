@@ -7,12 +7,13 @@ import { loadI18n } from './modules/settings-i18n.js';
 import { testChatApi, testSttApi } from './modules/settings-api-test.js';
 import { exportSettings, importSettings } from './modules/settings-import-export.js';
 import { loadSettings, saveSettings } from './modules/settings-data.js';
-import { 
-  populateSystemPromptLibrary, 
-  loadSystemPromptIntoForm, 
-  saveSystemPrompt, 
-  deleteSystemPrompt 
+import {
+  populateSystemPromptLibrary,
+  loadSystemPromptIntoForm,
+  saveSystemPrompt,
+  deleteSystemPrompt
 } from './modules/system-prompt-manager.js';
+import { getDonationUrl } from './modules/settings-data.js';
 
 let t = null;
 
@@ -31,8 +32,9 @@ async function init() {
   // Setup donate button
   const donateBtn = document.getElementById('donateBtn');
   if (donateBtn) {
-    donateBtn.addEventListener('click', () => {
-      browser.tabs.create({ url: manifest.donation_url });
+    donateBtn.addEventListener('click', async () => {
+      const donationUrl = await getDonationUrl();
+      browser.tabs.create({ url: donationUrl });
     });
   }
 
@@ -126,14 +128,31 @@ function setupEventListeners() {
       await loadSystemPromptIntoForm(selectedName, nameInput, contentTextarea);
       
       // Save this as the current system prompt
-      await browser.storage.local.set({ currentSystemPrompt: contentTextarea.value });
+      await browser.storage.local.set({
+        currentSystemPrompt: contentTextarea.value,
+        currentSystemPromptName: nameInput.value
+      });
     }
   });
   
   // System Prompt Content change - auto save as current
   document.getElementById('systemPromptContent').addEventListener('input', async (e) => {
     const content = e.target.value;
-    await browser.storage.local.set({ currentSystemPrompt: content });
+    const name = document.getElementById('systemPromptName').value;
+    await browser.storage.local.set({
+      currentSystemPrompt: content,
+      currentSystemPromptName: name
+    });
+  });
+
+  // System Prompt Name change - auto save as current
+  document.getElementById('systemPromptName').addEventListener('input', async (e) => {
+    const name = e.target.value;
+    const content = document.getElementById('systemPromptContent').value;
+    await browser.storage.local.set({
+      currentSystemPrompt: content,
+      currentSystemPromptName: name
+    });
   });
   
   // Save System Prompt button
@@ -156,7 +175,10 @@ function setupEventListeners() {
       document.getElementById('systemPromptLibrary').value = name;
       
       // Save this as the current system prompt
-      await browser.storage.local.set({ currentSystemPrompt: content });
+      await browser.storage.local.set({
+        currentSystemPrompt: content,
+        currentSystemPromptName: name
+      });
       
       const statusBox = document.getElementById('status');
       statusBox.textContent = t('systemPromptSaved') || 'System prompt saved successfully!';

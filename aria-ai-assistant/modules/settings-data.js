@@ -4,6 +4,66 @@
  */
 
 /**
+ * Get donation URL from app config
+ */
+export async function getDonationUrl() {
+  try {
+    // Import js-yaml dynamically
+    const yaml = window.jsyaml;
+    const configUrl = browser.runtime.getURL('app-config.yaml');
+    const response = await fetch(configUrl);
+    if (response.ok) {
+      const yamlText = await response.text();
+      const config = yaml.load(yamlText);
+      return config.donation_url || 'https://www.paypal.com/pool/9jCVLXPPmR?sr=wccr';
+    }
+  } catch (error) {
+    console.error('Failed to load donation URL:', error);
+  }
+  return 'https://www.paypal.com/pool/9jCVLXPPmR?sr=wccr'; // Fallback
+}
+
+/**
+ * Get autoresponse default message from app config
+ */
+export async function getAutoresponseDefault() {
+  try {
+    // Import js-yaml dynamically
+    const yaml = window.jsyaml;
+    const configUrl = browser.runtime.getURL('app-config.yaml');
+    const response = await fetch(configUrl);
+    if (response.ok) {
+      const yamlText = await response.text();
+      const config = yaml.load(yamlText);
+      return config.autoresponse_default || 'Write a short and polite confirmation that you have received the email. If the email contains an appointment, confirm it and wish best regards.';
+    }
+  } catch (error) {
+    console.error('Failed to load autoresponse default:', error);
+  }
+  return 'Write a short and polite confirmation that you have received the email. If the email contains an appointment, confirm it and wish best regards.'; // Fallback
+}
+
+/**
+ * Get default system prompt from app config
+ */
+export async function getDefaultSystemPrompt() {
+  try {
+    // Import js-yaml dynamically
+    const yaml = window.jsyaml;
+    const configUrl = browser.runtime.getURL('app-config.yaml');
+    const response = await fetch(configUrl);
+    if (response.ok) {
+      const yamlText = await response.text();
+      const config = yaml.load(yamlText);
+      return config.system_prompt_template || 'You are a helpful email assistant.';
+    }
+  } catch (error) {
+    console.error('Failed to load default system prompt:', error);
+  }
+  return 'You are a helpful email assistant.'; // Fallback
+}
+
+/**
  * Load settings from storage
  */
 export async function loadSettings() {
@@ -53,9 +113,24 @@ export async function loadSettings() {
   const t = window.currentT || ((key) => key);
   document.getElementById('generationCounter').innerText = `${t('generatedEmailsLabel')} ${generatedEmails}`;
   
-  // Load current system prompt if available
+  // Load current system prompt if available, otherwise load default from config
   if (settings.currentSystemPrompt) {
     document.getElementById('systemPromptContent').value = settings.currentSystemPrompt;
+  } else {
+    // Load default system prompt from YAML config
+    getDefaultSystemPrompt().then(defaultPrompt => {
+      document.getElementById('systemPromptContent').value = defaultPrompt;
+    }).catch(error => {
+      console.error('Failed to load default system prompt:', error);
+      document.getElementById('systemPromptContent').value = 'You are a helpful email assistant.';
+    });
+  }
+
+  // Load current system prompt name if available, otherwise set to "Default"
+  if (settings.currentSystemPromptName) {
+    document.getElementById('systemPromptName').value = settings.currentSystemPromptName;
+  } else {
+    document.getElementById('systemPromptName').value = 'Default';
   }
 }
 
@@ -88,8 +163,9 @@ export async function saveSettings(t) {
   };
 
   await browser.storage.local.set(settings);
-  
+
   const statusElement = document.getElementById('status');
   statusElement.innerText = t('savedMsg');
   statusElement.style.color = 'green';
+  statusElement.style.display = 'block';
 }

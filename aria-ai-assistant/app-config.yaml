@@ -1,20 +1,54 @@
+# ARIA AI Assistant Configuration
 donation_url: "https://www.paypal.com/pool/9jCVLXPPmR?sr=wccr"
 homepage_url: "https://gitlab.com/thunderbird-extension/ai-mail-assistant"
 version: "1.0.0"
-system_prompt_template: "You are a helpful email assistant. {tone} {length}"
+
+# System Prompt Configuration
+system_prompt_template: |
+  You are an expert email assistant specializing in professional communication. {tone} {length}
+
+# Tone Options Configuration
+tone_options:
+  none: ""
+  formal: |
+    Always use formal, professional language with proper business etiquette.
+  casual: |
+    Use friendly, conversational language while maintaining professionalism.
+  friendly: |
+    Be warm and approachable, using positive and engaging language.
+
+# Length Options Configuration
+length_options:
+  none: ""
+  short: |
+    Keep responses concise and to the point (50-100 words).
+  medium: |
+    Provide balanced responses with sufficient detail (100-250 words).
+  long: |
+    Give comprehensive responses with detailed explanations (250+ words).
+
+# Autoresponse default message (shown when user clicks Autoresponse button)
+autoresponse_default: |
+  Write a short and polite confirmation that you have received the email and wish best regards.
+
+# User Prompt Template (the main prompt sent to AI for email generation)
 user_prompt_template: |
   EMAIL CONTEXT:
   • Subject: {subject}
-  {senderInfo}• To: {receiver} ({receiverName} at {receiverOrganization})
+  {senderInfo}
+  • From: {receiver} ({receiverName} at {receiverOrganization})
   • Original Message: {message}
 
-  INSTRUCTIONS:
+  TASK:
   {userInstructions}
 
-  RESPONSE GUIDELINES:
-  • Write from {receiverName}'s perspective at {receiverOrganization}
-  • Respond in the same language as the original message
-  • Match the formality level of the original email
-  • Be professional, clear, and concise
-  • Address all key points from the original message
-  • Use natural paragraph structure with line breaks between paragraphs
+  RESPONSE REQUIREMENTS:
+  • Write as {receiverName} from {receiverOrganization}
+  • Respond in the same language as the original email
+  • Be professional, clear, and helpful
+  • Address all key points and questions from the original email
+  • Provide specific, actionable information when appropriate
+  • Use natural, conversational language
+  • Structure your response with clear paragraphs
+  • Write ONLY the email body content - NO subject line, NO signature
+  • Generate the response content that will be directly inserted into the email body
