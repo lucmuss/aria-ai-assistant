@@ -27,23 +27,23 @@ build:
     - apk add --no-cache zip jq
     - npm install -g web-ext
   script:
-    - web-ext build --source-dir $WEB_EXT_SOURCE_DIR --overwrite-dest
+    - web-ext build --source-dir $WEB_EXT_SOURCE_DIR --artifacts-dir $WEB_EXT_ARTIFACTS_DIR --overwrite-dest
     - |
       # Create ZIP archive for manual installation
       cd $WEB_EXT_SOURCE_DIR
       VERSION=$(cat manifest.json | jq -r '.version')
       COMMIT_SHORT=$(echo $CI_COMMIT_SHA | cut -c1-8)
       ZIP_NAME="aria-ai-assistant-${VERSION}-${COMMIT_SHORT}.zip"
-      zip -r ../$ZIP_NAME .
+      zip -r ../$WEB_EXT_ARTIFACTS_DIR/$ZIP_NAME .
       cd ..
-      echo "Created ZIP archive:   $ZIP_NAME"
+      echo "Created ZIP archive: $WEB_EXT_ARTIFACTS_DIR/$ZIP_NAME"
+      ls -lah $WEB_EXT_ARTIFACTS_DIR/
   artifacts:
     paths:
       - $WEB_EXT_ARTIFACTS_DIR/
-      - aria-ai-assistant-*.zip
     expire_in: 30 days
   rules:
-    - if: $CI_COMMIT_BRANCH == "main" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" || $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "master" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master" || $CI_COMMIT_TAG
       when: always
 
 # Version bump job: DISABLED - Only run manually or on tags
