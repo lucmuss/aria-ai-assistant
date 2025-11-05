@@ -15,10 +15,9 @@ lint:
     - npm install -g web-ext
   script:
     - web-ext lint --source-dir $WEB_EXT_SOURCE_DIR
-  only:
-    - main
-    - merge_requests
-    - tags
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" || $CI_COMMIT_TAG
+      when: always
 
 # Build stage: Package the extension into XPI
 build:
@@ -32,11 +31,9 @@ build:
     paths:
       - $WEB_EXT_ARTIFACTS_DIR/
     expire_in: 30 days
-    expose_as: "Extension Package"
-  only:
-    - main
-    - merge_requests
-    - tags
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" || $CI_COMMIT_TAG
+      when: always
 
 # Version bump job: Automatically increment patch version on push to main
 # WARNING: This requires setting a CI/CD variable GITLAB_TOKEN (Project Access Token with write_repository scope)
@@ -131,17 +128,12 @@ release-tag:
       cd $WEB_EXT_SOURCE_DIR
       zip -r ../aria-ai-assistant-${CI_COMMIT_TAG}.zip .
       cd ..
-    - echo "Release artifact created: aria-ai-assistant-${CI_COMMIT_TAG}.zip"
+      echo "Release artifact created: aria-ai-assistant-${CI_COMMIT_TAG}.zip"
   artifacts:
     paths:
       - aria-ai-assistant-*.zip
       - dist/
     expire_in: 1 month
-  only:
-    - tags
-
-# Default job for pushes/tags: Run test and build
-default:
-  image: node:18-alpine
-  before_script:
-    - npm install -g web-ext
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: always
