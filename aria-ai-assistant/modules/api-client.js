@@ -4,13 +4,14 @@
  */
 
 import { createLogger } from './logger.js';
+import yaml from './js-yaml.min.js';
 const logger = createLogger('API-Client');
 
 // Cache for app config
 let appConfigCache = null;
 
 /**
- * Load app configuration from app-config.json
+ * Load app configuration from app-config.yaml
  */
 async function loadAppConfig() {
   if (appConfigCache) {
@@ -18,12 +19,13 @@ async function loadAppConfig() {
   }
 
   try {
-    const configUrl = browser.runtime.getURL('app-config.json');
+    const configUrl = browser.runtime.getURL('app-config.yaml');
     const response = await fetch(configUrl);
     if (!response.ok) {
       throw new Error(`Failed to load app config: ${response.status}`);
     }
-    appConfigCache = await response.json();
+    const yamlText = await response.text();
+    appConfigCache = yaml.load(yamlText);
     logger.debug('App config loaded', appConfigCache);
     return appConfigCache;
   } catch (error) {
@@ -263,7 +265,14 @@ export async function buildPrompt(emailContext, userInstructions, stripHtmlFn) {
 
   // Load app config to get the template
   const appConfig = await loadAppConfig();
-  const template = appConfig.user_prompt_template || `EMAIL CONTEXT:
+  let template = appConfig.user_prompt_template;
+
+  // Handle both array and string formats for backward compatibility
+  if (Array.isArray(template)) {
+    template = template.join('\n');
+  }
+
+  template = template || `EMAIL CONTEXT:
 • Subject: {subject}
 {senderInfo}• To: {receiver} ({receiverName} at {receiverOrganization})
 • Original Message: {message}
