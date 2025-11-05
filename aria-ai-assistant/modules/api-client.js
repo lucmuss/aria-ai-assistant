@@ -6,6 +6,52 @@
 import { createLogger } from './logger.js';
 const logger = createLogger('API-Client');
 
+// Cache for app config
+let appConfigCache = null;
+
+/**
+ * Load app configuration from app-config.json
+ */
+async function loadAppConfig() {
+  if (appConfigCache) {
+    return appConfigCache;
+  }
+
+  try {
+    const configUrl = browser.runtime.getURL('app-config.json');
+    const response = await fetch(configUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to load app config: ${response.status}`);
+    }
+    appConfigCache = await response.json();
+    logger.debug('App config loaded', appConfigCache);
+    return appConfigCache;
+  } catch (error) {
+    logger.error('Failed to load app config, using defaults', error);
+    // Return default config if loading fails
+    appConfigCache = {
+      system_prompt_template: "You are a helpful email assistant. {tone} {length}",
+      user_prompt_template: `EMAIL CONTEXT:
+• Subject: {subject}
+{senderInfo}• To: {receiver} ({receiverName} at {receiverOrganization})
+• Original Message: {message}
+
+INSTRUCTIONS:
+{userInstructions}
+
+RESPONSE GUIDELINES:
+• Write from {receiverName}'s perspective at {receiverOrganization}
+• Respond in the same language as the original message
+• Match the formality level of the original email
+• Be professional, clear, and concise
+• Address all key points from the original message
+• Write ONLY the email body - no subject, greeting, or signature
+• Use natural paragraph structure with line breaks between paragraphs`
+    };
+    return appConfigCache;
+  }
+}
+
 /**
  * Get chat settings from storage
  */
@@ -17,13 +63,64 @@ export async function getChatSettings() {
 }
 
 /**
- * Get current system prompt from storage
- * Returns the content of the currently selected system prompt or a default
+ * Get current system prompt from storage with tone and length applied
+ * Returns the content of the currently selected system prompt or a default with template applied
  */
-export async function getCurrentSystemPrompt() {
-  logger.logFunctionCall('getCurrentSystemPrompt');
+export async function getCurrentSystemPrompt(tone = 'none', length = 'none') {
+  logger.logFunctionCall('getCurrentSystemPrompt', { tone, length });
+
+  // Load app config to get the template
+  const appConfig = await loadAppConfig();
+  const template = appConfig.system_prompt_template || "You are a helpful email assistant. {tone} {length}";
+
+  // Get the stored system prompt
   const result = await browser.storage.local.get('currentSystemPrompt');
-  const systemPrompt = result.currentSystemPrompt || (window.t ? window.t('systemPromptDefault') : 'You are a helpful email assistant.');
+  let systemPrompt = result.currentSystemPrompt || 'You are a helpful email assistant.';
+
+  // If using the default, apply the template with tone and length
+  if (!result.currentSystemPrompt) {
+    // Build tone and length strings
+    let toneString = '';
+    if (tone !== 'none') {
+      switch (tone) {
+        case 'formal':
+          toneString = 'Respond in a formal, professional tone.';
+          break;
+        case 'casual':
+          toneString = 'Respond in a casual, conversational tone.';
+          break;
+        case 'friendly':
+          toneString = 'Respond in a friendly, approachable tone.';
+          break;
+        default:
+          toneString = '';
+      }
+    }
+
+    let lengthString = '';
+    if (length !== 'none') {
+      switch (length) {
+        case 'short':
+          lengthString = 'Keep the response concise and to the point (under 100 words).';
+          break;
+        case 'medium':
+          lengthString = 'Provide a balanced response with sufficient detail (100-300 words).';
+          break;
+        case 'long':
+          lengthString = 'Provide a comprehensive response with detailed explanations (300+ words).';
+          break;
+        default:
+          lengthString = '';
+      }
+    }
+
+    // Apply template
+    systemPrompt = template
+      .replace('{tone}', toneString)
+      .replace('{length}', lengthString)
+      .trim();
+  }
+
   logger.logFunctionResult('getCurrentSystemPrompt', { promptLength: systemPrompt.length });
   return systemPrompt;
 }
@@ -61,10 +158,10 @@ function calculateCost(model, inputTokens, outputTokens) {
 /**
  * Call OpenAI API
  */
-export async function callOpenAI(prompt) {
-  logger.logFunctionCall('callOpenAI', { promptLength: prompt.length });
+export async function callOpenAI(prompt, tone = 'none', length = 'none') {
+  logger.logFunctionCall('callOpenAI', { promptLength: prompt.length, tone, length });
   const settings = await getChatSettings();
-  
+
   logger.debug('API Settings loaded', {
     hasApiUrl: !!settings.apiUrl,
     hasApiKey: !!settings.apiKey,
@@ -83,8 +180,8 @@ export async function callOpenAI(prompt) {
   const startTime = performance.now();
   logger.info('Starting API call', { model: settings.model, promptLength: prompt.length });
 
-  // Get the current system prompt from System Prompt Settings
-  const systemPrompt = await getCurrentSystemPrompt();
+  // Get the current system prompt from System Prompt Settings with tone and length applied
+  const systemPrompt = await getCurrentSystemPrompt(tone, length);
 
   const body = {
     model: settings.model,
@@ -158,82 +255,54 @@ export async function callOpenAI(prompt) {
 /**
  * Build full prompt from email context and user instructions
  */
-export function buildPrompt(emailContext, userInstructions, stripHtmlFn, tone = 'none', length = 'none') {
+export async function buildPrompt(emailContext, userInstructions, stripHtmlFn) {
   logger.logFunctionCall('buildPrompt', {
     hasContext: !!emailContext,
-    instructionsLength: userInstructions.length,
-    tone,
-    length
+    instructionsLength: userInstructions.length
   });
-  
+
+  // Load app config to get the template
+  const appConfig = await loadAppConfig();
+  const template = appConfig.user_prompt_template || `EMAIL CONTEXT:
+• Subject: {subject}
+{senderInfo}• To: {receiver} ({receiverName} at {receiverOrganization})
+• Original Message: {message}
+
+INSTRUCTIONS:
+{userInstructions}
+
+RESPONSE GUIDELINES:
+• Write from {receiverName}'s perspective at {receiverOrganization}
+• Respond in the same language as the original message
+• Match the formality level of the original email
+• Be professional, clear, and concise
+• Address all key points from the original message
+• Write ONLY the email body - no subject, greeting, or signature
+• Use natural paragraph structure with line breaks between paragraphs`;
+
   const extensionSettings = emailContext.extensionSettings || {};
-  const t = window.t || ((key) => key);
-  
+
   let senderInfo = '';
   if (extensionSettings.includeSender && emailContext.sender) {
-    senderInfo = `${t('promptContextSender')} ${emailContext.sender}\n`;
+    senderInfo = `Sender: ${emailContext.sender}\n`;
   }
 
   const emailBody = stripHtmlFn(emailContext.emailBody);
 
-  // Add tone-specific string to the system prompt
-  let toneString = '';
-  if (tone !== 'none') {
-    switch (tone) {
-      case 'formal':
-        toneString = t('toneFormalPrompt') || 'Respond in a formal, professional tone.';
-        break;
-      case 'casual':
-        toneString = t('toneCasualPrompt') || 'Respond in a casual, conversational tone.';
-        break;
-      case 'friendly':
-        toneString = t('toneFriendlyPrompt') || 'Respond in a friendly, approachable tone.';
-        break;
-      default:
-        toneString = t('toneFormalPrompt') || 'Respond in a formal, professional tone.';
-    }
-  }
-
-  // Add length-specific string to the system prompt
-  let lengthString = '';
-  if (length !== 'none') {
-    switch (length) {
-      case 'short':
-        lengthString = t('lengthShortPrompt') || 'Keep the response concise and to the point (under 100 words).';
-        break;
-      case 'medium':
-        lengthString = t('lengthMediumPrompt') || 'Provide a balanced response with sufficient detail (100-300 words).';
-        break;
-      case 'long':
-        lengthString = t('lengthLongPrompt') || 'Provide a comprehensive response with detailed explanations (300+ words).';
-        break;
-      default:
-        lengthString = t('lengthMediumPrompt') || 'Provide a balanced response with sufficient detail (100-300 words).';
-    }
-  }
-
-  const prompt = `${t('promptContextEmail')}
-${t('promptContextSubject')} ${emailContext.subject}
-${senderInfo}${t('promptContextReceiver')} ${emailContext.receiver}
-${t('promptContextReceiverName')} ${emailContext.receiverName}
-${t('promptContextReceiverOrganization')} ${emailContext.receiverOrganization}
-${t('promptContextMessage')} ${emailBody}
-${t('promptContextLanguageDetect')}
-
-${t('promptContextInstructions')} ${userInstructions}
-
-${t('promptContextFormat')}
-
-${toneString}
-
-${lengthString}`;
+  // Apply template
+  const prompt = template
+    .replace('{subject}', emailContext.subject)
+    .replace('{senderInfo}', senderInfo)
+    .replace('{receiver}', emailContext.receiver)
+    .replace('{receiverName}', emailContext.receiverName)
+    .replace('{receiverOrganization}', emailContext.receiverOrganization)
+    .replace('{message}', emailBody)
+    .replace('{userInstructions}', userInstructions);
 
   logger.debug('Prompt built', {
     promptLength: prompt.length,
     includedSender: !!senderInfo,
-    emailBodyLength: emailBody.length,
-    toneString,
-    lengthString
+    emailBodyLength: emailBody.length
   });
 
   return prompt;

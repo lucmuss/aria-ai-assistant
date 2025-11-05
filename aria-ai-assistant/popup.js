@@ -202,11 +202,11 @@ async function handleSubmit() {
     emailContext.extensionSettings = extensionSettings;
     
     // Build full prompt
-    const fullPrompt = buildPrompt(emailContext, userPrompt, stripHtml, tone, length);
+    const fullPrompt = await buildPrompt(emailContext, userPrompt, stripHtml);
     console.log('Full prompt sent to API:', fullPrompt);
 
-    // Call OpenAI API
-    const apiResult = await callOpenAI(fullPrompt);
+    // Call OpenAI API with tone and length
+    const apiResult = await callOpenAI(fullPrompt, tone, length);
     const { content, usage, model, time, cost } = apiResult;
     
     const settings = await browser.storage.local.get('chat');

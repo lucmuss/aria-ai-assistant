@@ -1,5 +1,7 @@
 {
   "donation_url": "https://www.paypal.com/pool/9jCVLXPPmR?sr=wccr",
   "homepage_url": "https://gitlab.com/thunderbird-extension/ai-mail-assistant",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "system_prompt_template": "You are a helpful email assistant. {tone} {length}",
+  "user_prompt_template": "EMAIL CONTEXT:\n• Subject: {subject}\n{senderInfo}• To: {receiver} ({receiverName} at {receiverOrganization})\n• Original Message: {message}\n\nINSTRUCTIONS:\n{userInstructions}\n\nRESPONSE GUIDELINES:\n• Write from {receiverName}'s perspective at {receiverOrganization}\n• Respond in the same language as the original message\n• Match the formality level of the original email\n• Be professional, clear, and concise\n• Address all key points from the original message\n• Write ONLY the email body - no subject, greeting, or signature\n• Use natural paragraph structure with line breaks between paragraphs"
 }
