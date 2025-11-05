@@ -114,27 +114,7 @@ body {
   cursor: not-allowed;
 }
 
-.donate-btn {
-  background: #007bff;
-  color: white;
-  border: 2px solid #0056b3;
-  padding: 12px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 1.1em;
-  transition: all 0.3s ease;
-  flex: 1;
-  min-width: 140px;
-  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
-}
 
-.donate-btn:hover {
-  background: #0056b3;
-  border-color: #004085;
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
-}
 
 @keyframes pulse {
   0% {
@@ -248,17 +228,27 @@ button {
   border-radius: 4px;
   background: #f9f9f9;
   font-weight: bold;
+  font-size: 0.95em;
   transition: all 0.2s ease;
 }
 
-button:hover {
+button:hover:not(:disabled) {
   background: #e9e9e9;
   transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 button:disabled {
-  background: #ccc;
+  background: #e0e0e0;
+  color: #999;
   cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
 }
 
 #submitBtn, #saveBtn {
@@ -267,10 +257,17 @@ button:disabled {
   color: #155724;
 }
 
-#submitBtn:hover, #saveBtn:hover {
+#submitBtn:hover:not(:disabled), #saveBtn:hover:not(:disabled) {
   background-color: #e6f4e6;
   border-color: #1e7e34;
   transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(40,167,69,0.2);
+}
+
+#submitBtn:disabled, #saveBtn:disabled {
+  background-color: #e0e0e0;
+  border-color: #ccc;
+  color: #999;
 }
 
 /* Tooltip styling */
@@ -514,20 +511,38 @@ button:disabled {
     color: #ffffff;
   }
   
-  button:hover {
+  button:hover:not(:disabled) {
     background: #3d3d3d;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  button:active:not(:disabled) {
+    background: #333;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
   }
   
   button:disabled {
-    background: #444;
+    background: #333;
+    color: #666;
+    opacity: 0.6;
   }
   
-  .donate-btn {
-    background: #0056b3;
+  #submitBtn, #saveBtn {
+    background-color: #1a3d2a;
+    border: 1px solid #28a745;
+    color: #4cd964;
   }
-
-  .donate-btn:hover {
-    background: #004085;
+  
+  #submitBtn:hover:not(:disabled), #saveBtn:hover:not(:disabled) {
+    background-color: #204d32;
+    border-color: #38b757;
+    box-shadow: 0 2px 4px rgba(40,167,69,0.3);
+  }
+  
+  #submitBtn:disabled, #saveBtn:disabled {
+    background-color: #333;
+    border-color: #444;
+    color: #666;
   }
   
   .status-box {

@@ -22,7 +22,11 @@
     "messagesRead",
     "compose",
     "tabs",
-    "accountsRead"
+    "accountsRead",
+    "<all_urls>"
+  ],
+  "optional_permissions": [
+    "microphone"
   ],
   "browser_action": {
     "default_icon": {

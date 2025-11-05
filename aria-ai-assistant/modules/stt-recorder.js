@@ -40,7 +40,8 @@ export class STTRecorder {
   async stopRecording() {
     return new Promise((resolve, reject) => {
       if (!this.mediaRecorder) {
-        reject(new Error('Keine aktive Aufnahme'));
+        const t = window.t || ((key) => key);
+        reject(new Error(t('errorNoActiveRecording') || 'No active recording'));
         return;
       }
 

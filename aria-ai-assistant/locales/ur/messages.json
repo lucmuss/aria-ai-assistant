@@ -1,120 +1,0 @@
-{
-  "extensionName": { "message": "ARIA - AI اسسٹنٹ" },
-  "extensionDescription": { "message": "AI کا استعمال کرتے ہوئے ذہین جوابات اور تحریریں تیار کریں" },
-  "browserActionTitle": { "message": "AI میل اسسٹنٹ" },
-  "settingsTitle": { "message": "سیٹنگز – ARIA - AI اسسٹنٹ" },
-  "popupTitle": { "message": "ARIA - AI اسسٹنٹ" },
-  
-  "saveBtn": { "message": "💾 سیٹنگز محفوظ کریں" },
-  "savedMsg": { "message": "سیٹنگز کامیابی سے محفوظ کی گئی ہیں!" },
-  "donateBtn": { "message": "❤️ عطیہ کریں" },
-  
-  "languageLabel": { "message": "انٹرفیس زبان:" },
-  "languageDesc": { "message": "ایکسٹینشن انٹرفیس کی زبان منتخب کریں" },
-  
-  "extensionSettings": { "message": "ایکسٹینشن سیٹنگز" },
-  "contextSizeLabel": { "message": "سیاق و سباق کا سائز:" },
-  "contextSizeDesc": { "message": "سیاق و سباق کے طور پر شامل کرنے کے لیے پچھلے پیغامات کی تعداد" },
-  "includeSenderLabel": { "message": "بھیجنے والے کو شامل کریں:" },
-  "includeSenderDesc": { "message": "پرامپٹ سیاق و سباق میں بھیجنے والے کا پتہ شامل کرتا ہے" },
-  "clearEmailLabel": { "message": "جمع کرنے کے بعد ای میل کی مواد صاف کریں:" },
-  "clearEmailDesc": { "message": "AI جواب ڈالنے سے پہلے ای میل باڈی صاف کرتا ہے" },
-  "generatedEmailsLabel": { "message": "تیار شدہ ای میلز:" },
-  
-  "chatSettings": { "message": "چیٹ API سیٹنگز" },
-  "apiUrlLabel": { "message": "API URL:" },
-  "apiUrlPlaceholder": { "message": "https://api.openai.com/v1/chat/completions" },
-  "apiUrlDesc": { "message": "آپ کے ماڈل کے لیے اینڈپوائنٹ (مثلاً OpenAI یا مقامی ULAMA سرور)" },
-  "apiKeyLabel": { "message": "API کلید:" },
-  "apiKeyPlaceholder": { "message": "sk-xxxxxxxxxxxx" },
-  "apiKeyDesc": { "message": "فراہم کنندہ سے آپ کی API کلید (مثلاً OpenAI, Ollama وغیرہ)" },
-  "modelLabel": { "message": "ماڈل:" },
-  "modelDesc": { "message": "ماڈل کا نام (مثلاً gpt-3.5-turbo, gpt-4o-mini, llama3, mistral:7b)" },
-  "temperatureLabel": { "message": "درجہ حرارت:" },
-  "temperatureDesc": { "message": "تخلیقی صلاحیت کو کنٹرول کرتا ہے (0 = حقیقت پسندانہ، 1 = تخلیقی)" },
-  "maxTokensLabel": { "message": "زیادہ سے زیادہ ٹوکنز:" },
-  "maxTokensDesc": { "message": "جواب کی زیادہ سے زیادہ لمبائی" },
-  "systemPromptLabel": { "message": "سسٹم پرامپٹ:" },
-  "systemPromptPlaceholder": { "message": "آپ ایک مہذب ای میل اسسٹنٹ ہیں۔" },
-  "systemPromptDesc": { "message": "اسسٹنٹ کے لیے ڈیفالٹ متن (مثلاً لہجہ یا سٹائل)" },
-  "systemPromptDefault": { "message": "آپ ایک مفید ای میل اسسٹنٹ ہیں۔" },
-  
-  "sttSettings": { "message": "سپیچ-ٹو-ٹیکسٹ سیٹنگز" },
-  "sttApiUrlLabel": { "message": "STT API URL:" },
-  "sttApiUrlPlaceholder": { "message": "https://api.openai.com/v1/audio/transcriptions" },
-  "sttApiUrlDesc": { "message": "گفتگو لکھنے کے لیے URL (مثلاً Whisper)" },
-  "sttApiKeyLabel": { "message": "STT API کلید:" },
-  "sttApiKeyPlaceholder": { "message": "sk-xxxxxxxxxxxx" },
-  "sttApiKeyDesc": { "message": "STT فراہم کنندہ کے لیے API کلید" },
-  "sttModelLabel": { "message": "ماڈل:" },
-  "sttModelDesc": { "message": "گفتگو ماڈل (مثلاً whisper-1 یا مقامی tiny)" },
-  "sttLanguageLabel": { "message": "زبان:" },
-  "sttLanguageDesc": { "message": "شناخت کی زبان (خالی = خودکار)" },
-  "sttLanguageAuto": { "message": "خودکار" },
-  
-  "promptInputPlaceholder": { "message": "یہاں AI کے لیے اپنی ہدایات درج کریں..." },
-  "voiceInputBtn": { "message": "🎤 وائس ان پٹ" },
-  "stopRecordingBtn": { "message": "⏹️ ریکارڈنگ روکیں" },
-  "submitBtn": { "message": "📤 جمع کریں" },
-  "cancelBtn": { "message": "❌ منسوخ کریں" },
-  "settingsBtn": { "message": "⚙️ سیٹنگز" },
-  "autoresponseBtn": { "message": "🪄 خودکار جواب" },
-  
-  "recordingInProgress": { "message": "🎤 ریکارڈنگ جاری ہے..." },
-  "transcribing": { "message": "ٹرانسکرائیب کر رہا ہے..." },
-  "generating": { "message": "📤 تیار کر رہا ہے..." },
-  
-  "statsInputToken": { "message": "ان پٹ ٹوکن:" },
-  "statsOutputToken": { "message": "آؤٹ پٹ ٹوکن:" },
-  "statsModel": { "message": "ماڈل:" },
-  "statsTime": { "message": "وقت:" },
-  "statsCost": { "message": "لاگت:" },
-  "statsTemperature": { "message": "درجہ حرارت:" },
-  
-  "testApiBtn": { "message": "🧪 API ٹیسٹ کریں" },
-  "testApiTesting": { "message": "🧪 API کنیکشن ٹیسٹ جاری ہے..." },
-  "testApiSuccess": { "message": "✅ API کنیکشن کامیابی سے ٹیسٹ کیا گیا!" },
-  "testApiError": { "message": "❌ API خرابی: " },
-  "testApiMissingSettings": { "message": "❌ براہ کرم پہلے تمام API سیٹنگز پوری کریں" },
-  "testApiSystemPrompt": { "message": "آپ ایک ٹیسٹ اسسٹنٹ ہیں۔" },
-  "testApiUserPrompt": { "message": "ہیلو، یہ ایک ٹیسٹ ہے۔ براہ کرم 'ٹیسٹ کامیاب' کے ساتھ جواب دیں۔" },
-  
-  "testSttBtn": { "message": "🧪 STT API ٹیسٹ کریں" },
-  "testSttTesting": { "message": "🧪 STT API کنیکشن ٹیسٹ جاری ہے..." },
-  "testSttSuccess": { "message": "✅ STT API کنیکشن کامیابی سے ٹیسٹ کیا گیا! ٹرانسکرپشن: " },
-  "testSttError": { "message": "❌ STT API خرابی: " },
-  "testSttMissingSettings": { "message": "❌ براہ کرم پہلے تمام STT API سیٹنگز پوری کریں" },
-  "testSttFileNotFound": { "message": "test.wav نہیں ملا۔ براہ کرم ایکسٹینشن ڈائریکٹری میں test.wav فائل شامل کریں۔" },
-  "testSttNoTranscription": { "message": "کوئی ٹرانسکرپشن واپس نہیں آیا" },
-  
-  "exportBtn": { "message": "📤 سیٹنگز برآمد کریں" },
-  "importBtn": { "message": "📥 سیٹنگز درآمد کریں" },
-  "exportSuccessMsg": { "message": "سیٹنگز کامیابی سے برآمد کی گئی ہیں!" },
-  "importSuccessMsg": { "message": "سیٹنگز کامیابی سے درآمد کی گئی ہیں!" },
-  "importErrorMsg": { "message": "درآمد کی خرابی: " },
-  "importInvalidFormat": { "message": "غیر معتبر فائل فارمیٹ: چیٹ سیٹنگز غائب ہیں" },
-  
-  "noInstructionsProvided": { "message": "براہ کرم AI کے لیے ہدایات درج کریں۔" },
-  "speechRecognitionError": { "message": "گفتگو شناخت کی خرابی: " },
-  "generalError": { "message": "خرابی: " },
-  
-  "errorApiSettingsMissing": { "message": "API سیٹنگز غائب ہیں۔ براہ کرم سیٹنگز میں URL، API کلید اور ماڈل کانفیگر کریں۔" },
-  "errorSttSettingsMissing": { "message": "STT API سیٹنگز غائب ہیں۔ براہ کرم سیٹنگز میں کانفیگر کریں۔" },
-  "errorMicrophoneAccess": { "message": "مائیکروفون تک رسائی مسترد کر دی گئی۔ براہ کرم اجازتیں چیک کریں۔" },
-  "errorNoMessageContext": { "message": "کوئی پیغام یا جواب ڈرافٹ کھولا ہوا نہیں ہے۔ براہ کرم پہلے ای میل کھولیں یا جواب دیں۔" },
-  "errorSttApi": { "message": "STT API خرابی" },
-  "errorApiGeneral": { "message": "API خرابی" },
-  
-  "promptContextEmail": { "message": "ای میل کا سیاق و سباق:" },
-  "promptContextSubject": { "message": "موضوع:" },
-  "promptContextSender": { "message": "بھیجنے والا:" },
-  "promptContextReceiver": { "message": "وصول کنندہ:" },
-  "promptContextReceiverName": { "message": "وصول کنندہ کا نام:" },
-  "promptContextReceiverOrganization": { "message": "وصول کنندہ کی تنظیم:" },
-  "promptContextMessage": { "message": "پیغام:" },
-  "promptContextLanguageDetect": { "message": "پیغام کی زبان کا پتہ لگائیں اور اسی زبان میں جواب دیں۔" },
-  "promptContextInstructions": { "message": "صارف کی ہدایات:" },
-  "promptContextFormat": { "message": "اہم ہدایات:\n1. وصول کنندہ کے نقطہ نظر سے ای میل جواب لکھیں (اوپر دیکھیں: وصول کنندہ کا نام، وصول کنندہ کی تنظیم)\n2. وصول کنندہ بھیجنے والے سے پیغام کا جواب دے رہا ہے\n3. ایک قدرتی، پیشہ ورانہ اور مہذب لہجہ استعمال کریں\n4. معنی خیز پیراگراف کے ساتھ جواب کو واضح طور پر ساخت دیں\n5. اصل پیغام کی ہی سطح کی رسمیت کو ملائیں\n6. اصل پیغام میں اٹھائے گئے نکات کو براہ راست سنبودھ کریں\n7. مختصر رہیں اور غیر ضروری دہرائی سے بچیں\n8. صرف ای میل باڈی کا متن لکھیں، سبجیکٹ لائن، سلام یا دستخط کے بغیر\n9. 'یہاں جواب ہے' یا 'AI جواب' جیسے جملوں سے شروع نہ کریں\n10. اصل پیغام کی ہی زبان استعمال کریں\n\nفارمیٹنگ:\n- چھوٹے، واضح پیراگراف استعمال کریں\n- پیراگراف کے درمیان خالی لائنوں کو شامل کریں (ایک لائن بریک)\n- جب تک ضروری نہ ہو، بہت زیادہ فارمیٹنگ یا بولیٹ پوائنٹس سے بچیں" },
-  
-  "autoresponsePrompt": { "message": "ایک مختصر اور مہذب تصدیق لکھیں کہ آپ نے ای میل وصول کی ہے۔ اگر ای میل میں ایک ملاقات ہے، تو اس کی تصدیق کریں اور بہترین خواہشات کا اظہار کریں۔" }
-}

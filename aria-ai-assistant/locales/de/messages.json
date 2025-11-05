@@ -1,151 +1,398 @@
 {
-  "extensionName": { "message": "ARIA - KI-Assistent" },
-  "extensionDescription": { "message": "Erstellt intelligente Antworten und Transkriptionen mit KI" },
-  "browserActionTitle": { "message": "ARIA - KI-Assistent" },
-  "settingsTitle": { "message": "Einstellungen – ARIA - KI-Assistent" },
-  "popupTitle": { "message": "ARIA - KI-Assistent" },
-  
-  "saveBtn": { "message": "💾 Einstellungen speichern" },
-  "savedMsg": { "message": "Einstellungen wurden erfolgreich gespeichert!" },
-  "donateBtn": { "message": "❤️ Spenden" },
-  
-  "languageLabel": { "message": "Oberflächensprache:" },
-  "languageDesc": { "message": "Wähle die Sprache der Benutzeroberfläche" },
-  
-  "extensionSettings": { "message": "Erweiterungs-Einstellungen" },
-  "contextSizeLabel": { "message": "Kontextgröße:" },
-  "contextSizeDesc": { "message": "Anzahl der vorherigen Nachrichten, die als Kontext gesendet werden" },
-  "includeSenderLabel": { "message": "Absender einbeziehen:" },
-  "includeSenderDesc": { "message": "Fügt die Absenderadresse in den Prompt-Kontext ein" },
-  "clearEmailLabel": { "message": "E-Mail-Inhalt nach Submit löschen:" },
-  "clearEmailDesc": { "message": "Löscht den E-Mail-Inhalt vor dem Einfügen der KI-Antwort" },
-  "generatedEmailsLabel": { "message": "Generierte E-Mails:" },
-  
-  "chatSettings": { "message": "Chat API Einstellungen" },
-  "apiUrlLabel": { "message": "API URL:" },
-  "apiUrlPlaceholder": { "message": "https://api.openai.com/v1/chat/completions" },
-  "apiUrlDesc": { "message": "Endpoint für dein Modell (z. B. OpenAI oder lokaler ULAMA-Server)" },
-  "apiKeyLabel": { "message": "API Key:" },
-  "apiKeyPlaceholder": { "message": "sk-xxxxxxxxxxxx" },
-  "apiKeyDesc": { "message": "Dein API-Schlüssel vom Anbieter (z. B. OpenAI, Ollama etc.)" },
-  "modelLabel": { "message": "Modell:" },
-  "modelDesc": { "message": "Modellname (z. B. gpt-3.5-turbo, gpt-4o-mini, llama3, mistral:7b)" },
-  "temperatureLabel": { "message": "Temperatur:" },
-  "temperatureDesc": { "message": "Steuert Kreativität (0 = sachlich, 1 = kreativ)" },
-  "maxTokensLabel": { "message": "Max Tokens:" },
-  "maxTokensDesc": { "message": "Maximale Textlänge der Antwort" },
-  "systemPromptLabel": { "message": "System Prompt:" },
-  "systemPromptPlaceholder": { "message": "Du bist ein höflicher E-Mail-Assistent." },
-  "systemPromptDesc": { "message": "Vorgabetext für den Assistenten (z. B. Tonfall oder Stil)" },
-  "systemPromptDefault": { "message": "Du bist ein hilfreicher E-Mail-Assistent." },
-  
-  "sttSettings": { "message": "Speech-to-Text Einstellungen" },
-  "sttApiUrlLabel": { "message": "STT API URL:" },
-  "sttApiUrlPlaceholder": { "message": "https://api.openai.com/v1/audio/transcriptions" },
-  "sttApiUrlDesc": { "message": "URL für Sprachtranskription (z. B. Whisper)" },
-  "sttApiKeyLabel": { "message": "STT API Key:" },
-  "sttApiKeyPlaceholder": { "message": "sk-xxxxxxxxxxxx" },
-  "sttApiKeyDesc": { "message": "API-Key für den STT-Anbieter" },
-  "sttModelLabel": { "message": "Modell:" },
-  "sttModelDesc": { "message": "Sprachmodell (z. B. whisper-1 oder lokal tiny)" },
-  "sttLanguageLabel": { "message": "Sprache:" },
-  "sttLanguageDesc": { "message": "Sprache der Erkennung (leer = automatisch)" },
-  "sttLanguageAuto": { "message": "Auto" },
-  
-  "promptInputPlaceholder": { "message": "Geben Sie hier Ihre Anweisungen für die KI ein..." },
-  "voiceInputBtn": { "message": "🎤 Spracheingabe" },
-  "stopRecordingBtn": { "message": "⏹️ Aufnahme stoppen" },
-  "submitBtn": { "message": "📤 Abschicken" },
-  "cancelBtn": { "message": "❌ Abbrechen" },
-  "settingsBtn": { "message": "⚙️ Einstellungen" },
-  "autoresponseBtn": { "message": "🪄 Automatische Antwort" },
-  
-  "recordingInProgress": { "message": "🎤 Aufnahme läuft..." },
-  "transcribing": { "message": "Transkribiere..." },
-  "generating": { "message": "📤 Generiere..." },
-  
-  "statsInputToken": { "message": "Input Token:" },
-  "statsOutputToken": { "message": "Output Token:" },
-  "statsModel": { "message": "Modell:" },
-  "statsTime": { "message": "Zeit:" },
-  "statsCost": { "message": "Kosten:" },
-  "statsTemperature": { "message": "Temperatur:" },
-  
-  "testApiBtn": { "message": "🧪 API testen" },
-  "testApiTesting": { "message": "🧪 Teste API-Verbindung..." },
-  "testApiSuccess": { "message": "✅ API-Verbindung erfolgreich getestet!" },
-  "testApiError": { "message": "❌ API-Fehler: " },
-  "testApiMissingSettings": { "message": "❌ Bitte füllen Sie zuerst alle API-Einstellungen aus" },
-  "testApiSystemPrompt": { "message": "Du bist ein Test-Assistent." },
-  "testApiUserPrompt": { "message": "Hallo, das ist ein Test. Bitte antworte mit 'Test erfolgreich'." },
-  
-  "testSttBtn": { "message": "🧪 STT API testen" },
-  "testSttTesting": { "message": "🧪 Teste STT API-Verbindung..." },
-  "testSttSuccess": { "message": "✅ STT API-Verbindung erfolgreich getestet! Transkription: " },
-  "testSttError": { "message": "❌ STT API-Fehler: " },
-  "testSttMissingSettings": { "message": "❌ Bitte füllen Sie zuerst alle STT API-Einstellungen aus" },
-  "testSttFileNotFound": { "message": "test.wav nicht gefunden. Bitte fügen Sie eine test.wav Datei zum Erweiterungsverzeichnis hinzu." },
-  "testSttNoTranscription": { "message": "Keine Transkription zurückgegeben" },
-  
-  "exportBtn": { "message": "📤 Einstellungen exportieren" },
-  "importBtn": { "message": "📥 Einstellungen importieren" },
-  "exportSuccessMsg": { "message": "Einstellungen wurden exportiert!" },
-  "importSuccessMsg": { "message": "Einstellungen wurden erfolgreich importiert!" },
-  "importErrorMsg": { "message": "Fehler beim Import: " },
-  "importInvalidFormat": { "message": "Ungültiges Dateiformat: Chat-Einstellungen fehlen" },
-  
-  "noInstructionsProvided": { "message": "Bitte geben Sie Anweisungen für die KI ein." },
-  "speechRecognitionError": { "message": "Spracherkennungsfehler: " },
-  "generalError": { "message": "Fehler: " },
-  
-  "errorApiSettingsMissing": { "message": "API-Einstellungen fehlen. Bitte URL, API-Key und Modell in den Einstellungen konfigurieren." },
-  "errorSttSettingsMissing": { "message": "STT-API-Einstellungen fehlen. Bitte in den Einstellungen konfigurieren." },
-  "errorMicrophoneAccess": { "message": "Mikrofonzugriff verweigert. Bitte Berechtigungen überprüfen." },
-  "errorNoMessageContext": { "message": "Keine Nachricht oder Antwort-Entwurf geöffnet. Bitte zuerst eine E-Mail öffnen oder beantworten." },
-  "errorSttApi": { "message": "STT API Fehler" },
-  "errorApiGeneral": { "message": "API-Fehler" },
-  
-  "promptContextEmail": { "message": "E-Mail-Kontext:" },
-  "promptContextSubject": { "message": "Betreff:" },
-  "promptContextSender": { "message": "Absender:" },
-  "promptContextReceiver": { "message": "Empfänger:" },
-  "promptContextReceiverName": { "message": "Empfänger Name:" },
-  "promptContextReceiverOrganization": { "message": "Empfänger Organisation:" },
-  "promptContextMessage": { "message": "Nachricht:" },
-  "promptContextLanguageDetect": { "message": "Erkenne die Sprache der Nachricht und antworte in derselben Sprache." },
-  "promptContextInstructions": { "message": "Benutzeranweisungen:" },
-  "promptContextFormat": { "message": "WICHTIGE ANWEISUNGEN:\n1. Schreibe die E-Mail-Antwort aus der Sicht des EMPFÄNGERS (siehe oben: Empfänger Name, Empfänger Organisation)\n2. Der Empfänger antwortet auf die Nachricht vom ABSENDER\n3. Verwende einen natürlichen, professionellen und höflichen Ton\n4. Strukturiere die Antwort klar mit sinnvollen Absätzen\n5. Behalte den gleichen Formalitätsgrad wie die ursprüngliche Nachricht\n6. Gehe direkt auf die Punkte der ursprünglichen Nachricht ein\n7. Sei präzise und vermeide unnötige Wiederholungen\n8. Schreibe NUR den E-Mail-Text, OHNE Betreff, Anrede-Formel oder Signatur\n9. Beginne NICHT mit Phrasen wie 'Hier ist die Antwort' oder 'AI response'\n10. Verwende die gleiche Sprache wie die ursprüngliche Nachricht\n\nFormatierung:\n- Verwende kurze, klare Absätze\n- Füge Leerzeilen zwischen Absätzen ein (ein einfacher Zeilenumbruch)\n- Vermeide übermäßige Formatierung oder Aufzählungen, es sei denn, sie sind notwendig" },
-  
-  "autoresponsePrompt": { "message": "Schreibe eine kurze und höfliche Bestätigung, dass du die E-Mail erhalten hast. Falls die E-Mail einen Termin enthält bestätige diesen und wünsche Beste Grüße." },
-  
-  "systemPromptSettings": { "message": "System Prompt Einstellungen" },
-  "systemPromptLibraryLabel": { "message": "System Prompt Library:" },
-  "systemPromptLibraryDesc": { "message": "Select a saved system prompt to load" },
-  "systemPromptNameLabel": { "message": "System Prompt Name:" },
-  "systemPromptNameDesc": { "message": "Enter a name for the current system prompt" },
-  "systemPromptContentLabel": { "message": "System Prompt:" },
-  "systemPromptContentDesc": { "message": "Vorgabetext für den Assistenten (z. B. Tonfall oder Stil)" },
-  "saveSystemPromptBtn": { "message": "💾 Save System Prompt" },
-  "deleteSystemPromptBtn": { "message": "🗑️ Delete System Prompt" },
-  "systemPromptNameRequired": { "message": "Bitte geben Sie einen Namen für den System Prompt ein." },
-  "systemPromptSaved": { "message": "System Prompt erfolgreich gespeichert!" },
-  "systemPromptSaveError": { "message": "Fehler beim Speichern des System Prompts: " },
-  "systemPromptSelectToDelete": { "message": "Bitte wählen Sie einen System Prompt aus der Library zum Löschen aus." },
-  "systemPromptDeleteConfirm": { "message": "Sind Sie sicher, dass Sie den System Prompt löschen möchten?" },
-  "systemPromptDeleted": { "message": "System Prompt erfolgreich gelöscht!" },
-  "systemPromptDeleteError": { "message": "Fehler beim Löschen des System Prompts: " },
-  
-  "toneLabel": { "message": "Response Tone:" },
-  "toneDesc": { "message": "Select the tone for AI responses (this will modify the system prompt)" },
-  "toneNone": { "message": "None" },
-  "toneFormal": { "message": "Formal" },
-  "toneCasual": { "message": "Casual" },
-  "toneFriendly": { "message": "Friendly" },
-  
-  "lengthLabel": { "message": "Response Length:" },
-  "lengthDesc": { "message": "Select the length for AI responses (this will modify the system prompt)" },
-  "lengthNone": { "message": "None" },
-  "lengthShort": { "message": "Short" },
-  "lengthMedium": { "message": "Medium" },
-  "lengthLong": { "message": "Long" }
+  "extensionName": {
+    "message": "ARIA - KI-Assistent"
+  },
+  "extensionDescription": {
+    "message": "Erstellt intelligente Antworten und Transkriptionen mit KI"
+  },
+  "browserActionTitle": {
+    "message": "ARIA - KI-Assistent"
+  },
+  "settingsTitle": {
+    "message": "Einstellungen – ARIA - KI-Assistent"
+  },
+  "popupTitle": {
+    "message": "ARIA - KI-Assistent"
+  },
+  "saveBtn": {
+    "message": "💾 Einstellungen speichern"
+  },
+  "savedMsg": {
+    "message": "Einstellungen wurden erfolgreich gespeichert!"
+  },
+  "donateBtn": {
+    "message": "❤️ Spenden"
+  },
+  "languageLabel": {
+    "message": "Oberflächensprache:"
+  },
+  "languageDesc": {
+    "message": "Wähle die Sprache der Benutzeroberfläche"
+  },
+  "extensionSettings": {
+    "message": "Erweiterungs-Einstellungen"
+  },
+  "contextSizeLabel": {
+    "message": "Kontextgröße:"
+  },
+  "contextSizeDesc": {
+    "message": "Anzahl der vorherigen Nachrichten, die als Kontext gesendet werden"
+  },
+  "includeSenderLabel": {
+    "message": "Absender einbeziehen:"
+  },
+  "includeSenderDesc": {
+    "message": "Fügt die Absenderadresse in den Prompt-Kontext ein"
+  },
+  "clearEmailLabel": {
+    "message": "E-Mail-Inhalt nach Submit löschen:"
+  },
+  "clearEmailDesc": {
+    "message": "Löscht den E-Mail-Inhalt vor dem Einfügen der KI-Antwort"
+  },
+  "generatedEmailsLabel": {
+    "message": "Generierte E-Mails:"
+  },
+  "chatSettings": {
+    "message": "Chat API Einstellungen"
+  },
+  "apiUrlLabel": {
+    "message": "API URL:"
+  },
+  "apiUrlPlaceholder": {
+    "message": "https://api.openai.com/v1/chat/completions"
+  },
+  "apiUrlDesc": {
+    "message": "Endpoint für dein Modell (z. B. OpenAI oder lokaler ULAMA-Server)"
+  },
+  "apiKeyLabel": {
+    "message": "API Key:"
+  },
+  "apiKeyPlaceholder": {
+    "message": "sk-xxxxxxxxxxxx"
+  },
+  "apiKeyDesc": {
+    "message": "Dein API-Schlüssel vom Anbieter (z. B. OpenAI, Ollama etc.)"
+  },
+  "modelLabel": {
+    "message": "Modell:"
+  },
+  "modelDesc": {
+    "message": "Modellname (z. B. gpt-3.5-turbo, gpt-4o-mini, llama3, mistral:7b)"
+  },
+  "temperatureLabel": {
+    "message": "Temperatur:"
+  },
+  "temperatureDesc": {
+    "message": "Steuert Kreativität (0 = sachlich, 1 = kreativ)"
+  },
+  "maxTokensLabel": {
+    "message": "Max Tokens:"
+  },
+  "maxTokensDesc": {
+    "message": "Maximale Textlänge der Antwort"
+  },
+  "systemPromptLabel": {
+    "message": "System Prompt:"
+  },
+  "systemPromptPlaceholder": {
+    "message": "Du bist ein höflicher E-Mail-Assistent."
+  },
+  "systemPromptDesc": {
+    "message": "Vorgabetext für den Assistenten (z. B. Tonfall oder Stil)"
+  },
+  "systemPromptDefault": {
+    "message": "Du bist ein hilfreicher E-Mail-Assistent."
+  },
+  "sttSettings": {
+    "message": "Speech-to-Text Einstellungen"
+  },
+  "sttApiUrlLabel": {
+    "message": "STT API URL:"
+  },
+  "sttApiUrlPlaceholder": {
+    "message": "https://api.openai.com/v1/audio/transcriptions"
+  },
+  "sttApiUrlDesc": {
+    "message": "URL für Sprachtranskription (z. B. Whisper)"
+  },
+  "sttApiKeyLabel": {
+    "message": "STT API Key:"
+  },
+  "sttApiKeyPlaceholder": {
+    "message": "sk-xxxxxxxxxxxx"
+  },
+  "sttApiKeyDesc": {
+    "message": "API-Key für den STT-Anbieter"
+  },
+  "sttModelLabel": {
+    "message": "Modell:"
+  },
+  "sttModelDesc": {
+    "message": "Sprachmodell (z. B. whisper-1 oder lokal tiny)"
+  },
+  "sttLanguageLabel": {
+    "message": "Sprache:"
+  },
+  "sttLanguageDesc": {
+    "message": "Sprache der Erkennung (leer = automatisch)"
+  },
+  "sttLanguageAuto": {
+    "message": "Auto"
+  },
+  "promptInputPlaceholder": {
+    "message": "Geben Sie hier Ihre Anweisungen für die KI ein..."
+  },
+  "voiceInputBtn": {
+    "message": "🎤 Spracheingabe"
+  },
+  "stopRecordingBtn": {
+    "message": "⏹️ Aufnahme stoppen"
+  },
+  "submitBtn": {
+    "message": "📤 Abschicken"
+  },
+  "cancelBtn": {
+    "message": "❌ Abbrechen"
+  },
+  "settingsBtn": {
+    "message": "⚙️ Einstellungen"
+  },
+  "autoresponseBtn": {
+    "message": "🪄 Automatische Antwort"
+  },
+  "recordingInProgress": {
+    "message": "🎤 Aufnahme läuft..."
+  },
+  "transcribing": {
+    "message": "Transkribiere..."
+  },
+  "generating": {
+    "message": "📤 Generiere..."
+  },
+  "statsInputToken": {
+    "message": "Input Token:"
+  },
+  "statsOutputToken": {
+    "message": "Output Token:"
+  },
+  "statsModel": {
+    "message": "Modell:"
+  },
+  "statsTime": {
+    "message": "Zeit:"
+  },
+  "statsCost": {
+    "message": "Kosten:"
+  },
+  "statsTemperature": {
+    "message": "Temperatur:"
+  },
+  "testApiBtn": {
+    "message": "🧪 API testen"
+  },
+  "testApiTesting": {
+    "message": "🧪 Teste API-Verbindung..."
+  },
+  "testApiSuccess": {
+    "message": "✅ API-Verbindung erfolgreich getestet!"
+  },
+  "testApiError": {
+    "message": "❌ API-Fehler: "
+  },
+  "testApiMissingSettings": {
+    "message": "❌ Bitte füllen Sie zuerst alle API-Einstellungen aus"
+  },
+  "testApiSystemPrompt": {
+    "message": "Du bist ein Test-Assistent."
+  },
+  "testApiUserPrompt": {
+    "message": "Hallo, das ist ein Test. Bitte antworte mit 'Test erfolgreich'."
+  },
+  "testSttBtn": {
+    "message": "🧪 STT API testen"
+  },
+  "testSttTesting": {
+    "message": "🧪 Teste STT API-Verbindung..."
+  },
+  "testSttSuccess": {
+    "message": "✅ STT API-Verbindung erfolgreich getestet! Transkription: "
+  },
+  "testSttError": {
+    "message": "❌ STT API-Fehler: "
+  },
+  "testSttMissingSettings": {
+    "message": "❌ Bitte füllen Sie zuerst alle STT API-Einstellungen aus"
+  },
+  "testSttFileNotFound": {
+    "message": "test.wav nicht gefunden. Bitte fügen Sie eine test.wav Datei zum Erweiterungsverzeichnis hinzu."
+  },
+  "testSttNoTranscription": {
+    "message": "Keine Transkription zurückgegeben"
+  },
+  "exportBtn": {
+    "message": "📤 Einstellungen exportieren"
+  },
+  "importBtn": {
+    "message": "📥 Einstellungen importieren"
+  },
+  "exportSuccessMsg": {
+    "message": "Einstellungen wurden exportiert!"
+  },
+  "importSuccessMsg": {
+    "message": "Einstellungen wurden erfolgreich importiert!"
+  },
+  "importErrorMsg": {
+    "message": "Fehler beim Import: "
+  },
+  "importInvalidFormat": {
+    "message": "Ungültiges Dateiformat: Chat-Einstellungen fehlen"
+  },
+  "noInstructionsProvided": {
+    "message": "Bitte geben Sie Anweisungen für die KI ein."
+  },
+  "speechRecognitionError": {
+    "message": "Spracherkennungsfehler: "
+  },
+  "generalError": {
+    "message": "Fehler: "
+  },
+  "errorApiSettingsMissing": {
+    "message": "API-Einstellungen fehlen. Bitte URL, API-Key und Modell in den Einstellungen konfigurieren."
+  },
+  "errorSttSettingsMissing": {
+    "message": "STT-API-Einstellungen fehlen. Bitte in den Einstellungen konfigurieren."
+  },
+  "errorMicrophoneAccess": {
+    "message": "Mikrofonzugriff verweigert. Bitte erlauben Sie den Zugriff auf das Mikrofon, wenn Ihr Browser danach fragt."
+  },
+  "errorNoActiveRecording": {
+    "message": "Keine aktive Aufnahme"
+  },
+  "errorNoMessageContext": {
+    "message": "Keine Nachricht oder Antwort-Entwurf geöffnet. Bitte zuerst eine E-Mail öffnen oder beantworten."
+  },
+  "errorSttApi": {
+    "message": "STT API Fehler"
+  },
+  "errorApiGeneral": {
+    "message": "API-Fehler"
+  },
+  "promptContextEmail": {
+    "message": "E-Mail-Kontext:"
+  },
+  "promptContextSubject": {
+    "message": "Betreff:"
+  },
+  "promptContextSender": {
+    "message": "Absender:"
+  },
+  "promptContextReceiver": {
+    "message": "Empfänger:"
+  },
+  "promptContextReceiverName": {
+    "message": "Empfänger Name:"
+  },
+  "promptContextReceiverOrganization": {
+    "message": "Empfänger Organisation:"
+  },
+  "promptContextMessage": {
+    "message": "Nachricht:"
+  },
+  "promptContextLanguageDetect": {
+    "message": "Erkenne die Sprache der Nachricht und antworte in derselben Sprache."
+  },
+  "promptContextInstructions": {
+    "message": "Benutzeranweisungen:"
+  },
+  "promptContextFormat": {
+    "message": "WICHTIGE ANWEISUNGEN:\n1. Schreibe die E-Mail-Antwort aus der Sicht des EMPFÄNGERS (siehe oben: Empfänger Name, Empfänger Organisation)\n2. Der Empfänger antwortet auf die Nachricht vom ABSENDER\n3. Verwende einen natürlichen, professionellen und höflichen Ton\n4. Strukturiere die Antwort klar mit sinnvollen Absätzen\n5. Behalte den gleichen Formalitätsgrad wie die ursprüngliche Nachricht\n6. Gehe direkt auf die Punkte der ursprünglichen Nachricht ein\n7. Sei präzise und vermeide unnötige Wiederholungen\n8. Schreibe NUR den E-Mail-Text, OHNE Betreff, Anrede-Formel oder Signatur\n9. Beginne NICHT mit Phrasen wie 'Hier ist die Antwort' oder 'AI response'\n10. Verwende die gleiche Sprache wie die ursprüngliche Nachricht\n\nFormatierung:\n- Verwende kurze, klare Absätze\n- Füge Leerzeilen zwischen Absätzen ein (ein einfacher Zeilenumbruch)\n- Vermeide übermäßige Formatierung oder Aufzählungen, es sei denn, sie sind notwendig"
+  },
+  "autoresponsePrompt": {
+    "message": "Schreibe eine kurze und höfliche Bestätigung, dass du die E-Mail erhalten hast. Falls die E-Mail einen Termin enthält bestätige diesen und wünsche Beste Grüße."
+  },
+  "systemPromptSettings": {
+    "message": "System Prompt Einstellungen"
+  },
+  "systemPromptLibraryLabel": {
+    "message": "System Prompt Library:"
+  },
+  "systemPromptLibraryDesc": {
+    "message": "Wählen Sie einen gespeicherten System Prompt zum Laden aus"
+  },
+  "systemPromptNameLabel": {
+    "message": "System Prompt Name:"
+  },
+  "systemPromptNameDesc": {
+    "message": "Geben Sie einen Namen für den aktuellen System Prompt ein"
+  },
+  "systemPromptContentLabel": {
+    "message": "System Prompt:"
+  },
+  "systemPromptContentDesc": {
+    "message": "Vorgabetext für den Assistenten (z. B. Tonfall oder Stil)"
+  },
+  "saveSystemPromptBtn": {
+    "message": "💾 System Prompt speichern"
+  },
+  "deleteSystemPromptBtn": {
+    "message": "🗑️ System Prompt löschen"
+  },
+  "systemPromptNameRequired": {
+    "message": "Bitte geben Sie einen Namen für den System Prompt ein."
+  },
+  "systemPromptSaved": {
+    "message": "System Prompt erfolgreich gespeichert!"
+  },
+  "systemPromptSaveError": {
+    "message": "Fehler beim Speichern des System Prompts: "
+  },
+  "systemPromptSelectToDelete": {
+    "message": "Bitte wählen Sie einen System Prompt aus der Library zum Löschen aus."
+  },
+  "systemPromptDeleteConfirm": {
+    "message": "Sind Sie sicher, dass Sie den System Prompt löschen möchten?"
+  },
+  "systemPromptDeleted": {
+    "message": "System Prompt erfolgreich gelöscht!"
+  },
+  "systemPromptDeleteError": {
+    "message": "Fehler beim Löschen des System Prompts: "
+  },
+  "toneLabel": {
+    "message": "Antwort-Ton:"
+  },
+  "toneDesc": {
+    "message": "Wählen Sie den Ton für KI-Antworten (dies ändert den System Prompt)"
+  },
+  "toneNone": {
+    "message": "Keiner"
+  },
+  "toneFormal": {
+    "message": "Formell"
+  },
+  "toneCasual": {
+    "message": "Lässig"
+  },
+  "toneFriendly": {
+    "message": "Freundlich"
+  },
+  "lengthLabel": {
+    "message": "Antwort-Länge:"
+  },
+  "lengthDesc": {
+    "message": "Wählen Sie die Länge für KI-Antworten (dies ändert den System Prompt)"
+  },
+  "lengthNone": {
+    "message": "Keine"
+  },
+  "lengthShort": {
+    "message": "Kurz"
+  },
+  "lengthMedium": {
+    "message": "Mittel"
+  },
+  "lengthLong": {
+    "message": "Lang"
+  }
 }

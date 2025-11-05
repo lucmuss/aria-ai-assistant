@@ -131,6 +131,9 @@ function setupEventListeners() {
  */
 async function handleVoiceInput() {
   try {
+    const voiceBtn = document.getElementById('voiceInputBtn');
+    setButtonState(voiceBtn, t('recordingInProgress') || '🎤 Starting...', true);
+    
     sttRecorder = new STTRecorder();
     await sttRecorder.startRecording();
     
@@ -141,6 +144,7 @@ async function handleVoiceInput() {
     alert(t('speechRecognitionError') + error.message);
     sttRecorder = null;
     toggleRecordingUI(false);
+    setButtonState(document.getElementById('voiceInputBtn'), t('voiceInputBtn'), false);
   }
 }
 
