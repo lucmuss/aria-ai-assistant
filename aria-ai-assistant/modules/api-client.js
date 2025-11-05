@@ -282,27 +282,27 @@ RESPONSE GUIDELINES:
 
   const extensionSettings = emailContext.extensionSettings || {};
 
-  let senderInfo = '';
-  if (extensionSettings.includeSender && emailContext.sender) {
-    senderInfo = `Sender: ${emailContext.sender}\n`;
-  }
+  // Prepare all placeholder values
+  const placeholderValues = {
+    subject: emailContext.subject,
+    senderInfo: (extensionSettings.includeSender && emailContext.sender) ? `• Sender: ${emailContext.sender}\n` : '',
+    receiver: emailContext.receiver,
+    receiverName: emailContext.receiverName,
+    receiverOrganization: emailContext.receiverOrganization,
+    message: stripHtmlFn(emailContext.emailBody),
+    userInstructions: userInstructions
+  };
 
-  const emailBody = stripHtmlFn(emailContext.emailBody);
-
-  // Apply template
-  const prompt = template
-    .replace('{subject}', emailContext.subject)
-    .replace('{senderInfo}', senderInfo)
-    .replace('{receiver}', emailContext.receiver)
-    .replace('{receiverName}', emailContext.receiverName)
-    .replace('{receiverOrganization}', emailContext.receiverOrganization)
-    .replace('{message}', emailBody)
-    .replace('{userInstructions}', userInstructions);
+  // Apply all replacements
+  let prompt = template;
+  Object.entries(placeholderValues).forEach(([key, value]) => {
+    prompt = prompt.replace(new RegExp(`{${key}}`, 'g'), value);
+  });
 
   logger.debug('Prompt built', {
     promptLength: prompt.length,
-    includedSender: !!senderInfo,
-    emailBodyLength: emailBody.length
+    includedSender: !!placeholderValues.senderInfo,
+    emailBodyLength: placeholderValues.message.length
   });
 
   return prompt;
