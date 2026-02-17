@@ -1,332 +1,311 @@
-# ARIA - AI Assistant for Thunderbird
+# ARIA Thunderbird AI Email Assistant
 
-![ARIA Logo](icons/ai-icon_128.png)
+ARIA ist eine Thunderbird Erweiterung fuer KI-gestuetzte E-Mail-Antworten mit OpenAI oder lokalen Modellen wie Ollama und LM Studio. Die Erweiterung beschleunigt das Beantworten von E-Mails, nutzt den aktuellen Mail-Kontext und unterstuetzt optional Voice Input mit Speech-to-Text.
 
-**ARIA** (AI Response & Intelligence Assistant) is a powerful Thunderbird extension that helps you compose emails faster and smarter using artificial intelligence. Generate intelligent email responses, use voice input, and leverage both OpenAI and local AI models.
+Diese README ist die zentrale, vollstaendige Dokumentation fuer Installation, Konfiguration, Nutzung, CI/CD und Release.
 
-## Features
+## Inhaltsverzeichnis
 
-✨ **AI-Powered Email Generation**
-- Generate professional email responses with AI assistance
-- Support for OpenAI GPT models (GPT-4, GPT-4o, GPT-3.5-turbo)
-- Support for local AI models (Ollama, LM Studio, etc.)
-- Customizable system prompts and temperature settings
+- [1. Was ist dieses Projekt?](#1-was-ist-dieses-projekt)
+- [2. Features](#2-features)
+- [3. Installation](#3-installation)
+- [4. Quickstart (5 Minuten)](#4-quickstart-5-minuten)
+- [5. Konfiguration](#5-konfiguration)
+- [6. Nutzung](#6-nutzung)
+- [7. CI/CD und Release](#7-cicd-und-release)
+- [8. Sicherheit und Datenschutz](#8-sicherheit-und-datenschutz)
+- [9. Troubleshooting](#9-troubleshooting)
+- [10. FAQ](#10-faq)
+- [11. Beitragen und Entwicklung](#11-beitragen-und-entwicklung)
+- [12. Lizenz](#12-lizenz)
 
-🎤 **Voice Input**
-- Record voice instructions using your microphone
-- Automatic transcription using Whisper API or compatible services
-- Support for multiple languages
+## 1. Was ist dieses Projekt?
 
-🌍 **Multi-Language Support**
-- Interface available in 14 languages: English, German, Spanish, French, Chinese, Hindi, Arabic, Bengali, Russian, Portuguese, Urdu, Indonesian, Japanese, Polish
-- Automatic language detection for email responses
-- Responds in the same language as the original email
+ARIA (AI Response and Intelligence Assistant) ist eine Thunderbird Compose-Erweiterung fuer schnellere, bessere E-Mail-Antworten.
 
-⚙️ **Flexible Configuration**
-- Use OpenAI API or your own local AI server
-- Adjustable context size and temperature
-- Custom system prompts for different writing styles
-- Export and import settings for easy backup
+Kernidee:
+- E-Mail-Kontext aus dem aktuellen Reply/Compose holen
+- Benutzeranweisung (Text oder Sprache) erfassen
+- Antwort ueber Chat-API generieren
+- Ergebnis direkt in den Entwurf einfuegen
 
-📊 **Statistics & Insights**
-- Track token usage (input/output)
-- Monitor API costs
-- View processing time
-- Temperature tracking
+Geeignet fuer:
+- Support und Kundenkommunikation
+- Termin- und Projektabstimmung
+- schnelle, konsistente Standardantworten
+- mehrsprachige E-Mail-Konversationen
 
-## Installation
+## 2. Features
 
-### From Thunderbird Add-ons Store
-1. Open Thunderbird
-2. Go to **Menu** → **Add-ons and Themes**
-3. Search for "ARIA AI Assistant"
-4. Click **Add to Thunderbird**
+### KI-Antworten in Thunderbird
+- Antwortgenerierung aus realem Mail-Kontext
+- konfigurierbare Modelle, Temperatur und Max Tokens
+- Tone und Length Steuerung
+- anpassbarer System Prompt inklusive Prompt Library
 
-### Manual Installation (Development)
-1. Download the latest release from this repository
-2. Open Thunderbird
-3. Go to **Menu** → **Add-ons and Themes**
-4. Click the gear icon → **Install Add-on From File**
-5. Select the downloaded `.xpi` file
+### Voice Input (Speech-to-Text)
+- Mikrofonaufnahme im Popup
+- Transkription ueber konfigurierbare STT API
+- robuste Fehlerbehandlung fuer Audio/Recorder/API
 
-## Setup
+### Produktivitaet
+- Autoresponse Button fuer schnelle Bestaetigungsantworten
+- Statistikanzeige (Input Tokens, Output Tokens, Model, Laufzeit, Kosten)
+- Export/Import von Einstellungen
 
-### 1. Configure API Settings
+### Aktueller Sprachumfang
+- UI Sprachen aktuell: `en`, `de`
 
-After installation, configure your AI provider:
+## 3. Installation
 
-1. Click the ARIA icon in the compose window or open Settings
-2. Navigate to **Chat API Settings**
-3. Enter your configuration:
+### Voraussetzungen
+- Thunderbird `>= 115`
+- API Zugriff auf mindestens einen Chat Provider
+- optional Mikrofon und STT API fuer Voice Input
 
-**For OpenAI:**
+### Option A: Installation aus GitHub Release
+1. Repository Releases oeffnen.
+2. Neueste `.xpi` Datei herunterladen.
+3. In Thunderbird: Add-ons und Themes.
+4. Zahnrad Icon klicken und `Install Add-on From File` waehlen.
+5. `.xpi` auswaehlen und installieren.
+
+### Option B: Temporaere Entwickler-Installation
+1. Repository klonen.
+2. In Thunderbird: Add-ons und Themes.
+3. Zahnrad Icon klicken und `Debug Add-ons` oeffnen.
+4. `Load Temporary Add-on` waehlen.
+5. Datei `aria-ai-assistant/manifest.json` laden.
+
+## 4. Quickstart (5 Minuten)
+
+1. ARIA im Compose Fenster oeffnen.
+2. `Settings` oeffnen.
+3. Unter `Chat API Settings` konfigurieren:
+   - API URL
+   - API Key
+   - Model
+4. `Save` klicken.
+5. `Test API` ausfuehren.
+6. Zurueck ins Popup, Anweisung eingeben.
+7. `Submit` klicken.
+
+Nach wenigen Sekunden steht die KI-Antwort im Entwurf.
+
+## 5. Konfiguration
+
+### 5.1 Chat API Settings
+
+Empfohlene OpenAI Konfiguration:
 - API URL: `https://api.openai.com/v1/chat/completions`
-- API Key: Your OpenAI API key (get one at https://platform.openai.com)
-- Model: `gpt-4o-mini` or `gpt-4o`
+- Model: `gpt-4o-mini` (guenstig und schnell)
 
-**For Ollama (Local):**
-- API URL: `http://localhost:11434/v1/chat/completions`
-- API Key: `ollama` (or leave empty)
-- Model: `llama3`, `mistral`, `phi3`, etc.
+Lokale Modelle:
+- Ollama API URL: `http://localhost:11434/v1/chat/completions`
+- LM Studio API URL: `http://localhost:1234/v1/chat/completions`
+- API Key kann bei lokalen Backends optional sein
 
-**For LM Studio (Local):**
-- API URL: `http://localhost:1234/v1/chat/completions`
-- API Key: `lm-studio` (or leave empty)
-- Model: Your loaded model name
+Wichtige Felder:
+- `temperature`: Kreativitaet der Antworten
+- `maxTokens`: maximale Antwortlaenge
+- `chatTone`: none, formal, casual, friendly
+- `chatLength`: none, short, medium, long
 
-### 2. Configure Speech-to-Text (Optional)
+### 5.2 Extension Settings
+- `contextSize`: wie viele vorherige Nachrichten einbezogen werden
+- `includeSender`: Absenderadresse in Prompt-Kontext aufnehmen
+- `clearEmailAfterSubmit`: Entwurf vor Einfuegen leeren
 
-For voice input functionality:
+### 5.3 System Prompt Settings
+- gespeicherte System Prompts laden
+- eigene Prompts unter eigenem Namen speichern
+- aktuellen Prompt als aktive Default-Vorgabe setzen
 
-1. Go to **STT Settings** in settings page
-2. Configure:
-   - STT API URL: `https://api.openai.com/v1/audio/transcriptions`
-   - STT API Key: Your OpenAI API key
-   - Model: `whisper-1`
-   - Language: Select your preferred language or leave as "Auto"
+### 5.4 Speech-to-Text Settings
 
-### 3. Test Your Configuration
+Beispiel OpenAI Whisper:
+- STT API URL: `https://api.openai.com/v1/audio/transcriptions`
+- Model: `whisper-1`
+- Language: `de`, `en` oder leer fuer Auto
 
-- Click **🧪 Test API** to verify your chat API settings
-- Click **🧪 Test STT API** to verify your speech-to-text settings
+Hinweise:
+- STT API Key ist optional, falls dein STT Endpoint ohne Bearer Auth arbeitet
+- bei erstem Voice Start fragt Thunderbird nach Mikrofonzugriff
 
-## Usage
+### 5.5 Konfiguration testen
+- `Test API` prueft Chat Endpoint
+- `Test STT API` prueft Transkriptionsendpoint mit `test.wav`
 
-### Generating Email Responses
+## 6. Nutzung
 
-1. **Open or Reply to an Email**
-   - Open an email you want to respond to, or click Reply
+### 6.1 Standard-Workflow fuer KI-Antwort
+1. E-Mail oeffnen oder auf E-Mail antworten.
+2. ARIA Popup oeffnen.
+3. Anweisung eingeben.
+4. `Submit` klicken.
+5. Ergebnis pruefen und bei Bedarf bearbeiten.
 
-2. **Click the ARIA Icon**
-   - In the compose window toolbar, click the ARIA icon
-   - The ARIA popup will appear
+### 6.2 Autoresponse
+- `Autoresponse` setzt einen vordefinierten Prompt und startet direkt die Generierung.
+- sinnvoll fuer kurze Empfangs- und Terminbestaetigungen.
 
-3. **Enter Instructions**
-   - Type your instructions in the text field (e.g., "Write a professional reply accepting the meeting invitation")
-   - Or click **🎤 Voice Input** to speak your instructions
+### 6.3 Voice Input Workflow
+1. `Voice Input` klicken.
+2. sprechen.
+3. `Stop Recording` klicken.
+4. Transkript wird ins Prompt Feld geschrieben.
+5. optional editieren und `Submit` klicken.
 
-4. **Generate Response**
-   - Click **📤 Submit**
-   - ARIA will generate a response based on the email context and your instructions
-   - The response will be automatically inserted into your email
+Popup Shortcuts:
+- `Ctrl/Cmd + Shift + V`: Voice Input starten
+- `Ctrl/Cmd + Shift + A`: Autoresponse ausfuehren
 
-### Quick Autoresponse
+### 6.4 Prompt Best Practices
+- Aufgabe konkret formulieren.
+- Zielton nennen: formal, freundlich, kurz, detailliert.
+- kritische Fakten explizit angeben.
 
-Click **🪄 Autoresponse** for instant AI-generated acknowledgment emails. Perfect for:
-- Confirming receipt of emails
-- Accepting meeting invitations
-- Quick professional responses
+Beispiele:
+- `Schreibe eine professionelle Zusage fuer den Termin am Dienstag um 14:00 Uhr.`
+- `Formuliere eine freundliche Absage mit Dank fuer das Angebot.`
+- `Antwort auf Englisch, knapp und sachlich.`
 
-### Voice Input
+## 7. CI/CD und Release
 
-1. Click **🎤 Voice Input**
-2. Allow microphone access when prompted
-3. Speak your instructions clearly
-4. Click **⏹️ Stop Recording**
-5. Wait for transcription
-6. Review and submit
+Dieses Repository nutzt GitHub Actions.
 
-**Shortcuts (popup only):**
-- `Ctrl/Cmd + Shift + V`: Start voice input
-- `Ctrl/Cmd + Shift + A`: Trigger autoresponse
+Workflow Datei:
+- `.github/workflows/extension-ci.yml`
 
-## Settings Overview
+Ablauf:
+1. `lint` mit `web-ext lint`
+2. `build` erzeugt Release-Artefakte (`.xpi` und `.zip`)
+3. Push auf `main` oder `master` erzeugt automatisches Commit Prerelease
+4. Tag Push `vX.Y.Z` erzeugt offizielles GitHub Release
 
-### Extension Settings
-- **Interface Language**: Choose your preferred UI language
-- **Context Size**: Number of previous messages to include (1-10)
-- **Include Sender**: Add sender email to context
-- **Clear Email After Submit**: Remove existing content before inserting AI response
-
-### Chat API Settings
-- **API URL**: Endpoint for your AI model
-- **API Key**: Your authentication key
-- **Model**: AI model to use
-- **Temperature**: Creativity level (0.0-2.0)
-  - 0.0 = More factual and deterministic
-  - 1.0 = Balanced (recommended)
-  - 2.0 = More creative and varied
-- **Max Tokens**: Maximum response length (500-4000)
-- **System Prompt**: Define AI assistant behavior and style
-
-### Speech-to-Text Settings
-- **STT API URL**: Transcription service endpoint
-- **STT API Key**: Authentication for STT service
-- **Model**: Speech recognition model
-- **Language**: Recognition language (auto-detect or specific)
-
-## Tips for Best Results
-
-### Writing Effective Instructions
-
-**Good Examples:**
-- "Write a professional reply accepting the meeting invitation for Tuesday"
-- "Politely decline this job offer and thank them for the opportunity"
-- "Answer their technical question about API authentication in detail"
-- "Write a friendly follow-up email about the project status"
-
-**Pro Tips:**
-- Be specific about the tone (professional, friendly, formal, casual)
-- Mention key points you want to address
-- Specify if you need a short or detailed response
-- Use voice input for natural, conversational instructions
-
-### Customizing System Prompts
-
-Tailor the AI's behavior with custom system prompts:
-
-**Professional:**
-```
-You are a professional business email assistant. Write clear, concise, and formal emails.
-```
-
-**Friendly:**
-```
-You are a friendly email assistant. Write warm, personable emails while maintaining professionalism.
-```
-
-**Technical:**
-```
-You are a technical email assistant. Provide detailed, accurate technical information in a clear manner.
-```
-
-### Managing Costs
-
-- Use `gpt-4o-mini` for cost-effective responses (recommended)
-- Use `gpt-4o` for complex or important emails
-- Monitor token usage in the statistics panel
-- Consider local models (Ollama) for unlimited free usage
-
-## Privacy & Security
-
-- **No Data Collection**: ARIA does not collect, store, or transmit your personal data
-- **API Communications**: Only communicates with your configured API endpoint
-- **Local Storage**: Settings stored locally in Thunderbird
-- **Your Control**: You control which AI service to use and what data to send
-
-See [PRIVACY.md](PRIVACY.md) for complete privacy policy.
-
-## Troubleshooting
-
-### Common Issues
-
-**"API settings missing" error**
-- Solution: Configure API URL, API Key, and Model in settings
-
-**"No message or reply draft open" error**
-- Solution: Open an email or click Reply before using ARIA
-
-**Voice input not working**
-- Solution: Grant microphone permissions in your browser/system settings
-- Check STT API configuration in settings
-
-**API connection fails**
-- Solution: Click "Test API" to diagnose the issue
-- Verify API key is correct and has sufficient credits
-- Check if API URL is accessible
-
-**Wrong language in response**
-- Solution: The email body language detection may be incorrect
-- Specify the language in your instructions: "Respond in English"
-
-### Getting Help
-
-- Check the [FAQ section](https://github.com/yourusername/aria-thunderbird)
-- Report bugs via the `/reportbug` command in chat
-- Open an issue on GitHub
-
-## System Requirements
-
-- **Thunderbird**: Version 115.0 or higher
-- **API Access**: OpenAI API key or local AI server
-- **Microphone**: Required for voice input (optional feature)
-- **Internet**: Required for API-based services
-
-## Development
-
-### Building from Source
+### Lokale Release-Vorbereitung
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/aria-thunderbird.git
-cd aria-thunderbird
+git checkout master
+# oder: git checkout main
 
-# The extension is ready to load
-# No build process required
+# Version in aria-ai-assistant/manifest.json aktualisieren
+# CHANGELOG.md aktualisieren
+
+git add aria-ai-assistant/manifest.json CHANGELOG.md
+git commit -m "release: v1.0.1"
+git push
+
+# offizielles Release
+git tag v1.0.1
+git push origin v1.0.1
 ```
 
-### CI/CD (GitHub Actions)
+## 8. Sicherheit und Datenschutz
 
-- Every push/PR runs lint + build and produces `.xpi` + `.zip` artifacts.
-- Every commit on `main`/`master` creates an automatic prerelease with both files.
-- Tag pushes (`vX.Y.Z`) create official GitHub Releases with both files.
+- keine externe Datensammlung durch ARIA selbst
+- lokale Speicherung von Settings in Thunderbird Storage
+- API Datenverkehr nur zu den von dir konfigurierten Endpoints
+- Voice Audio wird nur waehrend der STT Anfrage uebertragen
 
-### Loading as Temporary Extension
+Weitere Details:
+- `PRIVACY.md`
 
-1. Open Thunderbird
-2. Go to **Menu** → **Add-ons and Themes**
-3. Click gear icon → **Debug Add-ons**
-4. Click **Load Temporary Add-on**
-5. Select `manifest.json` from the project directory
+## 9. Troubleshooting
 
-### Project Structure
+### Fehler: API settings missing
+Ursache:
+- Chat API URL, API Key oder Model fehlen.
 
+Loesung:
+- Settings oeffnen und alle Pflichtfelder setzen.
+- danach `Test API` ausfuehren.
+
+### Fehler: No message or reply draft open
+Ursache:
+- ARIA benoetigt offenen Compose/Reply Kontext.
+
+Loesung:
+- zuerst auf eine E-Mail antworten oder Compose oeffnen.
+
+### Voice Input startet nicht
+Ursache:
+- kein Mikrofonzugriff oder keine Recorder-Unterstuetzung.
+
+Loesung:
+- Mikrofonberechtigung in Thunderbird/System erlauben.
+- STT Endpoint pruefen.
+- `Test STT API` ausfuehren.
+
+### STT gibt keinen Text zurueck
+Ursache:
+- leere/zu kurze Aufnahme oder STT Modellproblem.
+
+Loesung:
+- klarer sprechen, laenger aufnehmen, Sprache korrekt setzen.
+
+### API request failed
+Ursache:
+- falsche URL, Key, Netzwerk oder fehlende Credits.
+
+Loesung:
+- Endpoint und Key verifizieren.
+- mit minimalem Testprompt pruefen.
+
+## 10. FAQ
+
+### Kann ich ARIA ohne OpenAI nutzen?
+Ja. Du kannst lokale oder andere OpenAI-kompatible Endpoints nutzen, z. B. Ollama oder LM Studio.
+
+### Muss ich Voice Input nutzen?
+Nein. Voice Input ist optional. Textprompts funktionieren ohne STT Konfiguration.
+
+### Unterstuetzt ARIA mehrere Sprachen?
+Ja. Die UI hat aktuell Deutsch und Englisch. Antworten orientieren sich am E-Mail-Kontext und deinen Anweisungen.
+
+### Wo finde ich die wichtigsten Dokus?
+- Quick Einstieg: `QUICKSTART.md`
+- Datenschutz: `PRIVACY.md`
+- Aenderungen: `CHANGELOG.md`
+- Einreichung: `SUBMISSION_CHECKLIST.md`
+
+## 11. Beitragen und Entwicklung
+
+### Repository lokal starten
+
+```bash
+git clone https://github.com/lucmuss/aria-ai-assistant.git
+cd aria-ai-assistant
 ```
-ai-mail-assistant/
-├── manifest.json          # Extension manifest
-├── background.js          # Background scripts
-├── popup.html            # Main popup interface
-├── popup.js              # Popup logic
-├── settings.html         # Settings page
-├── settings.js           # Settings logic
-├── style.css             # Styles
-├── icons/                # Extension icons
-├── locales/              # Translations (14 languages)
-│   ├── en/
-│   ├── de/
-│   ├── es/
-│   └── ...
-└── modules/              # Modular components
-    ├── api-client.js     # API communication
-    ├── email-context.js  # Email handling
-    ├── i18n.js           # Internationalization
-    ├── stt-recorder.js   # Voice recording
-    └── ...
+
+### Projektstruktur
+
+```text
+aria-ai-assistant/
+├── aria-ai-assistant/
+│   ├── manifest.json
+│   ├── popup.html
+│   ├── popup.js
+│   ├── settings.html
+│   ├── settings.js
+│   ├── style.css
+│   ├── background.js
+│   ├── modules/
+│   ├── locales/
+│   └── icons/
+├── .github/workflows/
+├── README.md
+├── QUICKSTART.md
+├── CHANGELOG.md
+└── PRIVACY.md
 ```
 
-## Contributing
+### Beitrag leisten
+1. Fork erstellen.
+2. Feature Branch erstellen.
+3. Aenderungen umsetzen und lokal testen.
+4. Pull Request mit klarer Beschreibung erstellen.
 
-Contributions are welcome! Please feel free to submit pull requests or open issues.
+## 12. Lizenz
 
-### Translation Contributions
-
-To add a new language:
-1. Copy `locales/en/messages.json`
-2. Create a new folder `locales/[language-code]/`
-3. Translate all message strings
-4. Add language to `settings.html` language selector
-5. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License - see [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- OpenAI for GPT models and Whisper API
-- Thunderbird team for the excellent email client
-- Ollama and LM Studio for local AI model support
-- All contributors and translators
-
-## Support the Project
-
-If you find ARIA useful, consider supporting its development:
-
-[![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.com/pool/9jCVLXPPmR?sr=wccr)
-
----
-
-**Version**: 1.0.0  
-**Author**: Lucas M.
-**Website**: https://github.com/yourusername/aria-thunderbird  
-**License**: MIT
+MIT Lizenz. Details in `LICENSE`.

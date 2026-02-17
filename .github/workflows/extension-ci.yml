@@ -66,13 +66,15 @@ jobs:
           set -euo pipefail
           VERSION="$(jq -r '.version' aria-ai-assistant/manifest.json)"
           SHORT_SHA="${GITHUB_SHA::7}"
-          XPI_SOURCE="$(find dist -maxdepth 1 -name '*.xpi' | head -n1)"
-          test -n "$XPI_SOURCE"
+          PACKAGE_SOURCE="$(find dist -maxdepth 1 -type f \( -name '*.xpi' -o -name '*.zip' \) | sort | head -n1)"
+          test -n "$PACKAGE_SOURCE"
 
           ZIP_NAME="aria-ai-assistant-${VERSION}-${SHORT_SHA}.zip"
           XPI_NAME="aria-ai-assistant-${VERSION}-${SHORT_SHA}.xpi"
 
-          cp "$XPI_SOURCE" "dist/${XPI_NAME}"
+          # web-ext may output either .xpi or .zip depending on version/runtime.
+          # For Thunderbird distribution we publish a deterministic .xpi filename.
+          cp "$PACKAGE_SOURCE" "dist/${XPI_NAME}"
           (
             cd aria-ai-assistant
             zip -r "../dist/${ZIP_NAME}" .
