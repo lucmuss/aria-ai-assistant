@@ -269,6 +269,24 @@
   "errorNoActiveRecording": {
     "message": "No active recording"
   },
+  "errorMediaDevicesUnavailable": {
+    "message": "Audio input is not available in this Thunderbird environment."
+  },
+  "errorMediaRecorderUnavailable": {
+    "message": "Audio recording is not supported in this Thunderbird environment."
+  },
+  "errorMicrophonePermissionDenied": {
+    "message": "Microphone permission was denied."
+  },
+  "errorEmptyRecording": {
+    "message": "No audio was recorded. Please try again."
+  },
+  "errorEmptyTranscription": {
+    "message": "No transcription text was returned. Please speak more clearly and try again."
+  },
+  "errorInvalidAudioPayload": {
+    "message": "Invalid audio data for transcription."
+  },
   "errorNoMessageContext": {
     "message": "No message or reply draft open. Please open an email or reply first."
   },

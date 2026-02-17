@@ -79,12 +79,17 @@ Click **🪄 Autoresponse** for instant acknowledgment emails - perfect for:
 
 ### Try Voice Input 🎤
 1. Click **🎤 Voice Input**
-2. Speak your instructions
-3. Click **⏹️ Stop Recording**
-4. Wait for transcription
-5. Review and submit
+2. Allow microphone access if Thunderbird asks for it
+3. Speak your instructions
+4. Click **⏹️ Stop Recording**
+5. Wait for transcription
+6. Review and submit
 
 **Note**: Voice input requires STT API configuration (use OpenAI Whisper)
+
+**Shortcuts (popup only):**
+- `Ctrl/Cmd + Shift + V`: Start voice input
+- `Ctrl/Cmd + Shift + A`: Autoresponse
 
 ### Change the Language
 - Go to Settings → **Interface Language**

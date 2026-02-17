@@ -25,9 +25,6 @@
     "accountsRead",
     "<all_urls>"
   ],
-  "optional_permissions": [
-    "microphone"
-  ],
   "browser_action": {
     "default_icon": {
       "16": "icons/ai-icon_16.png",

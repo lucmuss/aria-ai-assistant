@@ -1,5 +1,8 @@
 # Voice Input (Spracheingabe) - Fehlerbehebung & Anleitung
 
+> **Update (2026-02):** Die Extension nutzt jetzt den nativen `getUserMedia`-Prompt von Thunderbird/WebExtensions. Eine `microphone`-Manifest-Permission ist dafür nicht notwendig.  
+> Shortcuts wurden auf `Ctrl/Cmd + Shift + V` (Voice) und `Ctrl/Cmd + Shift + A` (Autoresponse) geändert, damit Standard-Shortcuts wie Einfügen/Alles markieren nicht überschrieben werden.
+
 ## 🔧 Behobene Probleme
 
 ### 1. **KRITISCH: Fehlende Mikrofonberechtigung**

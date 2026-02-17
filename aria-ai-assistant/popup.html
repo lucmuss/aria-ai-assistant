@@ -2,15 +2,22 @@
 <html>
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <h3 style="display: flex; align-items: center;"><img src="icons/ai-icon_64.png" alt="ARIA Icon" style="width: 32px; height: 32px; margin-right: 8px;"> <span data-i18n="popupTitle">ARIA - AI Assistant</span> <span id="version" style="font-size: 0.8em; color: #666; margin-left: 10px;">v1.1</span></h3>
+<body class="popup-page">
+  <header class="popup-header">
+    <img src="icons/ai-icon_64.png" alt="ARIA Icon" class="popup-logo">
+    <div class="popup-title-row">
+      <h3 class="popup-title" data-i18n="popupTitle">ARIA - AI Assistant</h3>
+      <span id="version" class="popup-version">v1.1</span>
+    </div>
+  </header>
   
   <div id="inputSection">
     <textarea id="promptInput" data-i18n-placeholder="promptInputPlaceholder" placeholder="Enter your instructions for the AI here..."></textarea>
     <div class="button-group">
-      <button id="voiceInputBtn" data-i18n="voiceInputBtn" title="Ctrl+V (or Cmd+V on Mac)">🎤 Voice Input</button>
+      <button id="voiceInputBtn" data-i18n="voiceInputBtn" title="Ctrl/Cmd+Shift+V">🎤 Voice Input</button>
       <button id="stopRecordingBtn" data-i18n="stopRecordingBtn" style="display: none;">⏹️ Stop Recording</button>
     </div>
     <div class="button-group" id="submitCancelGroup" style="display: none;">
@@ -19,9 +26,9 @@
     </div>
     <div class="button-group">
       <button id="inputSettingsBtn" data-i18n="settingsBtn">⚙️ Settings</button>
-      <button id="autoresponseBtn" data-i18n="autoresponseBtn" title="Ctrl+A (or Cmd+A on Mac)">🪄 Autoresponse</button>
+      <button id="autoresponseBtn" data-i18n="autoresponseBtn" title="Ctrl/Cmd+Shift+A">🪄 Autoresponse</button>
     </div>
-    <div id="stats" style="display: none; margin-top: 10px; font-size: 11px; color: #333; padding: 5px; border: 1px solid #ddd; border-radius: 4px; width: 100%;">
+    <div id="stats" class="popup-stats" style="display: none;">
       <div class="stats-row">
         <div class="stats-label"><strong data-i18n="statsInputToken">Input Token:</strong></div>
         <div class="stats-value"><span id="inputTokens">-</span></div>

@@ -71,7 +71,7 @@ export async function testSttApi(t) {
   const apiKey = document.getElementById('sttApiKey').value.trim();
   const model = document.getElementById('sttModel').value.trim();
   
-  if (!apiUrl || !apiKey || !model) {
+  if (!apiUrl || !model) {
     statusElement.textContent = t('testSttMissingSettings');
     statusElement.style.color = 'red';
     statusElement.style.display = 'block';
@@ -96,11 +96,14 @@ export async function testSttApi(t) {
     const language = document.getElementById('sttLanguage').value;
     if (language) formData.append('language', language);
 
+    const headers = {};
+    if (apiKey) {
+      headers['Authorization'] = `Bearer ${apiKey}`;
+    }
+
     const response = await fetch(apiUrl, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`
-      },
+      headers,
       body: formData
     });
 

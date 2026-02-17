@@ -92,16 +92,22 @@ function setupEventListeners() {
     }
   });
 
-  // Add keyboard shortcuts for voice input and autoresponse
+  // Add keyboard shortcuts for voice input and autoresponse.
+  // Use Ctrl/Cmd+Shift+V and Ctrl/Cmd+Shift+A to avoid overriding paste/select-all.
   document.addEventListener('keydown', async (event) => {
-    // Voice input shortcut: Ctrl+V (or Cmd+V on Mac)
-    if ((event.ctrlKey || event.metaKey) && event.key === 'v' && !event.shiftKey && !event.altKey) {
+    // Do not hijack shortcuts while typing in editable fields.
+    if (isEditableTarget(event.target)) {
+      return;
+    }
+
+    // Voice input shortcut: Ctrl/Cmd+Shift+V
+    if ((event.ctrlKey || event.metaKey) && event.shiftKey && !event.altKey && event.key.toLowerCase() === 'v') {
       event.preventDefault();
       voiceInputBtn.click();
     }
     
-    // Autoresponse shortcut: Ctrl+A (or Cmd+A on Mac)
-    if ((event.ctrlKey || event.metaKey) && event.key === 'a' && !event.shiftKey && !event.altKey) {
+    // Autoresponse shortcut: Ctrl/Cmd+Shift+A
+    if ((event.ctrlKey || event.metaKey) && event.shiftKey && !event.altKey && event.key.toLowerCase() === 'a') {
       event.preventDefault();
       autoresponseBtn.click();
     }
@@ -180,6 +186,14 @@ async function handleStopRecording() {
     sttRecorder = null;
     toggleRecordingUI(false);
   }
+}
+
+function isEditableTarget(target) {
+  if (!target) {
+    return false;
+  }
+  const tagName = target.tagName?.toLowerCase();
+  return tagName === 'input' || tagName === 'textarea' || target.isContentEditable;
 }
 
 /**
