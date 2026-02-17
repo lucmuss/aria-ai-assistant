@@ -126,6 +126,10 @@ Click **🪄 Autoresponse** for instant AI-generated acknowledgment emails. Perf
 5. Wait for transcription
 6. Review and submit
 
+**Shortcuts (popup only):**
+- `Ctrl/Cmd + Shift + V`: Start voice input
+- `Ctrl/Cmd + Shift + A`: Trigger autoresponse
+
 ## Settings Overview
 
 ### Extension Settings
@@ -250,6 +254,12 @@ cd aria-thunderbird
 # The extension is ready to load
 # No build process required
 ```
+
+### CI/CD (GitHub Actions)
+
+- Every push/PR runs lint + build and produces `.xpi` + `.zip` artifacts.
+- Every commit on `main`/`master` creates an automatic prerelease with both files.
+- Tag pushes (`vX.Y.Z`) create official GitHub Releases with both files.
 
 ### Loading as Temporary Extension
 

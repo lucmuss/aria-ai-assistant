@@ -363,14 +363,13 @@ Edit `api-client.js::buildPrompt()` function:
 
 ## Release Process
 
-1. Update version in `manifest.json`
-2. Update `CHANGELOG.md` with changes
-3. Test all functionality
-4. Create git tag: `git tag v1.0.0`
-5. Build .xpi package
-6. Test packaged extension
-7. Submit to addons.thunderbird.net
-8. Push git tag: `git push --tags`
+1. Push commit to `main` or `master`
+2. GitHub Actions runs `lint` and `build`
+3. CI creates `.xpi` and `.zip` artifacts in `dist/`
+4. CI creates an automatic commit release with download links
+5. For official versions, create and push a tag (`git tag v1.0.0 && git push --tags`)
+6. Tag pipeline creates an official tag release
+7. Test packaged extension and submit to addons.thunderbird.net
 
 ## Contributing Guidelines
 
