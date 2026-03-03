@@ -8,13 +8,14 @@ import { STTRecorder, transcribeAudio, getSTTSettings } from './modules/stt-reco
 import { getEmailContext, insertTextAtCursor, stripHtml } from './modules/email-context.js';
 import { callOpenAI, buildPrompt, saveStats, incrementGenerationCounter, getExtensionSettings } from './modules/api-client.js';
 import { displayStats, updateSubmitCancelVisibility, openSettingsTab, loadLastPrompt, savePrompt, setButtonState, toggleRecordingUI } from './modules/ui-helpers.js';
-import { getAutoresponseDefault } from './modules/settings-data.js';
+import { getAutoresponseDefault, isVoiceInputEnabled } from './modules/settings-data.js';
 
 // Global state
 let sttRecorder = null;
 let t = null;
 let tone = 'none'; // Default tone (None)
 let length = 'none'; // Default length (None)
+let voiceInputEnabled = true;
 
 /**
  * Initialize the popup
@@ -57,6 +58,10 @@ async function init() {
 
   // Display stats
   await displayStats();
+
+  // Voice input feature flag
+  voiceInputEnabled = await isVoiceInputEnabled();
+  applyVoiceFeatureVisibility(voiceInputEnabled);
 
   // Setup event listeners
   setupEventListeners();
@@ -101,7 +106,7 @@ function setupEventListeners() {
     }
 
     // Voice input shortcut: Ctrl/Cmd+Shift+V
-    if ((event.ctrlKey || event.metaKey) && event.shiftKey && !event.altKey && event.key.toLowerCase() === 'v') {
+    if (voiceInputEnabled && (event.ctrlKey || event.metaKey) && event.shiftKey && !event.altKey && event.key.toLowerCase() === 'v') {
       event.preventDefault();
       voiceInputBtn.click();
     }
@@ -114,10 +119,14 @@ function setupEventListeners() {
   });
 
   // Voice input button
-  voiceInputBtn.addEventListener('click', handleVoiceInput);
+  if (voiceInputEnabled) {
+    voiceInputBtn.addEventListener('click', handleVoiceInput);
+  }
 
   // Stop recording button
-  stopRecordingBtn.addEventListener('click', handleStopRecording);
+  if (voiceInputEnabled) {
+    stopRecordingBtn.addEventListener('click', handleStopRecording);
+  }
 
   // Submit button
   submitBtn.addEventListener('click', handleSubmit);
@@ -136,6 +145,8 @@ function setupEventListeners() {
  * Handle voice input button click
  */
 async function handleVoiceInput() {
+  if (!voiceInputEnabled) return;
+
   try {
     const voiceBtn = document.getElementById('voiceInputBtn');
     setButtonState(voiceBtn, t('recordingInProgress') || '🎤 Starting...', true);
@@ -158,6 +169,7 @@ async function handleVoiceInput() {
  * Handle stop recording button click
  */
 async function handleStopRecording() {
+  if (!voiceInputEnabled) return;
   if (!sttRecorder) return;
 
   try {
@@ -194,6 +206,25 @@ function isEditableTarget(target) {
   }
   const tagName = target.tagName?.toLowerCase();
   return tagName === 'input' || tagName === 'textarea' || target.isContentEditable;
+}
+
+function applyVoiceFeatureVisibility(enabled) {
+  const voiceControlsGroup = document.getElementById('voiceControlsGroup');
+  const voiceInputBtn = document.getElementById('voiceInputBtn');
+  const stopRecordingBtn = document.getElementById('stopRecordingBtn');
+
+  if (!enabled) {
+    if (voiceControlsGroup) {
+      voiceControlsGroup.style.display = 'none';
+      return;
+    }
+    if (voiceInputBtn) {
+      voiceInputBtn.style.display = 'none';
+    }
+    if (stopRecordingBtn) {
+      stopRecordingBtn.style.display = 'none';
+    }
+  }
 }
 
 /**

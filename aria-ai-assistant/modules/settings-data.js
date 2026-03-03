@@ -24,6 +24,31 @@ export async function getDonationUrl() {
 }
 
 /**
+ * Feature flag: enable/disable voice input UI
+ */
+export async function isVoiceInputEnabled() {
+  try {
+    const yaml = window.jsyaml;
+    const configUrl = browser.runtime.getURL('app-config.yaml');
+    const response = await fetch(configUrl);
+    if (response.ok) {
+      const yamlText = await response.text();
+      const config = yaml.load(yamlText) || {};
+      const rawValue = config.voice_input_enabled;
+      if (typeof rawValue === 'boolean') {
+        return rawValue;
+      }
+      if (typeof rawValue === 'string') {
+        return rawValue.toLowerCase() === 'true';
+      }
+    }
+  } catch (error) {
+    console.error('Failed to load voice feature flag:', error);
+  }
+  return true; // Backward-compatible default if key is missing
+}
+
+/**
  * Get autoresponse default message from app config
  */
 export async function getAutoresponseDefault() {

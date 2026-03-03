@@ -3,6 +3,10 @@ donation_url: "https://www.paypal.com/pool/9jCVLXPPmR?sr=wccr"
 homepage_url: "https://gitlab.com/thunderbird-extension/ai-mail-assistant"
 version: "1.0.0"
 
+# Feature flags
+# Set to false to hide voice UI and STT settings without removing source code.
+voice_input_enabled: false
+
 # System Prompt Configuration
 system_prompt_template: |
   You are an expert email assistant specializing in professional communication. {tone} {length}

@@ -13,9 +13,10 @@ import {
   saveSystemPrompt,
   deleteSystemPrompt
 } from './modules/system-prompt-manager.js';
-import { getDonationUrl } from './modules/settings-data.js';
+import { getDonationUrl, isVoiceInputEnabled } from './modules/settings-data.js';
 
 let t = null;
+let voiceInputEnabled = true;
 
 /**
  * Initialize settings page
@@ -40,6 +41,10 @@ async function init() {
 
   // Load settings
   await loadSettings();
+
+  // Voice feature flag
+  voiceInputEnabled = await isVoiceInputEnabled();
+  applyVoiceFeatureVisibility(voiceInputEnabled);
   
   // Populate system prompt library
   await populateSystemPromptLibrary(document.getElementById('systemPromptLibrary'));
@@ -95,9 +100,11 @@ function setupEventListeners() {
   });
 
   // Test STT button
-  document.getElementById('testSttBtn').addEventListener('click', () => {
-    testSttApi(t);
-  });
+  if (voiceInputEnabled) {
+    document.getElementById('testSttBtn').addEventListener('click', () => {
+      testSttApi(t);
+    });
+  }
 
   // Export button
   document.getElementById('exportBtn').addEventListener('click', () => {
@@ -229,3 +236,20 @@ function setupEventListeners() {
 
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', init);
+
+function applyVoiceFeatureVisibility(enabled) {
+  if (enabled) {
+    return;
+  }
+
+  const sttSection = document.getElementById('sttSettingsSection');
+  const testSttBtn = document.getElementById('testSttBtn');
+
+  if (sttSection) {
+    sttSection.style.display = 'none';
+  }
+
+  if (testSttBtn) {
+    testSttBtn.style.display = 'none';
+  }
+}
